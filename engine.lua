@@ -1,19 +1,17 @@
-local class = require "lib/middleclass"
+local class = require 'lib.middleclass'
 require "player"
 require "zone"
-require "viewport"
+require "mLayer"
 require "item"
+require "screen"
 
 Engine = class('Engine')
   
 function Engine:initialize()
   self.player = Player()
   self.zone = Zone(self.player, "grey", 40, 40,"arena")
-  
   self.zone:spawnItem(Item("key",1,1, 1,1))
-  
-  
-  self.viewport = Viewport(self.player, self.zone)
+  self.screen = Screen(MLayer(self.player, self.zone))
   
 end
 

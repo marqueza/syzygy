@@ -1,14 +1,14 @@
 local class = require "lib/middleclass"
 ROT= require "/lib/rotLove"
 require "zone"
-
+require "player"
 --
 --this is the manager for the main display port
 --
 
-Viewport = class('Viewport')
+MLayer = class('MLayer')
 
-function Viewport:initialize(player, zone)
+function MLayer:initialize(player, zone)
   self.player = player
   self.zone = zone
   
@@ -41,7 +41,7 @@ end
 
 --unlike items and mobs the map tiles are a unique case
 --this preps mapBatch, and mapQuads (used determine which map tile to display for mapBatch)
-function Viewport:drawMap()
+function MLayer:drawMap()
 
   for x=1, self.zone.width do
     for y=1, self.zone.height do
@@ -51,7 +51,7 @@ function Viewport:drawMap()
   
 end
 
-function Viewport:update(dt)
+function MLayer:update(dt)
   --update player sprite
   self.player.sprite:update(dt)
   --update all actors
@@ -61,7 +61,7 @@ function Viewport:update(dt)
   end
 end
 
-function Viewport:draw()
+function MLayer:draw()
   self:drawMap()
   --love.graphics.draw(self.mapImage)
   self.player:draw()
