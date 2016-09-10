@@ -1,10 +1,10 @@
 local anim8 = require "lib/anim8"
 local class = require "lib/middleclass"
 
-Sprite = class("Sprite")
+ActorSprite = class("ActorSprite")
 
 --
-function Sprite:initialize(filename, x, y)
+function ActorSprite:initialize(filename, x, y )
   --local variables needed for return values
   local img = love.graphics.newImage(filename)
   img:setFilter('nearest')
@@ -43,19 +43,19 @@ function round(num, idp)
   return math.floor(num * mult + 0.5) / mult
 end
 
-function Sprite:isMoving()
+function ActorSprite:isMoving()
   return not (self.grid_x == round(self.actual_x) and self.grid_y == round(self.actual_y))
 end
 
 
-function Sprite:draw()
+function ActorSprite:draw()
   love.graphics.draw(self.batch)
 end
 
 --changing gird x y coords
 --allows the class to keep track of the actual x y coords
 --and when to change animations and spritebatch
-function Sprite:update(dt)
+function ActorSprite:update(dt)
   
   --update location
   self.actual_y = self.actual_y - ((self.actual_y - self.grid_y) * self.speed * dt)

@@ -7,6 +7,7 @@ require "player"
 --a zone is a mapped level
 --
 Zone = class("Zone")
+local tempMap = {}
 
 function Zone:initialize(player, name, width, height, mapType)
   self.player = player
@@ -17,6 +18,10 @@ function Zone:initialize(player, name, width, height, mapType)
   self.width = width or 20
   self.height = height or 20
   self.mapType = mapType or "arena"
+  self.rng=ROT.RNG.Twister:new()
+  self.rng:randomseed()
+  
+  self.items = {}
 
   self:initMap()
   --self:dig()
@@ -27,14 +32,41 @@ end
 function Zone:initMap()
   self.map = {}
   self.seen = {}
+  tempMap = {}
   for x=1,self.width do
     self.map[x] = {}
     self.seen[x] = {}
+    tempMap[x] = {}
     for y=1,self.height do
       self.map[x][y] = 1
       self.seen[x][y] = 0
+      tempMap[x][y] = 1
     end
   end
+    local opts ={
+    roomWidth={3,8},
+    roomHeight={3,5},
+    corridorLength={4,7},
+    dugPercentage=0.4,
+    timeLimit=1000,
+    nocorridorsmode=true
+  }
+  digger=ROT.Map.Digger(self.width, self.height, opts)
+  --digger:randomize(.5)
+  digger:create(diggerCallback)
+  self.map = tempMap
+  local doors = digger:getDoors()
+  for i,door in ipairs(doors) do
+    self.map[door.x][door.y] = 2
+  end
+  
+end
+
+function diggerCallback(x, y, val)
+    tempMap[x][y] = val
+end
+
+function Zone:cellDig()
   local iter = 5
 	local percentage_walls = 35
   local rules = {}
@@ -47,7 +79,7 @@ function Zone:initMap()
 	rules[3] = "wall"
 	rules[4] = "wall"
 	rules[5] = "wall"
-  local tempMap = maps.generate.cellular (self.width, self.height, iter, percentage_walls, rules)
+  tempMap = maps.generate.cellular (self.width, self.height, iter, percentage_walls, rules)
   tempMap = maps.process.removeDisconnected (tempMap)
   for x=1,self.width do
     for y=1,self.height do
@@ -58,19 +90,35 @@ function Zone:initMap()
   end
 end
 
-
 function Zone:spawnPlayer()
-  local rng=ROT.RNG.Twister:new()
-  rng:randomseed()
   while true do
-    local randX = rng:random(1,self.width)
-    local randY = rng:random(1,self.height)
+    local randX = self.rng:random(1,self.width)
+    local randY = self.rng:random(1,self.height)
     if self.map[randX][randY] == 0 then
-      self.player.x, self.player.y = randX, randY
-      
-      self.player.sprite.grid_x = self.player.x*64
-      self.player.sprite.grid_y = self.player.y*64
+      self.player:teleport(randX,randY)
       break
     end
+  end
+end
+
+function Zone:spawnItem(item)
+  --store in in table
+  table.insert(self.items, item)
+  
+  --determine spawn point
+  
+  while true do
+    local randX = self.rng:random(1,self.width)
+    local randY = self.rng:random(1,self.height)
+    if self.map[randX][randY] == 0 then
+      item:place(randX,randY)
+      break
+    end
+  end
+end
+  
+function Zone:update(dt)
+  if not self.Map == tempMap then
+    self.Map = tempMap
   end
 end

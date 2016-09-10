@@ -25,13 +25,16 @@ function Viewport:initialize(player, zone)
   self.height = 10
   
   self.mapQuads = {}
-  self.mapImage = love.graphics.newImage("img/" .. self.zone.name .. ".png")
+  self.mapImage = love.graphics.newImage("img/tiles.png")
   
    -- grey floor
-  self.mapQuads[0] = love.graphics.newQuad(3 * self.gridPixels, 9 * self.gridPixels, self.gridPixels, self.gridPixels,
+  self.mapQuads[0] = love.graphics.newQuad(0 * self.gridPixels, 0 * self.gridPixels, self.gridPixels, self.gridPixels,
     self.mapImage:getWidth(), self.mapImage:getHeight())
   -- stone wall
-  self.mapQuads[1] = love.graphics.newQuad(8 * self.gridPixels, 0 * self.gridPixels, self.gridPixels, self.gridPixels,
+  self.mapQuads[1] = love.graphics.newQuad(1 * self.gridPixels, 0 * self.gridPixels, self.gridPixels, self.gridPixels,
+    self.mapImage:getWidth(), self.mapImage:getHeight())
+  -- door
+  self.mapQuads[2] = love.graphics.newQuad(2 * self.gridPixels, 0 * self.gridPixels, self.gridPixels, self.gridPixels,
     self.mapImage:getWidth(), self.mapImage:getHeight())
   
 end
@@ -52,12 +55,20 @@ function Viewport:update(dt)
   --update player sprite
   self.player.sprite:update(dt)
   --update all actors
-  --update any item movement
+  --update all items
+  for i, item in ipairs(self.zone.items) do
+    item.sprite:update(dt)
+  end
 end
 
 function Viewport:draw()
   self:drawMap()
   --love.graphics.draw(self.mapImage)
-  self.player.sprite:draw()
+  self.player:draw()
+  
+  --draw all item in the zone
+  for i, item in ipairs(self.zone.items) do
+    item:draw()
+  end
 end
 

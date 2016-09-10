@@ -10,25 +10,29 @@ function love.load()
   if arg[#arg] == "-debug" then require("mobdebug").start() end
   e = Engine()
   camera = Camera(e.player.sprite.grid_x, e.player.sprite.grid_y)
-  camera.smoother = Camera.smooth.linear(10000)
+  camera.smoother = Camera.smooth.linear(5000)
 end
 
 function love.update(dt)
   local sX, sY = e.player.sprite.grid_x, e.player.sprite.grid_y
   local cX, cY = camera:cameraCoords(sX, sY)
   
-  if cX >= screenWidth-32 or cX <= 32 then
+  if cX >= screenWidth-128 or cX <= 128 then
     camera.x = sX
   end
-  if cY >= screenHeight-48 or cY <=48 then
+  if cY >= screenHeight-128 or cY <=128 then
     camera.y = sY
   end
+  if love.keyboard.isDown('c') then
+    camera:lockPosition(sX,sY)
+  end
+  e.zone:update(dt)
   e.viewport:update(dt)
   
 end
 
 function love.draw()
-  camera:attach() 
+  camera:attach(nil,nil,nil,nil,true) 
   e.viewport:draw()
   camera:detach()
   love.graphics.print("playerX "..e.player.x, 10, 40)

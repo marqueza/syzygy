@@ -1,16 +1,15 @@
 local anim8 = require "lib/anim8"
 local class = require "lib/middleclass"
 
-Sprite = class("Sprite")
+ItemSprite = class("ItemSprite")
 
 --
-function Sprite:initialize(filename, x, y)
+function ItemSprite:initialize(filename, x, y, sheetX, sheetY)
   --local variables needed for return values
   local img = love.graphics.newImage(filename)
   img:setFilter('nearest')
   local imgWidth,imgHeight = img:getDimensions()
   self.charSize = 64
-  local g = anim8.newGrid(self.charSize,self.charSize, imgWidth,imgHeight)
 
   --
   --fields that will be needed by others
@@ -23,17 +22,18 @@ function Sprite:initialize(filename, x, y)
   self.actual_y = y or 1
   self.speed = 10 --default
   self.direction = -1 -- left, by default
+  
+  self.sheetX = sheetX
+  self.sheetY = sheetY
 
   --pulls from grid based on image
+  local g = anim8.newGrid(self.charSize,self.charSize, imgWidth,imgHeight)
   self.ani = {
-    walkLeft = anim8.newAnimation(g(2,1, 2,1), 1),
-    walkRight = anim8.newAnimation(g(2,1, 2,1), 1):flipH(),
-    idleLeft = anim8.newAnimation(g(1,1, 1,1), 1),
-    idleRight = anim8.newAnimation(g(1,1, 1,1), 1):flipH(),
+   idle = anim8.newAnimation(g(sheetX,sheetY, sheetX+1,sheetY), 0.6)
   }
 
   --important for drawing
-  self.curAni = self.ani.idleLeft
+  self.curAni = self.ani.idle
   self.batch = love.graphics.newSpriteBatch(img)
   self.batchId = self.batch:add(self.curAni:getFrameInfo(self.actual_x, self.actual_y))
 end
@@ -43,40 +43,20 @@ function round(num, idp)
   return math.floor(num * mult + 0.5) / mult
 end
 
-function Sprite:isMoving()
-  return not (self.grid_x == round(self.actual_x) and self.grid_y == round(self.actual_y))
-end
 
-
-function Sprite:draw()
+function ItemSprite:draw()
   love.graphics.draw(self.batch)
 end
 
 --changing gird x y coords
 --allows the class to keep track of the actual x y coords
 --and when to change animations and spritebatch
-function Sprite:update(dt)
+function ItemSprite:update(dt)
   
-  --update location
-  self.actual_y = self.actual_y - ((self.actual_y - self.grid_y) * self.speed * dt)
-	self.actual_x = self.actual_x - ((self.actual_x - self.grid_x) * self.speed * dt)
+  --place any change in current animation here
+  -- <--
   
-  --choose animation based on movement status
-  if self:isMoving() then
-    if self.direction == 1 then
-        self.curAni = self.ani.walkRight
-      else
-        self.curAni = self.ani.walkLeft
-    end
-  else
-    if self.direction == 1 then
-      self.curAni = self.ani.idleRight
-    else
-      self.curAni = self.ani.idleLeft
-    end
-  end
-  
-  --update animation
+  --update current animation
   self.curAni:update(dt)
   --update batch, with new frame from animation, and new location data
   self.batch:set(self.batchId, self.curAni:getFrameInfo(self.actual_x, self.actual_y)) --x,y,r,sx,sy,ox,oy,kx,ky
