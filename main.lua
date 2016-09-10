@@ -16,11 +16,13 @@ end
 function love.update(dt)
   local sX, sY = e.player.sprite.grid_x, e.player.sprite.grid_y
   local cX, cY = camera:cameraCoords(sX, sY)
-  if love.keyboard.isDown('c') or cX >= screenWidth-32 or cY >= screenHeight-48 or cX <=0 or cY <=0 then
+  
+  if cX >= screenWidth-32 or cX <= 32 then
     camera.x = sX
+  end
+  if cY >= screenHeight-48 or cY <=48 then
     camera.y = sY
   end
-  
   e.viewport:update(dt)
   
 end
@@ -46,7 +48,9 @@ function love.keypressed(key)
       camera:zoom(.5)
     elseif key == '=' then
       camera:zoom(2)
-      end
+    end
+    
+    
     local dx,dy = 0,0
     
     if     key=='kp1' then dx,dy=-1, 1
@@ -60,18 +64,6 @@ function love.keypressed(key)
     elseif key=='kp9' then dx,dy= 1,-1
     end
 
-    if not (dx ==0 and dy == 0) then
-        
-        local newx = e.player.x+dx
-        local newy = e.player.y+dy
-        
-        if e.zone.map[newx][newy]==0 then -- if the player is heading towards a floor
-            e.player.x=newx -- move player
-            e.player.y=newy
-            
-            e.player.sprite.grid_x = e.player.x*64
-            e.player.sprite.grid_y = e.player.y*64
-        end
-    end
+    e:movePlayer(dx,dy)
     
 end

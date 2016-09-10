@@ -1,5 +1,6 @@
-local class = require "lib/middleclass"
-ROT= require "/lib/rotLove"
+local class = require "lib.middleclass"
+ROT= require "lib.rotLove"
+require "lib.mapgeneration"
 require "player"
 
 --
@@ -18,9 +19,9 @@ function Zone:initialize(player, name, width, height, mapType)
   self.mapType = mapType or "arena"
 
   self:initMap()
-  self:dig()
-  self.player.x, self.player.y = 2,2
-  --self:spawnPlayer()
+  --self:dig()
+  self.player.x, self.player.y = 1,1
+  self:spawnPlayer()
 end
 
 function Zone:initMap()
@@ -34,16 +35,27 @@ function Zone:initMap()
       self.seen[x][y] = 0
     end
   end
-end
-
-function Zone:dig()
-  for i=1, self.width do
-    for j=1, self.height do
-      if i>1 and j>1 and i<self.width and j<self.height then
-        self.map[i][j] = 0
+  local iter = 5
+	local percentage_walls = 35
+  local rules = {}
+	rules.neighborhood = 1
+	rules.include_self = true
+	rules.frame = "start"
+	rules[0] = "floor"
+	rules[1] = "floor"
+	rules[2] = "stay"
+	rules[3] = "wall"
+	rules[4] = "wall"
+	rules[5] = "wall"
+  local tempMap = maps.generate.cellular (self.width, self.height, iter, percentage_walls, rules)
+  tempMap = maps.process.removeDisconnected (tempMap)
+  for x=1,self.width do
+    for y=1,self.height do
+      if not tempMap[x][y] then
+        self.map[x][y] = 0
       end
     end
-  end 
+  end
 end
 
 
@@ -55,6 +67,9 @@ function Zone:spawnPlayer()
     local randY = rng:random(1,self.height)
     if self.map[randX][randY] == 0 then
       self.player.x, self.player.y = randX, randY
+      
+      self.player.sprite.grid_x = self.player.x*64
+      self.player.sprite.grid_y = self.player.y*64
       break
     end
   end
