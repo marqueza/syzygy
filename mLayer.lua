@@ -53,22 +53,26 @@ end
 
 function MLayer:update(dt)
   --update player sprite
-  self.player.sprite:update(dt)
+ 
   --update all actors
   --update all items
   for i, item in ipairs(self.zone.items) do
     item.sprite:update(dt)
   end
+  
+   self.player.sprite:update(dt)
 end
 
 function MLayer:draw()
   self:drawMap()
   --love.graphics.draw(self.mapImage)
-  self.player:draw()
+  
   
   --draw all item in the zone
   for i, item in ipairs(self.zone.items) do
     item:draw()
   end
+  
+  self.player:draw()
 end
 

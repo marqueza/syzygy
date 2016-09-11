@@ -8,6 +8,7 @@ Item = class("Item")
 function Item:initialize(name, x,y, sheetX,sheetY)
   Enitity.initialize(self, x, y, name)
   self.sprite = ItemSprite("img/item.png", 64*x, 64*y, sheetX or 1,sheetY or 1)
+  self.onFloor = true
 end
 
 function Item:place(x,y)

@@ -10,14 +10,14 @@ Engine = class('Engine')
 function Engine:initialize()
   self.player = Player()
   self.zone = Zone(self.player, "grey", 40, 40,"arena")
-  self.zone:spawnItem(Item("key",1,1, 1,1))
+  self.zone:spawnItem(Item("KEY",1,1, 1,1))
   self.screen = Screen(MLayer(self.player, self.zone))
   
 end
 
 function Engine:movePlayer(dx,dy)
   if not (dx ==0 and dy == 0) then
-        
+        --check for wall
         local newx = self.player.x+dx
         local newy = self.player.y+dy
         

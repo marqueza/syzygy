@@ -38,4 +38,7 @@ function love.keypressed(key)
 
     e:movePlayer(dx,dy)
     
+    if key == 'z' then
+      e.screen:sendMessage( e.player:touchArea(e.zone) )
+    end
 end
