@@ -4,13 +4,16 @@ require "actor"
 Player = class("Player", Actor)
 
 function Player:initialize(x, y)
-  Actor.initialize(self, "player", x or 1, y or 1)--invoke parent class Actor
+  Actor:initialize("player", x or 1, y or 1)--invoke parent class Actor
   self.inv = {}
 end
 
 function Player:touchArea(zone)
+  
     --interact with surroundings
     for i,item in ipairs(zone.items) do
+
+      --if player found an item
       if ((item.x == self.x or item.x == self.x+1 or item.x == self.x-1) and (item.y == self.y or item.y == self.y+1 or item.y == self.y-1) ) then
         
         --pick up item from floor
@@ -20,6 +23,7 @@ function Player:touchArea(zone)
         
         return "ACQUIRED "..item.name.."."
       end
+      
     end
-    return "NOTHING FOUND."
+    return "NOTHING HAPPEND"
 end

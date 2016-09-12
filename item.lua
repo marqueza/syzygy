@@ -6,7 +6,7 @@ Item = class("Item")
 --an enitity is an item, tile, or actor
 --they have a grid position and sprite
 function Item:initialize(name, x,y, sheetX,sheetY)
-  Enitity.initialize(self, x, y, name)
+  Enitity.initialize(self, name, x, y)
   self.sprite = ItemSprite("img/item.png", 64*x, 64*y, sheetX or 1,sheetY or 1)
   self.onFloor = true
 end

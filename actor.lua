@@ -5,7 +5,7 @@ require "actorsprite"
 Actor = class("Actor", Enitity)
   
 function Actor:initialize(name, x, y)
-  Enitity.initialize(self, name, x, y)--invoke parent class Enitity
+  Enitity:initialize(name, x, y)--invoke parent class Enitity
   self.sprite = ActorSprite("img/char.png", 64*x, 64*y)
 end
 

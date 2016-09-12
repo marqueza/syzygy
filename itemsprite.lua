@@ -1,51 +1,22 @@
 local anim8 = require "lib/anim8"
 local class = require "lib/middleclass"
+require "sprite"
 
-ItemSprite = class("ItemSprite")
+ItemSprite = class("ItemSprite", Sprite)
 
---
 function ItemSprite:initialize(filename, x, y, sheetX, sheetY)
-  --local variables needed for return values
-  local img = love.graphics.newImage(filename)
-  img:setFilter('nearest')
-  local imgWidth,imgHeight = img:getDimensions()
-  self.charSize = 64
-
-  --
-  --fields that will be needed by others
-  --
   
-  --info for needed for drawing/movement
-  self.grid_x = x or 1
-  self.grid_y = y or 1
-  self.actual_x = x or 1
-  self.actual_y = y or 1
-  self.speed = 10 --default
-  self.direction = -1 -- left, by default
+  --init from parent
+  Sprite:initialize(filename, x, y, sheetX, sheetY)
   
-  self.sheetX = sheetX
-  self.sheetY = sheetY
-
-  --pulls from grid based on image
-  local g = anim8.newGrid(self.charSize,self.charSize, imgWidth,imgHeight)
+  --animations
   self.ani = {
-   idle = anim8.newAnimation(g(sheetX,sheetY, sheetX+1,sheetY), 0.6)
+   idle = anim8.newAnimation(self.g(sheetX,sheetY, sheetX+1,sheetY), 0.6)
   }
-
-  --important for drawing
+  
+  --set up spritebatch
   self.curAni = self.ani.idle
-  self.batch = love.graphics.newSpriteBatch(img)
-  self.batchId = self.batch:add(self.curAni:getFrameInfo(self.actual_x, self.actual_y))
-end
-
-function round(num, idp)
-  local mult = 10^(idp or 0)
-  return math.floor(num * mult + 0.5) / mult
-end
-
-
-function ItemSprite:draw()
-  love.graphics.draw(self.batch)
+  self:initBatch()
 end
 
 --changing gird x y coords
@@ -56,9 +27,10 @@ function ItemSprite:update(dt)
   --place any change in current animation here
   -- <--
   
-  --update current animation
+  --update animation
   self.curAni:update(dt)
   --update batch, with new frame from animation, and new location data
   self.batch:set(self.batchId, self.curAni:getFrameInfo(self.actual_x, self.actual_y)) --x,y,r,sx,sy,ox,oy,kx,ky
+
 
 end

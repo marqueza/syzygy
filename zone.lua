@@ -2,7 +2,7 @@ local class = require "lib.middleclass"
 ROT= require "lib.rotLove"
 require "lib.mapgeneration"
 require "player"
-
+require "feature"
 --
 --a zone is a mapped level
 --
@@ -22,7 +22,8 @@ function Zone:initialize(player, name, width, height, mapType)
   self.rng:randomseed()
   
   self.items = {}
-
+  self.feats = {}
+  
   self:initMap()
   --self:dig()
   self.player.x, self.player.y = 1,1
@@ -55,9 +56,13 @@ function Zone:initMap()
   --digger:randomize(.5)
   digger:create(diggerCallback)
   self.map = tempMap
+  
+  --make doors and store them in feats table
   local doors = digger:getDoors()
   for i,door in ipairs(doors) do
-    self.map[door.x][door.y] = 2
+    --                            name,       x,y, sheetX,sheetY, zone
+    table.insert(self.feats, Feature("DOOR", door.x,door.y, 3,1, self))
+    self.map[door.x][door.y] = 1
   end
   
 end

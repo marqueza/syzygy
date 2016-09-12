@@ -60,6 +60,11 @@ function MLayer:update(dt)
     item.sprite:update(dt)
   end
   
+  --update all features
+  for i, feat in ipairs(self.zone.feats) do
+    feat:update(dt)
+  end
+  
    self.player.sprite:update(dt)
 end
 
@@ -67,7 +72,10 @@ function MLayer:draw()
   self:drawMap()
   --love.graphics.draw(self.mapImage)
   
-  
+  ----draw dungeon features the zone
+  for i, feat in ipairs(self.zone.feats) do
+    feat:draw()
+  end
   --draw all item in the zone
   for i, item in ipairs(self.zone.items) do
     item:draw()

@@ -17,11 +17,22 @@ end
 
 function Engine:movePlayer(dx,dy)
   if not (dx ==0 and dy == 0) then
-        --check for wall
-        local newx = self.player.x+dx
-        local newy = self.player.y+dy
+        --check for wall and dungeon features
+        local newX = self.player.x+dx
+        local newY = self.player.y+dy
         
-        if self.zone.map[newx][newy]~=1 then -- if the player is heading towards a floor
+        
+        --check if we are touching a feature
+        for i,feat in ipairs(self.zone.feats) do
+          --self.screen:sendMessage(newX..","..newY..feat.x)
+          if newX == feat.x and newY == feat.y then
+            
+            feat:touch()
+          end
+        end
+        
+        --floor is an allowed move
+        if self.zone.map[newX][newY]==0 then 
             self.player:move(dx,dy)
         end
     end
