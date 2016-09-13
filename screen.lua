@@ -10,7 +10,8 @@ Screen = class('mLayer')
   local boxY = 20
 function Screen:initialize(mLayer)
   self.mLayer = mLayer
-  self.camera = camera(mLayer.player.sprite.grid_x, mLayer.player.sprite.grid_y)
+  self.camera = camera(mLayer.player.sprite.actual_x, mLayer.player.sprite.actual_y)
+ -- self.camera.smoother = camera.smooth.linear(2500)
   self.width = love.graphics.getWidth()
   self.height = love.graphics.getHeight()
 
@@ -37,18 +38,10 @@ function Screen:initialize(mLayer)
 end
 
 function Screen:update(dt)
-  local sX, sY = self.mLayer.player.sprite.grid_x, self.mLayer.player.sprite.grid_y
-  local cX, cY = self.camera:cameraCoords(sX, sY)
   
-  if cX >= self.width-128 or cX <= 128 then
-    self.camera.x = sX
-  end
-  if cY >= self.height-128 or cY <=128 then
-    self.camera.y = sY
-  end
-  if love.keyboard.isDown('c') then
-    self.camera:lockPosition(sX,sY)
-  end
+  local sX, sY = math.floor(self.mLayer.player.sprite.actual_x), math.floor(self.mLayer.player.sprite.actual_y)
+  self.camera:lockPosition(sX,sY)
+  
   
   self.mLayer:update(dt)
   gui_stack.update()
@@ -61,6 +54,8 @@ function Screen:draw()
   self.camera:attach() 
   self.mLayer:draw()
   self.camera:detach()
+  
+  self.mLayer.player:draw()
   gui_stack.draw()	
 end
 

@@ -12,7 +12,7 @@ function Sprite:initialize(filename, x, y, sheetX, sheetY)
   self.grid_y = y or 1
   self.actual_x = x or 1
   self.actual_y = y or 1
-  self.speed = 10 
+  self.speed = 8
   self.direction = -1 -- left
   self.sheetX = sheetX
   self.sheetY = sheetY

@@ -44,27 +44,7 @@ function Zone:initMap()
       tempMap[x][y] = 1
     end
   end
-    local opts ={
-    roomWidth={3,8},
-    roomHeight={3,5},
-    corridorLength={4,7},
-    dugPercentage=0.4,
-    timeLimit=1000,
-    nocorridorsmode=true
-  }
-  digger=ROT.Map.Digger(self.width, self.height, opts)
-  --digger:randomize(.5)
-  digger:create(diggerCallback)
-  self.map = tempMap
-  
-  --make doors and store them in feats table
-  local doors = digger:getDoors()
-  for i,door in ipairs(doors) do
-    --                            name,       x,y, sheetX,sheetY, zone
-    table.insert(self.feats, Feature("DOOR", door.x,door.y, 3,1, self))
-    self.map[door.x][door.y] = 1
-  end
-  
+  self:cellDig()
 end
 
 function diggerCallback(x, y, val)
@@ -73,7 +53,7 @@ end
 
 function Zone:cellDig()
   local iter = 5
-	local percentage_walls = 35
+	local percentage_walls = 5
   local rules = {}
 	rules.neighborhood = 1
 	rules.include_self = true
@@ -95,6 +75,28 @@ function Zone:cellDig()
   end
 end
 
+function Zone:dungeonDig()
+    local opts ={
+    roomWidth={3,8},
+    roomHeight={3,5},
+    corridorLength={4,7},
+    dugPercentage=0.4,
+    timeLimit=1000,
+    nocorridorsmode=true
+  }
+  digger=ROT.Map.Digger(self.width, self.height, opts)
+  --digger:randomize(.5)
+  digger:create(diggerCallback)
+  self.map = tempMap
+  
+  --make doors and store them in feats table
+  local doors = digger:getDoors()
+  for i,door in ipairs(doors) do
+    --                            name,       x,y, sheetX,sheetY, zone
+    table.insert(self.feats, Feature("DOOR", door.x,door.y, 3,1, self))
+    self.map[door.x][door.y] = 1
+  end
+end
 function Zone:spawnPlayer()
   while true do
     local randX = self.rng:random(1,self.width)

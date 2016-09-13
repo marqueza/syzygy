@@ -4,9 +4,9 @@ require "actorsprite"
 
 Actor = class("Actor", Enitity)
   
-function Actor:initialize(name, x, y)
+function Actor:initialize(name, x, y, filename, sheetX, sheetY)
   Enitity:initialize(name, x, y)--invoke parent class Enitity
-  self.sprite = ActorSprite("img/char.png", 64*x, 64*y)
+  self.sprite = ActorSprite(filename or "img/char.png", 64*x, 64*y, sheetX or 1, sheetY or 1)
 end
 
 function Actor:move(dx,dy)

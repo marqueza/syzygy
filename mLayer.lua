@@ -37,18 +37,16 @@ function MLayer:initialize(player, zone)
   self.mapQuads[2] = love.graphics.newQuad(2 * self.gridPixels, 0 * self.gridPixels, self.gridPixels, self.gridPixels,
     self.mapImage:getWidth(), self.mapImage:getHeight())
   
-end
-
---unlike items and mobs the map tiles are a unique case
---this preps mapBatch, and mapQuads (used determine which map tile to display for mapBatch)
-function MLayer:drawMap()
-
+  
+  self.mapBatch = love.graphics.newSpriteBatch(self.mapImage, self.zone.width * self.zone.height)
+  
   for x=1, self.zone.width do
     for y=1, self.zone.height do
-      love.graphics.draw(self.mapImage, self.mapQuads[self.zone.map[x][y]], x*self.gridPixels, y*self.gridPixels)
+      self.mapBatch:add(self.mapQuads[self.zone.map[x][y]], x*self.gridPixels, y*self.gridPixels)
     end
   end
   
+  self.mapBatch:flush()
 end
 
 function MLayer:update(dt)
@@ -68,9 +66,10 @@ function MLayer:update(dt)
    self.player.sprite:update(dt)
 end
 
+
 function MLayer:draw()
-  self:drawMap()
-  --love.graphics.draw(self.mapImage)
+  
+  love.graphics.draw(self.mapBatch)
   
   ----draw dungeon features the zone
   for i, feat in ipairs(self.zone.feats) do
@@ -81,6 +80,5 @@ function MLayer:draw()
     item:draw()
   end
   
-  self.player:draw()
 end
 
