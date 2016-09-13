@@ -62,10 +62,14 @@ function ActorSprite:update(dt)
   --update batch, with new frame from animation, and new location data
   --special case for player who is always centered
   if (self.sheetX == 1 and self.sheetY ==1) then
-    self.batch:set(self.batchId, self.curAni:getFrameInfo(love.graphics.getWidth()/2, love.graphics.getHeight()/2)) 
+    self.batch:set(self.batchId, self.curAni:getFrameInfo(self.ovX, self.ovY))
   else
     self.batch:set(self.batchId, self.curAni:getFrameInfo(self.actual_x, self.actual_y))
   end
+end
+
+function ActorSprite:setOverride(ovX,ovY)
+  self.ovX,self.ovY = ovX, ovY
 end
 
 function Sprite:draw()

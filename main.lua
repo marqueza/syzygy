@@ -17,9 +17,9 @@ end
 function love.keypressed(key)
   
     if key == '-' then
-      e.screen.camera:zoom(.5)
+      e.screen:zoom(.5)
     elseif key == '=' then
-      e.screen.camera:zoom(2)
+      e.screen:zoom(2)
     end
     
     

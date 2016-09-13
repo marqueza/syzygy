@@ -11,9 +11,10 @@ Screen = class('mLayer')
 function Screen:initialize(mLayer)
   self.mLayer = mLayer
   self.camera = camera(mLayer.player.sprite.actual_x, mLayer.player.sprite.actual_y)
- -- self.camera.smoother = camera.smooth.linear(2500)
+  self.pcam = camera(mLayer.player.sprite.actual_x, mLayer.player.sprite.actual_y)
   self.width = love.graphics.getWidth()
   self.height = love.graphics.getHeight()
+  self.scale = 1
 
   --gui fields
   self.guiBackground={r=0, g=0, b=0, alpha=240}
@@ -41,7 +42,7 @@ function Screen:update(dt)
   
   local sX, sY = math.floor(self.mLayer.player.sprite.actual_x), math.floor(self.mLayer.player.sprite.actual_y)
   self.camera:lockPosition(sX,sY)
-  
+  self.mLayer.player.sprite:setOverride(self.camera.x,self.camera.y)
   
   self.mLayer:update(dt)
   gui_stack.update()
@@ -53,10 +54,16 @@ end
 function Screen:draw()
   self.camera:attach() 
   self.mLayer:draw()
-  self.camera:detach()
   
   self.mLayer.player:draw()
+  
+  self.camera:detach()
   gui_stack.draw()	
+end
+
+function Screen:zoom(mult)
+  --self.scale = self.scale*mult
+  e.screen.camera:zoom(mult)
 end
 
 function Screen:sendMessage(text) 
