@@ -1,5 +1,7 @@
 local class = require "lib.middleclass"
 ROT= require "lib.rotLove"
+local serpent = require "lib.serpent"
+
 require "lib.mapgeneration"
 require "player"
 require "feature"
@@ -8,24 +10,22 @@ require "feature"
 --
 Zone = class("Zone")
 local tempMap = {}
+local rng=ROT.RNG.Twister:new()
+rng:randomseed()
 
-function Zone:initialize(player, name, width, height, mapType)
+function Zone:initialize(player, width, height, mapType)
   self.player = player
-  self.name = name or "grey"
   self.map = {}
   self.seen = {}
   self.field = {}
   self.width = width or 20
   self.height = height or 20
   self.mapType = mapType or "arena"
-  self.rng=ROT.RNG.Twister:new()
-  self.rng:randomseed()
   
   self.items = {}
   self.feats = {}
   
   self:initMap()
-  --self:dig()
   self.player.x, self.player.y = 1,1
   self:spawnPlayer()
 end
@@ -44,7 +44,8 @@ function Zone:initMap()
       tempMap[x][y] = 1
     end
   end
-  self:cellDig()
+  --self:cellDig()
+  self:dungeonDig()
 end
 
 function diggerCallback(x, y, val)
@@ -93,14 +94,14 @@ function Zone:dungeonDig()
   local doors = digger:getDoors()
   for i,door in ipairs(doors) do
     --                            name,       x,y, sheetX,sheetY, zone
-    table.insert(self.feats, Feature("DOOR", door.x,door.y, 3,1, self))
+    table.insert(self.feats, Feature("DOOR", door.x,door.y, 3,1))
     self.map[door.x][door.y] = 1
   end
 end
 function Zone:spawnPlayer()
   while true do
-    local randX = self.rng:random(1,self.width)
-    local randY = self.rng:random(1,self.height)
+    local randX = rng:random(1,self.width)
+    local randY = rng:random(1,self.height)
     if self.map[randX][randY] == 0 then
       self.player:teleport(randX,randY)
       break
@@ -115,8 +116,8 @@ function Zone:spawnItem(item)
   --determine spawn point
   
   while true do
-    local randX = self.rng:random(1,self.width)
-    local randY = self.rng:random(1,self.height)
+    local randX = rng:random(1,self.width)
+    local randY = rng:random(1,self.height)
     if self.map[randX][randY] == 0 then
       item:place(randX,randY)
       break
@@ -128,4 +129,60 @@ function Zone:update(dt)
   if not self.Map == tempMap then
     self.Map = tempMap
   end
+end
+
+function Zone:save()
+  --save everything but call the save functions on items and feats, maybe player too
+  --for now save the map into map file
+  local zdata = {}
+  for k,v in pairs(self) do
+      if k ~= "player" and k ~= "items" and k ~= "feats" and k~="class" then
+        zdata[k] = v
+      end
+  end
+  
+  zdata["player"] = self.player:getData()
+  
+  local itemsData = {}
+  for i, item in ipairs(self.items) do
+    itemsData[i] = item:getData()
+  end
+  zdata["items"]  = itemsData
+  
+  local featsData = {}
+  for i, feat in ipairs(self.feats) do
+    featsData[i] = feat:getData()
+  end
+  zdata["feats"]  = featsData
+  
+  love.filesystem.write('z.lua', serpent.dump(zdata, {indent = ' ', sortkeys=true}) )
+ -- love.filesystem.write('z.lua', serpent.dump(zdata))
+  return
+end
+
+function Zone:load()
+
+  --for now load the map from map file
+  local data = loadstring(love.filesystem.read('z.lua')) ()
+  
+  -- i: index, d :dataTable contains info to init new feat
+  for i, d in ipairs(data.feats) do
+    self.feats[i] = Feature(d.name, d.x, d.y, d.sheetX, d.sheetY, d.isPassible, d.active)
+  end
+  data.feats = nil  --remove feats from data  
+   
+  -- i: index, d :dataTable contains info to init new item
+  for i, d in ipairs(data.items) do
+    self.items[i] = Item(d.name, d.x, d.y, d.sheetX, d.sheetY, d.onFloor)
+  end
+  data.items = nil  --remove items from data  
+   
+  local p = data.player
+  self.player = Player(p.x, p.y, p.inv)
+  data.player = nil --remove from data
+  
+  for k, v in pairs(data) do
+    self[k] = v
+  end
+  
 end

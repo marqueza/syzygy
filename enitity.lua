@@ -10,3 +10,13 @@ function Enitity:initialize(name, x, y, imgName)
   self.x = x
   self.y = y
 end
+
+function Enitity:getData()
+  local data = {}
+  for k,v in pairs(self) do
+    if k ~= "sprite" and k~="class" then
+      data[k] = v
+    end
+  end
+  return data
+end

@@ -9,7 +9,7 @@ Engine = class('Engine')
   
 function Engine:initialize()
   self.player = Player()
-  self.zone = Zone(self.player, "grey", 40, 40,"arena")
+  self.zone = Zone(self.player, 40, 40,"arena")
   self.zone:spawnItem(Item("KEY",1,1, 1,1))
   self.screen = Screen(MLayer(self.player, self.zone))
   
@@ -27,7 +27,7 @@ function Engine:movePlayer(dx,dy)
           --self.screen:sendMessage(newX..","..newY..feat.x)
           if newX == feat.x and newY == feat.y then
             
-            feat:touch()
+            feat:touch(self.zone)
           end
         end
         
@@ -36,5 +36,28 @@ function Engine:movePlayer(dx,dy)
             self.player:move(dx,dy)
         end
     end
+end
+
+function Engine:quit()
+  love.event.quit()
+end
+
+function Engine:loadGame()
+  --self.zone = lady.load_all('zone')
+  
+  self.zone:load()
+  self.player = self.zone.player
+  self.screen = Screen(MLayer(self.player, self.zone))
+end
+
+function Engine:restart()
+  self.player = Player()
+  self.zone = Zone(self.player, 40, 40,"arena")
+  self.screen = Screen(MLayer(self.player, self.zone))
+
+end
+
+function Engine:save()
+ self.zone:save()
 end
 

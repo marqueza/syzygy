@@ -3,9 +3,9 @@ require "actor"
 
 Player = class("Player", Actor)
 
-function Player:initialize(x, y)
+function Player:initialize(x, y, inv)
   Actor:initialize("player", x or 1, y or 1)--invoke parent class Actor
-  self.inv = {}
+  self.inv = inv or {}
 end
 
 function Player:touchArea(zone)

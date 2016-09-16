@@ -55,7 +55,7 @@ function MLayer:update(dt)
   --update all actors
   --update all items
   for i, item in ipairs(self.zone.items) do
-    item.sprite:update(dt)
+    item:update(dt)
   end
   
   --update all features
