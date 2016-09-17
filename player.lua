@@ -3,8 +3,8 @@ require "actor"
 
 Player = class("Player", Actor)
 
-function Player:initialize(x, y, inv)
-  Actor:initialize("player", x or 1, y or 1)--invoke parent class Actor
+function Player:initialize(x, y, inv, sheetX, sheetY)
+  Actor.initialize(self, "PLAYER", x or 1, y or 1, sheetX, sheetY)--invoke parent class Actor
   self.inv = inv or {}
 end
 

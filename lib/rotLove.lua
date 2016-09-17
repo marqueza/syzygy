@@ -89,8 +89,7 @@
     Pure Lua Pseudo-Random Numbers Generator
     Under the MIT license.
     copyright(c) 2011 linux-man
---]]------------------------------------
-]]--
+--]]------------------------------------]]
 local type, pairs, setmetatable, rawget, baseMt, _instances, _classes, class = type, pairs, setmetatable, rawget, {}, {}, {}
 local function deep_copy(t, dest)
   local t, r = t or {}, dest or {}

@@ -1,12 +1,13 @@
 local class = require "lib/middleclass"
 require "enitity"
 require "featuresprite"
+
 Feature = class("Feature", Enitity)
 
 --features are things in the dungeon can be interacted with
 --such as buttons, doors, statues, etc
 function Feature:initialize(name, x,y, sheetX,sheetY, isPassible, active)
-  Enitity.initialize(self, name, x, y)
+  Enitity.initialize(self,name, x, y)
   self.sheetX = sheetX
   self.sheetY = sheetY
   self.sprite = FeatureSprite("img/tiles.png", 64*x, 64*y, sheetX or 1,sheetY or 1)
@@ -28,15 +29,24 @@ function Feature:update(dt)
   self.sprite:update(dt)
 end
 
---a feature may do something on touch
-function Feature:touch(zone)
-  --current doors are the only features
-  self:activate()
-  zone.map[self.x][self.y] = 0
+--a feature may do something on a passive bump
+function Feature:bump(zone)
+  if self.name == "DOOR" then
+    self:activate()
+    zone.map[self.x][self.y] = 0
+  end
 end
 
 function Feature:activate()
   self.active = true
   self.sprite.curAni = self.sprite.ani.active
+end
+function Feature:place(x,y)
+  self.x = x
+  self.y = y
+  self.sprite.actual_x = x*64
+  self.sprite.actual_y = y*64
+  self.sprite.grid_x = x*64
+  self.sprite.grid_y = y*64
 end
   

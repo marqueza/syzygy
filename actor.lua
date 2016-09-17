@@ -4,9 +4,13 @@ require "actorsprite"
 
 Actor = class("Actor", Enitity)
   
-function Actor:initialize(name, x, y, filename, sheetX, sheetY)
-  Enitity:initialize(name, x, y)--invoke parent class Enitity
-  self.sprite = ActorSprite(filename or "img/char.png", 64*x, 64*y, sheetX or 1, sheetY or 1)
+function Actor:initialize(name, x, y, sheetX, sheetY)
+  Enitity.initialize(self, name, x, y)--invoke parent class Enitity
+  self.sheetX = sheetX
+  self.sheetY = sheetY
+  self.sprite = ActorSprite(name, 64*x, 64*y, sheetX or 1, sheetY or 1, "img/char.png")
+  
+  self:teleport(x,y)
 end
 
 function Actor:move(dx,dy)
@@ -31,6 +35,6 @@ function Actor:draw()
   self.sprite:draw()
 end
 
-function Actor:update()
-  self.sprite:update()
+function Actor:update(dt)
+  self.sprite:update(dt)
 end

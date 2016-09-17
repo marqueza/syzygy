@@ -3,6 +3,8 @@ ROT= require "lib.rotLove"
 local serpent = require "lib.serpent"
 
 require "lib.mapgeneration"
+
+require "actor"
 require "player"
 require "feature"
 --
@@ -20,14 +22,18 @@ function Zone:initialize(player, width, height, mapType)
   self.field = {}
   self.width = width or 20
   self.height = height or 20
-  self.mapType = mapType or "arena"
+  self.mapType = mapType or "ARENA"
+  
   
   self.items = {}
   self.feats = {}
+  self.mobs = {}
   
   self:initMap()
   self.player.x, self.player.y = 1,1
   self:spawnPlayer()
+  self.lastX = self.player.x
+  self.lastY = self.player.y
 end
 
 function Zone:initMap()
@@ -44,8 +50,14 @@ function Zone:initMap()
       tempMap[x][y] = 1
     end
   end
-  --self:cellDig()
-  self:dungeonDig()
+  
+  if self.mapType == "CELL" then
+    self:cellDig()
+  elseif self.mapType == "DUNGEON" then
+    self:dungeonDig()
+  elseif self.mapType == "ARENA" then
+    self:arenaDig()
+  end
 end
 
 function diggerCallback(x, y, val)
@@ -77,7 +89,8 @@ function Zone:cellDig()
 end
 
 function Zone:dungeonDig()
-    local opts ={
+  --dig out map
+  local opts ={
     roomWidth={3,8},
     roomHeight={3,5},
     corridorLength={4,7},
@@ -86,7 +99,6 @@ function Zone:dungeonDig()
     nocorridorsmode=true
   }
   digger=ROT.Map.Digger(self.width, self.height, opts)
-  --digger:randomize(.5)
   digger:create(diggerCallback)
   self.map = tempMap
   
@@ -97,7 +109,48 @@ function Zone:dungeonDig()
     table.insert(self.feats, Feature("DOOR", door.x,door.y, 3,1))
     self.map[door.x][door.y] = 1
   end
+  
+  --place mobs
+  local rooms = digger:getRooms()
+  for i, room in ipairs(rooms) do
+    if (rng:random(1,3) == 1) then
+      local randX = rng:random(room:getLeft(), room:getRight())
+      local randY = rng:random(room:getTop(), room:getBottom())
+      local mob = Actor("GOO", randX,randY, 1,2)
+      table.insert(self.mobs, mob)
+    end
+  end
+  
+  --place stairs
+  local feat = Feature("DOWN STAIRWAY", 1,1, 5,1, true)
+  table.insert(self.feats, feat)
+  feat:place(self:getRandFloor())
+  
 end
+
+function Zone:arenaDig()
+  --dig out map
+  digger=ROT.Map.Arena(self.width, self.height, opts)
+  digger:create(diggerCallback)
+  self.map = tempMap
+  
+  --place stairs
+  local feat = Feature("DOWN STAIRWAY", 1,1, 5,1, true)
+  table.insert(self.feats, feat)
+  feat:place(self:getRandFloor())
+  
+end
+
+function Zone:getRandFloor()
+  while true do
+    local randX = rng:random(1,self.width)
+    local randY = rng:random(1,self.height)
+    if self.map[randX][randY] == 0 then
+      return randX, randY
+    end
+  end
+end
+
 function Zone:spawnPlayer()
   while true do
     local randX = rng:random(1,self.width)
@@ -108,6 +161,17 @@ function Zone:spawnPlayer()
     end
   end
 end
+
+function Zone:createUpStairs(x, y)
+  local feat = Feature("UP STAIRWAY", x,y, 6,1, true)
+  table.insert(self.feats, feat)
+end
+
+function Zone:createDownStairs(x, y)
+  local feat = Feature("DOWN STAIRWAY", x,y, 6,1, true)
+  table.insert(self.feats, feat)
+end
+
 
 function Zone:spawnItem(item)
   --store in in table
@@ -124,7 +188,8 @@ function Zone:spawnItem(item)
     end
   end
 end
-  
+
+
 function Zone:update(dt)
   if not self.Map == tempMap then
     self.Map = tempMap

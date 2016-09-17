@@ -50,9 +50,7 @@ function MLayer:initialize(player, zone)
 end
 
 function MLayer:update(dt)
-  --update player sprite
- 
-  --update all actors
+  
   --update all items
   for i, item in ipairs(self.zone.items) do
     item:update(dt)
@@ -63,7 +61,13 @@ function MLayer:update(dt)
     feat:update(dt)
   end
   
-   self.player.sprite:update(dt)
+  --update all mobs
+  for i, mob in ipairs(self.zone.mobs) do
+    mob:update(dt)
+  end
+  
+  --update player
+  self.player.sprite:update(dt)
 end
 
 
@@ -78,6 +82,10 @@ function MLayer:draw()
   --draw all item in the zone
   for i, item in ipairs(self.zone.items) do
     item:draw()
+  end
+  --draw all mobs in the zone
+  for i, mob in ipairs(self.zone.mobs) do
+    mob:draw()
   end
   
 end

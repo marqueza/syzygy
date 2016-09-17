@@ -4,18 +4,28 @@ require "sprite"
 
 ActorSprite = class("ActorSprite", Sprite)
 
-function ActorSprite:initialize(filename, x, y, sheetX, sheetY)
+function ActorSprite:initialize(aniType, x, y, sheetX, sheetY, filename)
   
    --init from parent
   Sprite:initialize(filename, x, y, sheetX, sheetY)
+  self.override = false
   
   --animations
-  self.ani = {
-    walkLeft = anim8.newAnimation(self.g(2,1, 2,1), 1),
-    walkRight = anim8.newAnimation(self.g(2,1, 2,1), 1):flipH(),
-    idleLeft = anim8.newAnimation(self.g(1,1, 1,1), 1),
-    idleRight = anim8.newAnimation(self.g(1,1, 1,1), 1):flipH(),
-  }
+  if aniType == "GOO" then
+     self.ani = {
+      idleLeft = anim8.newAnimation(self.g(sheetX, sheetY, sheetX+1, sheetY), 1),
+      idleRight = anim8.newAnimation(self.g(sheetX, sheetY, sheetX+1, sheetY), 1):flipH(),
+      walkLeft = anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), 1),
+      walkRight = anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), 1):flipH()
+    }
+  else
+    self.ani = {
+      idleLeft = anim8.newAnimation(self.g(sheetX, sheetY, sheetX, sheetY), 1),
+      idleRight = anim8.newAnimation(self.g(sheetX, sheetY, sheetX, sheetY), 1):flipH(),
+      walkLeft = anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), 1),
+      walkRight = anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), 1):flipH()
+    }
+  end
   
   --set up spritebatch
   self.curAni = self.ani.walkLeft
@@ -61,7 +71,7 @@ function ActorSprite:update(dt)
   self.curAni:update(dt)
   --update batch, with new frame from animation, and new location data
   --special case for player who is always centered
-  if (self.sheetX == 1 and self.sheetY ==1) then
+  if (self.override) then
     self.batch:set(self.batchId, self.curAni:getFrameInfo(self.ovX, self.ovY))
   else
     self.batch:set(self.batchId, self.curAni:getFrameInfo(self.actual_x, self.actual_y))
@@ -69,6 +79,7 @@ function ActorSprite:update(dt)
 end
 
 function ActorSprite:setOverride(ovX,ovY)
+  self.override = true
   self.ovX,self.ovY = ovX, ovY
 end
 
