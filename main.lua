@@ -11,6 +11,11 @@ end
 
 function love.draw()
   e.screen:draw()
+--[[  
+  local mX, mY = e.player.sprite:mapLocation()
+  local lX, lY = e.player.sprite.lastMapX,  e.player.sprite.lastMapY
+  love.graphics.print("mapX: "..mX..", mapY: "..mY,10, 10)
+  --]]
 end
 
   

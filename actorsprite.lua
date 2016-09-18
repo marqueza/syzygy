@@ -31,13 +31,14 @@ function ActorSprite:initialize(aniType, x, y, sheetX, sheetY, filename)
       walkLeft = {anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), .1), 
                   anim8.newAnimation(self.g(sheetX+2, sheetY, sheetX+2, sheetY), .1)},
       walkRight = {
-        anim8.newAnimation(self.g(sheetX+2, sheetY, sheetX+2, sheetY), .1):flipH(),
-        anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), .1):flipH(), 
+        anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), .1):flipH(),
+        anim8.newAnimation(self.g(sheetX+2, sheetY, sheetX+2, sheetY), .1):flipH(), 
                   },
     }
   end
   self.foot = 1
   self.wasMoving = false
+  self.lastMapX, self.lastMapY = self:mapLocation()
   
   --set up spritebatch
   self.curAni = self.ani.idleLeft
@@ -54,6 +55,10 @@ function ActorSprite:isMoving()
   return not (self.grid_x == round(self.actual_x, 1) and self.grid_y == round(self.actual_y))
 end
 
+function ActorSprite:mapLocation()
+  return math.floor(self.actual_x/64), math.floor(self.actual_y/64)
+end
+
 
 --changing gird x y coords
 --allows the class to keep track of the actual x y coords
@@ -64,16 +69,21 @@ function ActorSprite:update(dt)
   self.actual_y = self.actual_y - ((self.actual_y - self.grid_y) * self.speed * dt)
 	self.actual_x = self.actual_x - ((self.actual_x - self.grid_x) * self.speed * dt)
   
-  
+  local mX, mY = self:mapLocation()
+  if mX ~= self.lastMapX or mY ~= self.lastMapY then
+    self.lastMapX = mX
+    self.lastMapY = mY
+    if self.foot == 1 then 
+        self.foot = 2
+    else 
+        self.foot = 1 
+    end
+  end
   
   --choose animation based on movement status
   if self:isMoving() then
      if self.wasMoving == false then
-      if self.foot == 1 then 
-        self.foot = 2
-      else 
-        self.foot = 1 
-      end
+     
       self.wasMoving = true
     end
     
