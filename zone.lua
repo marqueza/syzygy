@@ -11,11 +11,11 @@ require "feature"
 --a zone is a mapped level
 --
 Zone = class("Zone")
-local tempMap = {}
+
 local rng=ROT.RNG.Twister:new()
 rng:randomseed()
 
-function Zone:initialize(player, width, height, mapType)
+function Zone:initialize(player, width, height, mapType, depth)
   self.player = player
   self.map = {}
   self.seen = {}
@@ -23,31 +23,45 @@ function Zone:initialize(player, width, height, mapType)
   self.width = width or 20
   self.height = height or 20
   self.mapType = mapType or "ARENA"
-  
+  self.depth = depth
   
   self.items = {}
   self.feats = {}
   self.mobs = {}
   
   self:initMap()
+  
+  self.fov=ROT.FOV.Precise:new( 
+    function (fov, x, y)
+      if self.map[x] and self.map[x][y] then
+          return self.map[x][y]==0
+      end
+      return false
+    end
+    )
+  
   self.player.x, self.player.y = 1,1
   self:spawnPlayer()
   self.lastX = self.player.x
   self.lastY = self.player.y
+  self:updateFov(self.player.x, self.player.y)
+  
 end
 
 function Zone:initMap()
   self.map = {}
   self.seen = {}
-  tempMap = {}
+  self.field = {}
+  
   for x=1,self.width do
     self.map[x] = {}
     self.seen[x] = {}
-    tempMap[x] = {}
+    self.field[x] = {}
+    
     for y=1,self.height do
       self.map[x][y] = 1
       self.seen[x][y] = 0
-      tempMap[x][y] = 1
+      self.field[x][y] = 0
     end
   end
   
@@ -58,10 +72,28 @@ function Zone:initMap()
   elseif self.mapType == "ARENA" then
     self:arenaDig()
   end
+  
 end
-
-function diggerCallback(x, y, val)
-    tempMap[x][y] = val
+function Zone:zeroTable(t)
+    for x=1,self.width do
+      t[x] = {}
+    
+    for y=1,self.height do
+      t[x][y] = 0
+    end
+  end
+end
+function Zone:updateFov(x,y)
+  self:zeroTable(self.field)
+  self.fov:compute(x, y, 10, 
+    function (x, y, r, v)
+      
+      if self.map[x] and self.map[x][y] then
+        self.field[x][y]=1
+        self.seen[x][y]=1
+      end
+    end
+    )
 end
 
 function Zone:cellDig()
@@ -77,7 +109,7 @@ function Zone:cellDig()
 	rules[3] = "wall"
 	rules[4] = "wall"
 	rules[5] = "wall"
-  tempMap = maps.generate.cellular (self.width, self.height, iter, percentage_walls, rules)
+  local tempMap = maps.generate.cellular (self.width, self.height, iter, percentage_walls, rules)
   tempMap = maps.process.removeDisconnected (tempMap)
   for x=1,self.width do
     for y=1,self.height do
@@ -98,9 +130,8 @@ function Zone:dungeonDig()
     timeLimit=1000,
     nocorridorsmode=true
   }
-  digger=ROT.Map.Digger(self.width, self.height, opts)
-  digger:create(diggerCallback)
-  self.map = tempMap
+  local digger=ROT.Map.Digger(self.width, self.height, opts)
+  digger:create( function (x, y, val) self.map[x][y] = val end )
   
   --make doors and store them in feats table
   local doors = digger:getDoors()
@@ -201,12 +232,18 @@ function Zone:save()
   --for now save the map into map file
   local zdata = {}
   for k,v in pairs(self) do
-      if k ~= "player" and k ~= "items" and k ~= "feats" and k~="class" then
+      if k ~= "player" and k ~= "items" and k ~= "feats" and k~="fov" and k~="class" then
         zdata[k] = v
       end
   end
   
   zdata["player"] = self.player:getData()
+  
+  local mobsData = {}
+  for i, mobs in ipairs(self.mobs) do
+    mobsData[i] = mobs:getData()
+  end
+  zdata["mobs"]  = mobsData
   
   local itemsData = {}
   for i, item in ipairs(self.items) do
@@ -220,15 +257,14 @@ function Zone:save()
   end
   zdata["feats"]  = featsData
   
-  love.filesystem.write('z.lua', serpent.dump(zdata, {indent = ' ', sortkeys=true}) )
- -- love.filesystem.write('z.lua', serpent.dump(zdata))
+  love.filesystem.write('z'..self.depth..'.lua', serpent.dump(zdata, {indent = ' ', sortkeys=true}) )
   return
 end
 
-function Zone:load()
+function Zone:load(depth)
 
   --for now load the map from map file
-  local data = loadstring(love.filesystem.read('z.lua')) ()
+  local data = loadstring(love.filesystem.read('z'..depth..'.lua')) ()
   
   -- i: index, d :dataTable contains info to init new feat
   for i, d in ipairs(data.feats) do
@@ -241,6 +277,12 @@ function Zone:load()
     self.items[i] = Item(d.name, d.x, d.y, d.sheetX, d.sheetY, d.onFloor)
   end
   data.items = nil  --remove items from data  
+  
+  -- i: index, d :dataTable contains info to init new item
+  for i, d in ipairs(data.mobs) do
+    self.mobs[i] = Actor(d.name, d.x, d.y, d.sheetX, d.sheetY)
+  end
+  data.mobs = nil  --remove items from data  
    
   local p = data.player
   self.player = Player(p.x, p.y, p.inv)

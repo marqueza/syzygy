@@ -42,7 +42,7 @@ function love.keypressed(key)
       e.screen:sendMessage( e.player:touchArea(e.zone) )
     elseif key == 'q' then
       e:quit()
-    elseif key == 'u' then
+    elseif key == 'l' then
       e:loadGame()
     elseif key == 'r' then
       e:restart()

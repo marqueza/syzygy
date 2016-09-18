@@ -16,6 +16,7 @@ function Sprite:initialize(filename, x, y, sheetX, sheetY)
   self.direction = -1 -- left
   self.sheetX = sheetX
   self.sheetY = sheetY
+  self.visible = true
   
   
   --pulls from grid based on image
@@ -35,5 +36,11 @@ function Sprite:initBatch()
 end
 
 function Sprite:draw()
-  love.graphics.draw(self.batch)
+  if self.visible then 
+   love.graphics.draw(self.batch) 
+  end
+end
+
+function Sprite:setColor(r,g,b)
+  self.batch:setColor(r,g,b)
 end

@@ -83,7 +83,3 @@ function ActorSprite:setOverride(ovX,ovY)
   self.ovX,self.ovY = ovX, ovY
 end
 
-function Sprite:draw()
-  love.graphics.draw(self.batch)
-end
-

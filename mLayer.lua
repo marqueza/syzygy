@@ -42,14 +42,37 @@ function MLayer:initialize(player, zone)
   
   for x=1, self.zone.width do
     for y=1, self.zone.height do
-      self.mapBatch:add(self.mapQuads[self.zone.map[x][y]], x*self.gridPixels, y*self.gridPixels)
+      if self.zone.seen[x][y] == 1 then
+        self.mapBatch:add(self.mapQuads[self.zone.map[x][y]], x*self.gridPixels, y*self.gridPixels)
+      end
     end
   end
   
   self.mapBatch:flush()
 end
 
+function MLayer:updateMapBatch()
+  self.mapBatch:clear()
+  for x=1, self.zone.width do
+    for y=1, self.zone.height do
+      if self.zone.seen[x][y] == 1 then
+        if self.zone.field[x][y] == 1 then
+          self.mapBatch:setColor(255,255,255) --default
+        else
+          self.mapBatch:setColor(100,100,100) --greyed
+        end
+         
+         self.mapBatch:add(self.mapQuads[self.zone.map[x][y]], x*self.gridPixels, y*self.gridPixels)
+
+      end
+    end
+  end
+  self.mapBatch:flush()
+end
+
 function MLayer:update(dt)
+  --update mapBatch
+  self:updateMapBatch()
   
   --update all items
   for i, item in ipairs(self.zone.items) do
@@ -75,17 +98,35 @@ function MLayer:draw()
   
   love.graphics.draw(self.mapBatch)
   
-  ----draw dungeon features the zone
+  ----draw all seen dungeon features
   for i, feat in ipairs(self.zone.feats) do
+    if self.zone.seen[feat.x][feat.y] == 1 then
+      if self.zone.field[feat.x][feat.y] == 1 then
+        feat.sprite:setColor(255,255,255) --default
+      else
+        feat.sprite:setColor(100,100,100) --greyed
+      end
     feat:draw()
+    end
   end
-  --draw all item in the zone
+  
+  --draw all seen items
   for i, item in ipairs(self.zone.items) do
-    item:draw()
+    if self.zone.seen[item.x][item.y] == 1 then
+      if self.zone.field[item.x][item.y] == 1 then
+        item.sprite:setColor(255,255,255) --default
+      else
+        item.sprite:setColor(100,100,100) --greyed
+      end
+      item:draw()
+    end
   end
-  --draw all mobs in the zone
+  
+  --draw all mobs in fov
   for i, mob in ipairs(self.zone.mobs) do
-    mob:draw()
+    if self.zone.field[mob.x][mob.y] == 1 then
+      mob:draw()
+    end
   end
   
 end
