@@ -1,6 +1,6 @@
 local class = require 'lib.middleclass'
-local camera = require 'lib.hump.camera'
-local timer = require 'lib.hump.timer'
+local camera = require 'lib.camera'
+local timer = require 'lib.timer'
 
 require("lib/snes_gui")
 require "mLayer"
