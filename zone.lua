@@ -39,7 +39,6 @@ function Zone:initialize(player, width, height, mapType, depth)
     end
     )
   
-  self.player.x, self.player.y = 1,1
   self:spawnPlayer()
   self.lastX = self.player.x
   self.lastY = self.player.y
@@ -236,8 +235,6 @@ function Zone:save()
       end
   end
   
-  zdata["player"] = self.player:getData()
-  
   local mobsData = {}
   for i, mobs in ipairs(self.mobs) do
     mobsData[i] = mobs:getData()
@@ -282,11 +279,7 @@ function Zone:load(depth)
     self.mobs[i] = Actor(d.name, d.x, d.y, d.sheetX, d.sheetY)
   end
   data.mobs = nil  --remove items from data  
-   
-  local p = data.player
-  self.player = Player(p.x, p.y, p.inv)
-  data.player = nil --remove from data
-  
+     
   for k, v in pairs(data) do
     self[k] = v
   end

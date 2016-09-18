@@ -116,5 +116,5 @@ function Dungeon:load()
   end
   
   local p = data.player
-  self.player = Player(p.x, p.y, p.inv)
+  self.player = Player(p.x, p.y, p.inv, p.sheetX, p.sheetY)
 end

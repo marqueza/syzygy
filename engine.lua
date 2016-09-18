@@ -8,7 +8,7 @@ require "screen"
 Engine = class('Engine')
   
 function Engine:initialize()
-  self.player = Player(1,1, nil, 3,1)
+  self.player = Player(1,1, nil, 4,1)
   self.dungeon = Dungeon(self.player, Zone(self.player, 20, 20, "DUNGEON", 1) )
   self.screen = Screen(MLayer(self.player, self.dungeon:getZone() ) )
 end
