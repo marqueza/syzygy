@@ -6,6 +6,7 @@ Actor = class("Actor", Enitity)
   
 function Actor:initialize(name, x, y, sheetX, sheetY)
   Enitity.initialize(self, name, x, y)--invoke parent class Enitity
+  
   self.sheetX = sheetX
   self.sheetY = sheetY
   self.sprite = ActorSprite(name, 64*x, 64*y, sheetX or 1, sheetY or 1, "img/char.png")
@@ -37,4 +38,8 @@ end
 
 function Actor:update(dt)
   self.sprite:update(dt)
+end
+
+function Actor:touch()
+  e.screen:sendMessage("YOU TOUCH THE "..self.name..".")
 end

@@ -29,8 +29,28 @@ function Dungeon:downZone()
      
       if not self.zones[self.depth] then 
         --set up new zone
+        
+        if self.depth ~= 3 then
         self.zones[self.depth] = Zone(self.player, 20, 20, "DUNGEON", self.depth)
         self.zones[self.depth]:createUpStairs(self.player.x, self.player.y)
+        
+        else
+        self.zones[self.depth] = Zone(self.player, 50, 50, "CELL", self.depth)
+        self.zones[self.depth]:createUpStairs(self.player.x, self.player.y)
+          local z = self:getZone()
+          
+          --remove downstairs
+          for i,feat in ipairs(z.feats) do
+            if feat.name == "DOWN STAIRWAY" then
+              table.remove(z.feats,i)
+            end
+          end
+          
+          --place gateway
+          local randX, randY = z:getRandFloor()
+          table.insert(z.feats, Feature("GLASS GATE", randX,randY, 7,1, false))
+          z.map[randX][randY] = 1
+        end
       else
         --visit old zone
         self.player:teleport(self.zones[self.depth].lastX, self.zones[self.depth].lastY)
@@ -81,8 +101,6 @@ function Dungeon:load()
   
   --read and store dungeon data into data
   local data = loadstring(love.filesystem.read('d.lua')) ()
-  
- 
   
   --load data except for zones
   for k, v in pairs(data) do

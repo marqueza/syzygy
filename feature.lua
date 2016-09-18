@@ -36,6 +36,17 @@ function Feature:bump(zone)
     zone.map[self.x][self.y] = 0
   end
 end
+function Feature:touch(zone)
+  if self.name == "DOOR" then
+    self:activate()
+    zone.map[self.x][self.y] = 0
+  end
+  
+  if self.name == "GLASS GATE" then
+    --self:activate()
+    e.screen:sendMessage("YOU ESCAPED THE GREY ZONE!")
+  end
+end
 
 function Feature:activate()
   self.active = true

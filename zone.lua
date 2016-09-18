@@ -5,7 +5,6 @@ local serpent = require "lib.serpent"
 require "lib.mapgeneration"
 
 require "actor"
-require "player"
 require "feature"
 --
 --a zone is a mapped level
@@ -98,7 +97,7 @@ end
 
 function Zone:cellDig()
   local iter = 5
-	local percentage_walls = 5
+	local percentage_walls = 30
   local rules = {}
 	rules.neighborhood = 1
 	rules.include_self = true

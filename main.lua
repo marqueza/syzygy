@@ -39,7 +39,7 @@ function love.keypressed(key)
     e:movePlayer(dx,dy)
     
     if key == 'z' then
-      e.screen:sendMessage( e.player:touchArea(e.zone) )
+      e.player:touchArea(e.dungeon:getZone())
     elseif key == 'q' then
       e:quit()
     elseif key == 'l' then
