@@ -7,29 +7,22 @@ end
 
 function love.update(dt)
   e.screen:update(dt)
+  if e.turn ==2 then
+    e.dungeon:getZone():invokeMobs()
+    e:nextTurn()
+  end
 end
 
 function love.draw()
   e.screen:draw()
---[[  
-  local mX, mY = e.player.sprite:mapLocation()
-  local lX, lY = e.player.sprite.lastMapX,  e.player.sprite.lastMapY
-  love.graphics.print("mapX: "..mX..", mapY: "..mY,10, 10)
-  --]]
+  love.graphics.print("Turn: "..e.turn, 10, 10)
 end
 
-  
 function love.keypressed(key)
-  
-    if key == '-' then
-      e.screen:zoom(.5)
-    elseif key == '=' then
-      e.screen:zoom(2)
-    end
-    
-    
+
+  --player controls
+  if e.turn == 1 then 
     local dx,dy = 0,0
-    
     if     key=='kp1' then dx,dy=-1, 1
     elseif key=='kp2' then dx,dy= 0, 1
     elseif key=='kp3' then dx,dy= 1, 1
@@ -40,23 +33,31 @@ function love.keypressed(key)
     elseif key=='kp8' then dx,dy= 0,-1
     elseif key=='kp9' then dx,dy= 1,-1
     end
-
-    e:movePlayer(dx,dy)
+    e.player:move(dx,dy, e.dungeon:getZone())
+    e:nextTurn()
     
     if key == 'z' then
       e.player:touchArea(e.dungeon:getZone())
-    elseif key == 'q' then
-      e:quit()
-    elseif key == 'l' then
-      e:loadGame()
-    elseif key == 'r' then
-      e:restart()
-    elseif key == 's' then
-      e:save()
-    elseif key == '.' then
-      e:downZone()
-    elseif key == ',' then
-      e:upZone()
+      e:nextTurn()
     end
-    
+  end
+--system level
+  if key == '-' then
+    e.screen:zoom(.5)
+  elseif key == '=' then
+    e.screen:zoom(2)
+  elseif key == 'q' then
+    e:quit()
+  elseif key == 'l' then
+    e:loadGame()
+  elseif key == 'r' then
+    e:restart()
+  elseif key == 's' then
+    e:save()
+  elseif key == '.' then
+    e:downZone()
+  elseif key == ',' then
+    e:upZone()
+  end
+
 end

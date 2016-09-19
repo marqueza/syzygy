@@ -16,11 +16,11 @@ function ActorSprite:initialize(aniType, x, y, sheetX, sheetY, filename)
       idleLeft = anim8.newAnimation(self.g(sheetX, sheetY, sheetX+1, sheetY), 1),
       idleRight = anim8.newAnimation(self.g(sheetX, sheetY, sheetX+1, sheetY), 1):flipH(),
       walkLeft = {
-        anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), 1),
+        anim8.newAnimation(self.g(sheetX, sheetY, sheetX, sheetY), 1),
         anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), 1)
         },
       walkRight = {
-        anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), 1):flipH(),
+        anim8.newAnimation(self.g(sheetX, sheetY, sheetX, sheetY), 1):flipH(),
         anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), 1):flipH()
         },
     }

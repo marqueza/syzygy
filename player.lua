@@ -8,6 +8,11 @@ function Player:initialize(x, y, inv, sheetX, sheetY)
   self.inv = inv or {}
 end
 
+function Player:move(dx,dy,zone)
+  Actor.move(self, dx, dy, zone)
+  zone:updateFov(self.x, self.y)
+end
+
 function Player:touchArea(zone)
   
     --interact with items

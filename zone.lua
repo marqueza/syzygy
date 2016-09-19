@@ -11,8 +11,6 @@ require "feature"
 --
 Zone = class("Zone")
 
-local rng=ROT.RNG.Twister:new()
-rng:randomseed()
 
 function Zone:initialize(player, width, height, mapType, depth)
   self.player = player
@@ -142,7 +140,7 @@ function Zone:dungeonDig()
   --place mobs
   local rooms = digger:getRooms()
   for i, room in ipairs(rooms) do
-    if (rng:random(1,3) == 1) then
+    if (rng:random(1,1) == 1) then
       local randX = rng:random(room:getLeft(), room:getRight())
       local randY = rng:random(room:getTop(), room:getBottom())
       local mob = Actor("GOO", randX,randY, 1,2)
@@ -218,6 +216,11 @@ function Zone:spawnItem(item)
   end
 end
 
+function Zone:invokeMobs()
+  for i,mob in ipairs(self.mobs) do
+    mob:act(self)
+  end
+end
 
 function Zone:update(dt)
   if not self.Map == tempMap then

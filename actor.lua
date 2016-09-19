@@ -3,22 +3,43 @@ require "enitity"
 require "actorsprite"
 
 Actor = class("Actor", Enitity)
-  
+
 function Actor:initialize(name, x, y, sheetX, sheetY)
   Enitity.initialize(self, name, x, y)--invoke parent class Enitity
-  
+
   self.sheetX = sheetX
   self.sheetY = sheetY
   self.sprite = ActorSprite(name, 64*x, 64*y, sheetX or 1, sheetY or 1, "img/char.png")
-  
+
   self:teleport(x,y)
 end
 
-function Actor:move(dx,dy)
-  self.x = self.x + dx
-  self.y = self.y + dy
-  self.sprite.grid_x = self.x*self.sprite.charSize
-  self.sprite.grid_y = self.y*self.sprite.charSize
+function Actor:move(dx,dy, zone)
+
+  --change direction of sprite
+  if dx ~= 0 then 
+    self.sprite.direction = dx
+  end
+
+  --check for wall and dungeon features
+  local newX = self.x+dx
+  local newY = self.y+dy
+
+  --check if we are bumping a feature
+  for i,feat in ipairs(zone.feats) do
+    if newX == feat.x and newY == feat.y then
+      feat:bump(zone)
+    end
+  end
+
+    --floor is an allowed move
+  if zone.map[newX][newY]==0 then  
+      self.x = self.x + dx
+      self.y = self.y + dy
+      self.sprite.grid_x = self.x*self.sprite.charSize
+      self.sprite.grid_y = self.y*self.sprite.charSize
+  end
+
 
 end
 
@@ -42,4 +63,11 @@ end
 
 function Actor:touch()
   e.screen:sendMessage("YOU TOUCH THE "..self.name..".")
+end
+
+function Actor:act(zone)
+  if (rng:random(1,2) == 1) then 
+    local randX, randY = rng:random(-1,1), rng:random(-1,1)
+    self:move(randX, randY, zone)
+  end
 end
