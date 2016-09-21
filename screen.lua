@@ -1,14 +1,16 @@
 local class = require 'lib.middleclass'
 local camera = require 'lib.camera'
 local timer = require 'lib.timer'
-
-require("lib/snes_gui")
+local UI = require 'lib.UI'
+local term = require 'term'
+local InvMenu = require 'invMenu'
 require "mLayer"
 Screen = class('mLayer')
-  local boxWidth = 100
-  local boxX = 150
-  local boxY = 20
+
 function Screen:initialize(mLayer)
+  local displayWidth = love.graphics.getWidth()
+  local displayHeight = love.graphics.getHeight()
+  
   self.mLayer = mLayer
   self.camera = camera(mLayer.player.sprite.actual_x, mLayer.player.sprite.actual_y)
   self.pcam = camera(mLayer.player.sprite.actual_x, mLayer.player.sprite.actual_y)
@@ -16,26 +18,14 @@ function Screen:initialize(mLayer)
   self.height = love.graphics.getHeight()
   self.scale = 1
 
-  --gui fields
-  self.guiBackground={r=0, g=0, b=0, alpha=240}
-  self.guiOutline={r=255, g=255, b=255, alpha=255, style="rough"}
-  gui_stack.set_defaults("font/Pixeled.ttf", 15, self.guiBackground, self.guiOutline)
+ 
+  UI.registerEvents()
   
-  --example notice box
-  --local nText = "THIS IS AN EXAMPLE TEXT BOX"
-  --gui_stack.add("notice",		notice_box(	10, 	2, 	220*2, 	65*2, 	gui_trans.open,	nText))
-
+  local boxHeight = displayHeight/5
   
-	-- This is message box. Unlike the notice box, it reacts automatically to player input
-	-- closing and opening when a button is pushed.
-	--				ID							X		Y		Width	Height	Transition		Text
-
- gui_stack.add("topMessage",		notice_box(boxX, 	boxY, 	220*2, 	120, 	gui_trans.open,	""))
+  self.term= term(0, displayHeight-boxHeight, displayWidth, boxHeight)
   
-  gui_stack.disable("topMessage")
-  gui_stack.close("topMessage")
-  gui_stack.stack["topMessage"].closed = true
-  --gui_stack.enable("topMessage")
+  self.invMenu = InvMenu(displayWidth/2-400/2, 0, 400, 400, {"Milk", "Cheese", "Eggs", "Onions"})
 end
 
 function Screen:update(dt)
@@ -45,7 +35,6 @@ function Screen:update(dt)
   self.mLayer.player.sprite:setOverride(self.camera.x,self.camera.y)
   
   self.mLayer:update(dt)
-  gui_stack.update()
   
   timer.update(dt)
 
@@ -58,7 +47,9 @@ function Screen:draw()
   self.mLayer.player:draw()
   
   self.camera:detach()
-  gui_stack.draw()	
+  self.term:draw()
+  self.invMenu:draw()
+  love.graphics.setColor(255,255,255,255)
 end
 
 function Screen:zoom(mult)
@@ -67,14 +58,4 @@ function Screen:zoom(mult)
 end
 
 function Screen:sendMessage(text) 
-  if (gui_stack.closed("topMessage") ) then
-    gui_stack.open("topMessage")
-    gui_stack.set_text("topMessage", text)
-    timer.after(6, function() gui_stack.close("topMessage") end)
-
-  else
-    gui_stack.set_text("topMessage", text)
-    timer.clear()
-    timer.after(6, function() gui_stack.close("topMessage") end)
-  end
 end

@@ -2,6 +2,9 @@ require 'engine'
 
 function love.load()
   if arg[#arg] == "-debug" then require("mobdebug").start() end
+  
+  love.window.setMode(0, 0)
+  love.graphics.setFont(love.graphics.newFont('slkscr.ttf', 24))
   e = Engine()
 end
 
