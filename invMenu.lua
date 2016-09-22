@@ -9,19 +9,21 @@ function InvMenu:new(x, y, w, h, invList)
     local buttonHeight = 35
     local topMargin = buttonHeight
     self.focusIndex = 0
+    self.item = nil
+    self.itemIndex = nil
     
-    self.main_frame = UI.Frame(x, y, w, #invList*buttonHeight, {draggable = true, drag_margin = topMargin})
+    self.main_frame = UI.Frame(x, y, w, #invList*buttonHeight, {closeable = true, draggable = true, drag_margin = topMargin})
    
     
     self.invList = invList
     self.buttons = {}
     self.textareas = {}
     local curY = 0
-    for i, invText in ipairs(invList) do 
+    for i, item in ipairs(invList) do 
       self.buttons[i] = UI.Button(0,curY,w,buttonHeight)
       self.textareas[i] = UI.Textarea(0, curY, w, buttonHeight, {text_margin = 1, editing_locked = true})
       local letter = string.char(96+i)
-      self.textareas[i]:addText(letter.." - "..invText.."\n")
+      self.textareas[i]:addText(letter.." - "..item.name.."\n")
       self.main_frame:addElement(self.textareas[i])
       self.main_frame:addElement(self.buttons[i])
       curY = curY + buttonHeight
@@ -33,13 +35,14 @@ function InvMenu:update(dt)
   self.main_frame:update(dt)
   if self.main_frame.pressed then
       for i,button in ipairs(self.buttons) do
-        button.selected = false
+       -- button.selected = false
       end
   end
   --check the status of each button
   for i,button in ipairs(self.buttons) do
-    if button.released then
-      message = self.invList[i]
+    if button.pressed then
+      self.item = self.invList[i]
+      self.itemIndex = i
     end
   end
 end
@@ -65,7 +68,6 @@ function InvMenu:keypressed(key)
   local index = string.byte(key)-96
   if self.invList[index] then
     self.buttons[index]:press()
-    self.buttons[index].selected = false
   end
 end
 

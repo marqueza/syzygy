@@ -5,8 +5,8 @@ local Term = UI.Object:extend('Term')
 
 function Term:new(x, y, w, h)
     UI.DefaultTheme = Theme
-    self.main_frame = UI.Frame(x, y, w, h, {draggable = true, drag_margin = 20, disable_directional_selection = true, disable_tab_selection = true})
-    self.scrollarea = UI.Scrollarea(0, 20, w, h, {scrollbar_button_extensions = {Theme.Button}, 
+    self.main_frame = UI.Frame(x, y, w, h, {draggable = true, drag_margin = 0, disable_directional_selection = true, disable_tab_selection = true})
+    self.scrollarea = UI.Scrollarea(0, 0, w, h, {scrollbar_button_extensions = {Theme.Button}, 
                                                             area_width = w - 15, area_height = h, show_scrollbars = true})
     self.scrollarea.vertical_scrolling = true
     self.main_frame:addElement(self.scrollarea)
@@ -23,7 +23,7 @@ end
 
 function Term:sendMessage(text)
   if #text > 0 then
-    local chat_text = os.date("%H:%M") .. ': ' .. text .. '\n'
+    local chat_text = text .. '\n'
     self.textarea:addText(chat_text)
 
     -- Scrolling
@@ -31,7 +31,7 @@ function Term:sendMessage(text)
       self.scrollarea.vertical_scrolling = true
       self.scrollarea.h = self.textarea:getMaxLines()*self.textarea.font:getHeight() + 4*self.textarea.text_margin
       self.textarea.h = self.textarea:getMaxLines()*self.textarea.font:getHeight() + 4*self.textarea.text_margin
-      self.scrollarea:scrollDown(500)
+      self.scrollarea:scrollDown(100)
     end
 
   end

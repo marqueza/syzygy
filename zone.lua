@@ -42,6 +42,10 @@ function Zone:initialize(player, width, height, mapType, depth)
   self.lastY = self.player.y
   self:updateFov(self.player.x, self.player.y)
   
+  self:spawnItem(Item("KEY", 1,1, 1,1) )
+  self:spawnItem(Item("KEY", 1,1, 1,1) )
+  self:spawnItem(Item("HEART", 1,1, 1,2) )
+  self:spawnItem(Item("HEART", 1,1, 1,2) )
 end
 
 function Zone:initMap()

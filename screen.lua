@@ -21,24 +21,29 @@ function Screen:initialize(mLayer)
  
   UI.registerEvents()
   
-  local boxHeight = displayHeight/5
+  local boxHeight = 24*8
   
   self.term= term(0, displayHeight-boxHeight, displayWidth, boxHeight)
   
-  self.invMenu = InvMenu(displayWidth/2-400/2, 0, 400, 400, {"Milk", "Cheese", "Eggs", "Onions"})
 end
 
 function Screen:update(dt)
   
+  local offsetY = 64
+  local offsetX = 64/2
   local sX, sY = math.floor(self.mLayer.player.sprite.actual_x), math.floor(self.mLayer.player.sprite.actual_y)
-  self.camera:lockPosition(sX,sY)
-  self.mLayer.player.sprite:setOverride(self.camera.x,self.camera.y)
+  self.camera:lockPosition(sX+offsetX,sY+offsetY)
+  self.mLayer.player.sprite:setOverride(self.camera.x-offsetX,self.camera.y-offsetY)
   
   self.mLayer:update(dt)
   
   timer.update(dt)
+  
+  self.term:update(dt)
+    if self.invMenu then self.invMenu:update(dt) end
 
 end
+
 
 function Screen:draw()
   self.camera:attach() 
@@ -48,14 +53,26 @@ function Screen:draw()
   
   self.camera:detach()
   self.term:draw()
-  self.invMenu:draw()
+  if self.invMenu then self.invMenu:draw() end
+  love.graphics.setColor(255,255,255,255)
+end
+
+function Screen:invDraw()
   love.graphics.setColor(255,255,255,255)
 end
 
 function Screen:zoom(mult)
-  --self.scale = self.scale*mult
   e.screen.camera:zoom(mult)
 end
 
 function Screen:sendMessage(text) 
+  self.term:sendMessage(text)
+end
+
+function Screen:spawnInventory(invTable)
+  self.invMenu = InvMenu(0, 0, 200, 400, invTable)
+end
+
+function Screen:closeInventory(invTable)
+  self.invMenu.closed = true
 end

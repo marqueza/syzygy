@@ -19,6 +19,8 @@ function Engine:initialize()
   self.sched=ROT.Scheduler.Simple:new()
   for i=1,2 do self.sched:add(i, true) end
   self.turn = 1
+  self.time = 1
+  
 end
 
 function Engine:quit()
@@ -31,6 +33,7 @@ end
 
 function Engine:nextTurn()
    self.turn = self.sched:next()
+   self.time = self.time + 1
 end
 
 function Engine:downZone()

@@ -14,18 +14,6 @@ function Player:move(dx,dy,zone)
 end
 
 function Player:touchArea(zone)
-  
-    --interact with items
-    for i,item in ipairs(zone.items) do
-      if ((item.x == self.x or item.x == self.x+1 or item.x == self.x-1) and (item.y == self.y or item.y == self.y+1 or item.y == self.y-1) ) then
-        --pick up item from floor
-        table.insert(self.inv, item)
-        item.onFloor = false
-        table.remove(zone.items, i)
-        e.screen:sendMessage("ACQUIRED "..item.name..".")
-        return 
-      end
-    end
     
     for i, feat in ipairs(zone.feats) do
       if ((feat.x == self.x or feat.x == self.x+1 or feat.x == self.x-1) and (feat.y == self.y or feat.y == self.y+1 or feat.y == self.y-1) ) then
@@ -40,4 +28,29 @@ function Player:touchArea(zone)
         return
       end
     end
+end
+
+function Player:grabFloor(zone)
+  
+    --interact with items
+    for i,item in ipairs(zone.items) do
+      if (item.x == self.x and item.y == self.y ) then
+        --pick up item from floor
+        table.insert(self.inv, item)
+        item.onFloor = false
+        table.remove(zone.items, i)
+        e.screen:sendMessage("ACQUIRED "..item.name..".")
+        return 
+      end
+    end
+
+end
+
+function Player:dropItem(index, zone)
+    local item = self.inv[index]
+    table.remove(self.inv, index) 
+    item:place(self.x, self.y)
+    table.insert(zone.items, item)
+    
+
 end

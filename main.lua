@@ -1,14 +1,21 @@
+local Gamestate = require "lib.gamestate"
 require 'engine'
+
+local invState = {}
+local localState = {}
 
 function love.load()
   if arg[#arg] == "-debug" then require("mobdebug").start() end
   
-  love.window.setMode(0, 0)
+  love.window.setMode(1280,720)
   love.graphics.setFont(love.graphics.newFont('slkscr.ttf', 24))
   e = Engine()
+  
+  Gamestate.registerEvents()
+  Gamestate.switch(localState)
 end
 
-function love.update(dt)
+function localState:update(dt)
   e.screen:update(dt)
   if e.turn ==2 then
     e.dungeon:getZone():invokeMobs()
@@ -18,10 +25,9 @@ end
 
 function love.draw()
   e.screen:draw()
-  love.graphics.print("Turn: "..e.turn, 10, 10)
 end
 
-function love.keypressed(key)
+function localState:keypressed(key)
 
   --player controls
   if e.turn == 1 then 
@@ -42,8 +48,12 @@ function love.keypressed(key)
     if key == 'z' then
       e.player:touchArea(e.dungeon:getZone())
       e:nextTurn()
+    elseif key == 'g' then
+      e.player:grabFloor(e.dungeon:getZone())
+      e:nextTurn()
     end
   end
+  
 --system level
   if key == '-' then
     e.screen:zoom(.5)
@@ -61,6 +71,39 @@ function love.keypressed(key)
     e:downZone()
   elseif key == ',' then
     e:upZone()
+  elseif key == 'd' then
+    e.screen:sendMessage("Drop which item? ")
+    Gamestate.switch(invState)
   end
 
+end
+
+function invState:enter()
+  e.screen:spawnInventory(e.player.inv)
+end
+
+function invState:update(dt)
+  e.screen:update(dt)
+  
+ local item = e.screen.invMenu.item
+  if item then
+    e.screen:sendMessage(item.name.." dropped.")
+    
+    --put item on floor
+    e.player:dropItem(e.screen.invMenu.itemIndex, e.dungeon:getZone())
+    --now exit inv state
+    
+    Gamestate.switch(localState)
+  end
+end
+
+function invState:keypressed(key)
+  e.screen.invMenu:keypressed(key)
+  if key == 'escape' then
+     Gamestate.switch(localState)
+  end
+end
+
+function invState:leave()
+  e.screen.invMenu = nil
 end
