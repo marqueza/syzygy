@@ -84,7 +84,6 @@ end
 
 function invState:update(dt)
   e.screen:update(dt)
-  
  local item = e.screen.invMenu.item
   if item then
     e.screen:sendMessage(item.name.." dropped.")
@@ -94,7 +93,9 @@ function invState:update(dt)
     --now exit inv state
     
     Gamestate.switch(localState)
+   
   end
+   
 end
 
 function invState:keypressed(key)

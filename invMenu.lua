@@ -33,14 +33,16 @@ end
 
 function InvMenu:update(dt)
   self.main_frame:update(dt)
+  self.main_frame.selected = true
   if self.main_frame.pressed then
       for i,button in ipairs(self.buttons) do
-       -- button.selected = false
+       
       end
   end
   --check the status of each button
   for i,button in ipairs(self.buttons) do
     if button.pressed then
+      button.selected = false
       self.item = self.invList[i]
       self.itemIndex = i
     end
@@ -65,10 +67,17 @@ function InvMenu:focusPrevious()
 end
 
 function InvMenu:keypressed(key)
-  local index = string.byte(key)-96
-  if self.invList[index] then
-    self.buttons[index]:press()
+  if key == 'kp8' or key == 'up' then
+    self:focusPrevious()
+  elseif key == 'kp2' or key == 'down' then
+    self:focusNext()
+  elseif key == 'return' then
+    self.buttons[self.focusIndex+1]:press()
+  else
+    local index = string.byte(key)-96
+    if self.invList[index] then
+      self.buttons[index]:press()
+    end
   end
 end
-
 return InvMenu

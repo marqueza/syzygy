@@ -46,10 +46,6 @@ function Player:grabFloor(zone)
 end
 
 function Player:dropItem(index, zone)
-    local item = self.inv[index]
-    table.remove(self.inv, index) 
-    item:place(self.x, self.y)
-    table.insert(zone.items, item)
-    
-
+  zone:placeItem(self.inv[index], self.x, self.y)
+  table.remove(self.inv, index)
 end

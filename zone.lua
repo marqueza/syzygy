@@ -1,6 +1,7 @@
 local class = require "lib.middleclass"
 ROT= require "lib.rotLove"
 local serpent = require "lib.serpent"
+Timer = require "lib.timer"
 
 require "lib.mapgeneration"
 
@@ -143,7 +144,7 @@ function Zone:dungeonDig()
       local randX = rng:random(room:getLeft(), room:getRight())
       local randY = rng:random(room:getTop(), room:getBottom())
       local mob = Actor("GOO", randX,randY, 1,2)
-     -- table.insert(self.mobs, mob)
+      table.insert(self.mobs, mob)
     end
   end
   
@@ -215,6 +216,15 @@ function Zone:spawnItem(item)
   end
 end
 
+function Zone:placeItem(item, x, y)
+  item.onFloor = false
+  item:place(x,y)
+  table.insert(self.items,item)
+  --delay for smoother sprite placement
+  Timer.after(.05, function ()  item.onFloor = true end) 
+
+end
+
 function Zone:invokeMobs()
   for i,mob in ipairs(self.mobs) do
     mob:act(self)
@@ -276,14 +286,13 @@ function Zone:load(depth)
   end
   data.items = nil  --remove items from data  
   
-  --[[ i: index, d :dataTable contains info to init new item
+  -- i: index, d :dataTable contains info to init new item
   for i, d in ipairs(data.mobs) do
     self.mobs[i] = Actor(d.name, d.x, d.y, d.sheetX, d.sheetY)
     for j, item in ipairs(d.inv) do -- iterate through the new actor and re-populate its inv
       table.insert(self.mobs[i].inv, Item(item.name, item.x, item.y, item.sheetX, item.sheetY, item.onFloor) )
     end
   end
-  --]]
   --fix the inv
   data.mobs = nil  --remove items from data  
      

@@ -24,7 +24,9 @@ function Item:place(x,y)
   self.sprite.grid_y = y*64
 end
 function Item:draw()
-  self.sprite:draw()
+  if self.onFloor then 
+    self.sprite:draw()
+  end
 end
 
 function Item:update(dt)
