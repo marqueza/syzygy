@@ -4,13 +4,13 @@ require "actorsprite"
 
 Actor = class("Actor", Enitity)
 
-function Actor:initialize(name, x, y, sheetX, sheetY)
+function Actor:initialize(name, x, y, sheetX, sheetY, inv)
   Enitity.initialize(self, name, x, y)--invoke parent class Enitity
 
   self.sheetX = sheetX
   self.sheetY = sheetY
   self.sprite = ActorSprite(name, 64*x, 64*y, sheetX or 1, sheetY or 1, "img/char.png")
-
+  self.inv = inv or {} -- if inv is a table of classes vs a table of data
   self:teleport(x,y)
 end
 
@@ -70,4 +70,22 @@ function Actor:act(zone)
     local randX, randY = rng:random(-1,1), rng:random(-1,1)
     self:move(randX, randY, zone)
   end
+end
+
+function Actor:getData()
+  local data = {}
+  for k,v in pairs(self) do
+    if k ~= "sprite" and k~="class"  and k~= "inv" then
+      data[k] = v
+    end
+  end
+  
+  local invData = {}
+  for i,item in ipairs(self.inv) do
+    invData[i] = item:getData()
+  end
+  
+  data['inv'] = invData
+  
+  return data
 end

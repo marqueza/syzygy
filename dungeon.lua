@@ -23,33 +23,41 @@ function Dungeon:downZone()
     if feat.name == "DOWN STAIRWAY" and self.player.x == feat.x and self.player.y == feat.y then
       self.zones[self.depth].lastX = self.player.x
       self.zones[self.depth].lastY = self.player.y
-      
+
       self.depth = self.depth+1
       self.maxDepth = math.max(self.depth, self.maxDepth)
-     
+
       if not self.zones[self.depth] then 
         --set up new zone
-        
-        if self.depth ~= 3 then
-        self.zones[self.depth] = Zone(self.player, 20, 20, "DUNGEON", self.depth)
-        self.zones[self.depth]:createUpStairs(self.player.x, self.player.y)
-        
+
+        if self.depth ~= 4 then
+          self.zones[self.depth] = Zone(self.player, 10*self.depth, 10*self.depth, "DUNGEON", self.depth)
+          local z = self.zones[self.depth]
+          z:createUpStairs(self.player.x, self.player.y)
+          --place items
+
+          z:spawnItem(Item("KEY", 1,1, 1,1) )
+          z:spawnItem(Item("KEY", 1,1, 1,1) )
+          z:spawnItem(Item("HEART", 1,1, 1,2) )
+          z:spawnItem(Item("HEART", 1,1, 1,2) )
+
         else
-        self.zones[self.depth] = Zone(self.player, 50, 50, "CELL", self.depth)
-        self.zones[self.depth]:createUpStairs(self.player.x, self.player.y)
+          self.zones[self.depth] = Zone(self.player, 50, 50, "CELL", self.depth)
+          self.zones[self.depth]:createUpStairs(self.player.x, self.player.y)
           local z = self:getZone()
-          
+
           --remove downstairs
           for i,feat in ipairs(z.feats) do
             if feat.name == "DOWN STAIRWAY" then
               table.remove(z.feats,i)
             end
           end
-          
+
           --place gateway
           local randX, randY = z:getRandFloor()
           table.insert(z.feats, Feature("GLASS GATE", randX,randY, 7,1, false))
           z.map[randX][randY] = 1
+
         end
       else
         --visit old zone
@@ -64,7 +72,7 @@ function Dungeon:upZone()
   for i,feat in ipairs(self.zones[self.depth].feats) do
     --check if feature is a stair or portal and player is on it
     if feat.name == "UP STAIRWAY" and self.player.x == feat.x and self.player.y == feat.y then
-      
+
       self.zones[self.depth].lastX, self.zones[self.depth].lastY = self.player.x, self.player.y
 
       if not self.zones[self.depth-1] then --exit the dungeon
@@ -84,37 +92,42 @@ function Dungeon:save()
   for i, zone in ipairs(self.zones) do
     zone:save()
   end
-  
+
   --save rest of the properites in d.lua file
   local data = {}
   data["player"] = self.player:getData()
-  
+
   for k,v in pairs(self) do
-      if k ~= "player" and k ~= "zones" and k~="class" then
-        data[k] = v
-      end
+    if k ~= "player" and k ~= "zones" and k~="class" then
+      data[k] = v
+    end
   end
   love.filesystem.write('d.lua', serpent.dump(data, {indent = ' ', sortkeys=true}) ) 
 end
 
 function Dungeon:load()
-  
+
   --read and store dungeon data into data
   local data = loadstring(love.filesystem.read('d.lua')) ()
-  
+
   --load data except for zones
   for k, v in pairs(data) do
     if k ~= "zones" and k~= "player" then 
       self[k] = v
     end
   end
-  
+
   --create and rebuild zones
   for i=1, self.maxDepth do
     self.zones[i] = Zone(self.player, 10,10, "CELL", 1) 
     self.zones[i]:load(i)
   end
-  
+
   local p = data.player
   self.player = Player(p.x, p.y, p.inv, p.sheetX, p.sheetY)
+
+  for j, item in ipairs(p.inv) do -- iterate through the new actor and re-populate its inv
+    table.insert(self.player.inv, Item(item.name, item.x, item.y, item.sheetX, item.sheetY, item.onFloor) )
+  end
+  data.player = nil
 end
