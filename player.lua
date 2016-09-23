@@ -21,14 +21,18 @@ function Player:touchArea(zone)
       end
     end
     
+end
+
+
+function Player:getAdjMob(zone)
+  
     for i, mob in ipairs(zone.mobs) do
-      if ((mob.x == self.x or mob.x == self.x+1 or mob.x == self.x-1) and (mob.y == self.y or mob.y == self.y+1 or mob.y == self.y-1) ) then
-        mob:touch()
-        return
+      if ((mob.x == self.x or mob.x == self.x+1 or mob.x == self.x-1) and 
+          (mob.y == self.y or mob.y == self.y+1 or mob.y == self.y-1) ) then
+        return mob
       end
     end
 end
-
 function Player:grabFloor(zone)
   
     --interact with items
@@ -48,4 +52,8 @@ end
 function Player:dropItem(index, zone)
   zone:placeItem(self.inv[index], self.x, self.y)
   table.remove(self.inv, index)
+end
+
+function Player:attack(target)
+  target:die()
 end

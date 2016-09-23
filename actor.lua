@@ -3,14 +3,21 @@ require "enitity"
 require "actorsprite"
 
 Actor = class("Actor", Enitity)
-
-function Actor:initialize(name, x, y, sheetX, sheetY, inv)
+Actor.id = 0
+function Actor:initialize(name, x, y, sheetX, sheetY, id, inv)
   Enitity.initialize(self, name, x, y)--invoke parent class Enitity
 
   self.sheetX = sheetX
   self.sheetY = sheetY
   self.sprite = ActorSprite(name, 64*x, 64*y, sheetX or 1, sheetY or 1, "img/char.png")
   self.inv = inv or {} -- if inv is a table of classes vs a table of data
+  if id then
+    self.id = id
+  else
+    Actor.id = Actor.id + 1
+    self.id = Actor.id
+  end
+  
   self:teleport(x,y)
 end
 
@@ -88,4 +95,13 @@ function Actor:getData()
   data['inv'] = invData
   
   return data
+end
+
+function Actor:die()
+  e.screen:sendMessage("The "..self.name.." dies.")
+  for i,mob in ipairs(e.dungeon:getZone().mobs) do
+    if self.id == mob.id then
+      table.remove(e.dungeon:getZone().mobs, i)
+    end
+  end
 end

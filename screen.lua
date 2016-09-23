@@ -3,7 +3,7 @@ local camera = require 'lib.camera'
 local timer = require 'lib.timer'
 local UI = require 'lib.UI'
 local term = require 'term'
-local InvMenu = require 'invMenu'
+require "menu"
 require "mLayer"
 Screen = class('mLayer')
 
@@ -40,8 +40,8 @@ function Screen:update(dt)
   timer.update(dt)
   
   self.term:update(dt)
-    if self.invMenu then self.invMenu:update(dt) end
-
+  if self.invMenu then self.invMenu:update(dt) end
+  if self.interMenu then self.interMenu:update(dt) end
 end
 
 
@@ -54,10 +54,7 @@ function Screen:draw()
   self.camera:detach()
   self.term:draw()
   if self.invMenu then self.invMenu:draw() end
-  love.graphics.setColor(255,255,255,255)
-end
-
-function Screen:invDraw()
+  if self.interMenu then self.interMenu:draw() end
   love.graphics.setColor(255,255,255,255)
 end
 
@@ -70,9 +67,9 @@ function Screen:sendMessage(text)
 end
 
 function Screen:spawnInventory(invTable)
-  self.invMenu = InvMenu(0, 0, 200, 400, invTable)
+  self.invMenu = Menu(0, 0, 200, 400, invTable)
 end
 
-function Screen:closeInventory(invTable)
-  self.invMenu.closed = true
+function Screen:spawnInteraction(interTable)
+  self.interMenu = Menu(0, 0, 200, 400, interTable)
 end

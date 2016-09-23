@@ -158,8 +158,7 @@ end
 function Zone:arenaDig()
   --dig out map
   digger=ROT.Map.Arena(self.width, self.height, opts)
-  digger:create(diggerCallback)
-  self.map = tempMap
+  digger:create(function (x, y, val) self.map[x][y] = val end)
   
   --place stairs
   local feat = Feature("DOWN STAIRWAY", 1,1, 5,1, true)

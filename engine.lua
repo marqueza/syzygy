@@ -14,12 +14,13 @@ function Engine:initialize()
   
 
   self.player = Player(1,1, nil, 4,1)
-  self.dungeon = Dungeon(self.player, Zone(self.player, 20, 20, "DUNGEON", 1) )
+  self.dungeon = Dungeon(self.player, Zone(self.player, 5, 5, "ARENA", 1) )
   self.screen = Screen(MLayer(self.player, self.dungeon:getZone() ) )
   self.sched=ROT.Scheduler.Simple:new()
   for i=1,2 do self.sched:add(i, true) end
   self.turn = 1
   self.time = 1
+  self.target = nil
   
 end
 
@@ -32,7 +33,7 @@ function Engine:restart()
 end
 
 function Engine:nextTurn()
-   self.turn = self.sched:next()
+   self.turn = self.sched:next() % 2
    self.time = self.time + 1
 end
 
