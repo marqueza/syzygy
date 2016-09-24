@@ -28,11 +28,11 @@ function ActorSprite:initialize(aniType, x, y, sheetX, sheetY, filename)
     self.ani = {
       idleLeft = anim8.newAnimation(self.g(sheetX, sheetY, sheetX, sheetY), 1),
       idleRight = anim8.newAnimation(self.g(sheetX, sheetY, sheetX, sheetY), 1):flipH(),
-      walkLeft = {anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), .1), 
-                  anim8.newAnimation(self.g(sheetX+2, sheetY, sheetX+2, sheetY), .1)},
+      walkLeft = {anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), .025), 
+                  anim8.newAnimation(self.g(sheetX+2, sheetY, sheetX+2, sheetY), .025)},
       walkRight = {
-        anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), .1):flipH(),
-        anim8.newAnimation(self.g(sheetX+2, sheetY, sheetX+2, sheetY), .1):flipH(), 
+        anim8.newAnimation(self.g(sheetX+1, sheetY, sheetX+1, sheetY), .025):flipH(),
+        anim8.newAnimation(self.g(sheetX+2, sheetY, sheetX+2, sheetY), .025):flipH(), 
                   },
     }
   end
