@@ -41,6 +41,13 @@ function Dungeon:downZone()
           z:spawnItem(Item("HEART", 1,1, '1-2',2) )
           z:spawnItem(Item("HEART", 1,1,  '1-2',2) )
           z:spawnItem(Item("MAGIC DUST", 1,1, '1-2',3))
+          z:spawnMob(Actor(
+        "FAIRY", 
+        1,1, 
+        1,3, 
+        nil, 
+        {Item("GREY MATTER", 1,1, '1-2',4, false)}
+        ) )
 
         else
           self.zones[self.depth] = Zone(self.player, 50, 50, "CELL", self.depth)
