@@ -36,10 +36,11 @@ function Dungeon:downZone()
           z:createUpStairs(self.player.x, self.player.y)
           --place items
 
-          z:spawnItem(Item("KEY", 1,1, 1,1) )
-          z:spawnItem(Item("KEY", 1,1, 1,1) )
-          z:spawnItem(Item("HEART", 1,1, 1,2) )
-          z:spawnItem(Item("HEART", 1,1, 1,2) )
+          z:spawnItem(Item("KEY", 1,1, '1-2',1) )
+          z:spawnItem(Item("KEY", 1,1, '1-2',1) )
+          z:spawnItem(Item("HEART", 1,1, '1-2',2) )
+          z:spawnItem(Item("HEART", 1,1,  '1-2',2) )
+          z:spawnItem(Item("MAGIC DUST", 1,1, '1-2',3))
 
         else
           self.zones[self.depth] = Zone(self.player, 50, 50, "CELL", self.depth)

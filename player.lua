@@ -49,10 +49,6 @@ function Player:grabFloor(zone)
 
 end
 
-function Player:dropItem(index, zone)
-  zone:placeItem(self.inv[index], self.x, self.y)
-  table.remove(self.inv, index)
-end
 
 function Player:attack(target)
   target:die()

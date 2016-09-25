@@ -140,15 +140,27 @@ function Zone:dungeonDig()
   --place mobs
   local rooms = digger:getRooms()
   for i, room in ipairs(rooms) do
-    if (rng:random(1,4) == 1) then
+    if (rng:random(1,2) == 1) then
       local randX = rng:random(room:getLeft(), room:getRight())
       local randY = rng:random(room:getTop(), room:getBottom())
-      local mob = Actor("GOO", randX,randY, 1,2)
+      local mob = Actor(
+        "GOO", 
+        randX,randY, 
+        1,2, 
+        nil, 
+        {Item("GREY MATTER", 1,1, '1-2',4, false)}
+        )
       table.insert(self.mobs, mob)
     else
       local randX = rng:random(room:getLeft(), room:getRight())
       local randY = rng:random(room:getTop(), room:getBottom())
-      local mob = Actor("SKELETON", randX,randY, 3,2)
+      local mob = Actor(
+        "SKELETON", 
+        randX,randY, 
+        3,2, 
+        nil, 
+        {Item("BONES", 1,1, 4,3, false) }
+        )
       table.insert(self.mobs, mob)
     end
   end

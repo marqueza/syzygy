@@ -11,7 +11,7 @@ function ItemSprite:initialize(filename, x, y, sheetX, sheetY)
   
   --animations
   self.ani = {
-   idle = anim8.newAnimation(self.g(sheetX,sheetY, sheetX+1,sheetY), 0.6)
+   idle = anim8.newAnimation(self.g(sheetX,sheetY), 0.6)
   }
   
   --set up spritebatch

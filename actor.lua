@@ -91,13 +91,14 @@ function Actor:touch()
 end
 
 function Actor:act(zone)
-
+  --randomMovement
   if self.name == "GOO" then
     if (rng:random(1,2) == 1) then 
       local randX, randY = rng:random(-1,1), rng:random(-1,1)
       self:move(randX, randY, zone)
     end
-    --seek and destroy player
+    
+  --seek and destroy player
   else
     local z = e.dungeon:getZone()
     local dijkstra = ROT.Path.Dijkstra(e.player.x, e.player.y,
@@ -110,20 +111,14 @@ function Actor:act(zone)
 
     local dij_step = 0
     local newX, newY = 0,0
-    local oldX, oldY = self.x, self.y
-    dijkstra:compute(oldX, oldY, 
+    dijkstra:compute(self.x, self.y, 
       function(x, y)
         if dij_step == 1 then 
-          --if x == oldX or y == oldY then
             self:move(x-self.x, y-self.y, z)
             first = false
-          --end
         end
         dij_step = dij_step + 1
       end )
-    local dx = newX - self.x
-    local dy = newY - self.y
-    --self:teleport(newX, newY)
   end
 end
 
@@ -148,12 +143,26 @@ end
 
 function Actor:die()
   e.screen:sendMessage("The "..self.name.." dies.")
+  
+  --drop inventory
+  for i, item in ipairs(self.inv) do
+    self:dropItem(i)
+  end
+  
+  --remove entry from zone mob table
   for i,mob in ipairs(e.dungeon:getZone().mobs) do
     if self.id == mob.id then
       table.remove(e.dungeon:getZone().mobs, i)
     end
   end
 end
+
+function Actor:dropItem(index, zone)
+  zone = zone or e.dungeon:getZone()
+  zone:placeItem(self.inv[index], self.x, self.y)
+  table.remove(self.inv, index)
+end
+
 function Actor:attack(target)
   return
 end

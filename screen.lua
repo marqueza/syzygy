@@ -67,9 +67,9 @@ function Screen:sendMessage(text)
 end
 
 function Screen:spawnInventory(invTable)
-  self.invMenu = Menu(0, 0, 200, 400, invTable)
+  self.invMenu = Menu(0, 0, invTable)
 end
 
 function Screen:spawnInteraction(interTable)
-  self.interMenu = Menu(0, 0, 200, 400, interTable)
+  self.interMenu = Menu(0, 0, interTable)
 end
