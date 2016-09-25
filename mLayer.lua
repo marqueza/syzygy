@@ -124,10 +124,12 @@ function MLayer:draw()
   
   --draw all mobs in fov
   for i, mob in ipairs(self.zone.mobs) do
-    if self.zone.field[mob.x][mob.y] == 1 then
-      mob:draw()
+    if self.zone.field[mob.x] and self.zone.field[mob.x][mob.y] then
+      if self.zone.field[mob.x][mob.y] == 1 then
+        mob:draw()
+      end
     end
   end
-  
+
 end
 

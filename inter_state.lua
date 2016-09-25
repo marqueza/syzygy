@@ -19,6 +19,11 @@ function inter_state:update(dt)
       
       --exit state
       state.switch(action_state)
+    elseif interaction == "RECRUIT" then
+      e.screen:sendMessage("You recruit the " .. e.target.name..".")
+      
+      --exit state
+      state.switch(action_state)
     end
   end
    
