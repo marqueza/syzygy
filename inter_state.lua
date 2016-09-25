@@ -21,6 +21,8 @@ function inter_state:update(dt)
       state.switch(action_state)
     elseif interaction == "RECRUIT" then
       e.screen:sendMessage("You recruit the " .. e.target.name..".")
+      --do recruitment
+      e.player:recruit(e.target)
       
       --exit state
       state.switch(action_state)

@@ -34,8 +34,8 @@ function Dungeon:downZone()
           self.zones[self.depth] = Zone(self.player, 10*self.depth, 10*self.depth, "DUNGEON", self.depth)
           local z = self.zones[self.depth]
           z:createUpStairs(self.player.x, self.player.y)
+          self:transferAllies(self.depth-1, self.depth)
           --place items
-
           z:spawnItem(Item("KEY", 1,1, '1-2',1) )
           z:spawnItem(Item("KEY", 1,1, '1-2',1) )
           z:spawnItem(Item("HEART", 1,1, '1-2',2) )
@@ -45,13 +45,15 @@ function Dungeon:downZone()
         "FAIRY", 
         1,1, 
         1,3, 
-        nil, 
+        nil,
+        'foe',
         {Item("GREY MATTER", 1,1, '1-2',4, false)}
         ) )
 
         else
-          self.zones[self.depth] = Zone(self.player, 50, 50, "CELL", self.depth)
+          self.zones[self.depth] = Zone(self.player, 50, 50, "DUNGEON", self.depth)
           self.zones[self.depth]:createUpStairs(self.player.x, self.player.y)
+          self:transferAllies(self.depth-1, self.depth)
           local z = self:getZone()
 
           --remove downstairs
@@ -70,6 +72,7 @@ function Dungeon:downZone()
       else
         --visit old zone
         self.player:teleport(self.zones[self.depth].lastX, self.zones[self.depth].lastY)
+        self:transferAllies(self.depth-1, self.depth)
       end
     end
   end
@@ -90,6 +93,8 @@ function Dungeon:upZone()
         --elevate
         self.depth = self.depth - 1
         self.player:teleport(self.zones[self.depth].lastX, self.zones[self.depth].lastY)
+        self:transferAllies(self.depth+1, self.depth)
+
       end
     end
   end
@@ -132,10 +137,26 @@ function Dungeon:load()
   end
 
   local p = data.player
-  self.player = Player(p.x, p.y, p.inv, p.sheetX, p.sheetY)
+  self.player = Player(p.x, p.y, p.inv, p.sheetX, p.sheetY, p.id, p.faction)
 
-  for j, item in ipairs(p.inv) do -- iterate through the new actor and re-populate its inv
+  for i, item in ipairs(p.inv) do -- iterate through the new actor and re-populate its inv
     table.insert(self.player.inv, Item(item.name, item.x, item.y, item.sheetX, item.sheetY, item.onFloor) )
   end
   data.player = nil
+end
+
+function Dungeon:transferAllies(oldDepth, newDepth)
+  local removeIndices = {}
+  for i,mob in ipairs(e.dungeon.zones[oldDepth].mobs) do
+    if mob.faction == 'ally' then
+      table.insert(e.dungeon.zones[newDepth].mobs, mob)
+      table.insert(removeIndices, i)
+      --teleport near player
+      mob:teleport(self.zones[newDepth].lastX, self.zones[newDepth].lastY)
+    end
+  end
+  
+  for i,removeIndex in ipairs(removeIndices) do
+    table.remove(e.dungeon.zones[oldDepth].mobs, removeIndex)
+  end
 end

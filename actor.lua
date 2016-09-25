@@ -6,7 +6,7 @@ require "actorsprite"
 
 Actor = class("Actor", Enitity)
 Actor.id = 0
-function Actor:initialize(name, x, y, sheetX, sheetY, id, inv)
+function Actor:initialize(name, x, y, sheetX, sheetY, id, faction, inv)
   Enitity.initialize(self, name, x, y)--invoke parent class Enitity
 
   self.sheetX = sheetX
@@ -19,6 +19,8 @@ function Actor:initialize(name, x, y, sheetX, sheetY, id, inv)
     Actor.id = Actor.id + 1
     self.id = Actor.id
   end
+  
+  self.faction = faction or 'foe'
 
   self:teleport(x,y)
 end
@@ -46,7 +48,23 @@ function Actor:move(dx,dy, zone)
   --check if we are bumping an actor
   for i,mob in ipairs(zone.mobs) do
     if newX == mob.x and newY == mob.y then
-      self:attack(mob)
+      if self.faction ~= mob.faction then
+        self:attack(mob)
+      else
+        if self.name == "PLAYER" then
+          mob.x = self.x
+          mob.y = self.y
+          mob.sprite.grid_x = self.sprite.grid_x
+          mob.sprite.grid_y = self.sprite.grid_y
+          
+          self.x = self.x + dx
+          self.y = self.y + dy
+          self.sprite.grid_x = self.x*self.sprite.charSize
+          self.sprite.grid_y = self.y*self.sprite.charSize
+        else
+          return
+        end
+      end
       return
     end
   end
@@ -79,7 +97,11 @@ end
 
 
 function Actor:draw()
+  if self.faction == "foe" then
+    love.graphics.setColor(220,220,220,255)
+  end
   self.sprite:draw()
+  love.graphics.setColor(255,255,255,255)
 end
 
 function Actor:update(dt)
@@ -98,7 +120,7 @@ function Actor:act(zone)
       self:move(randX, randY, zone)
     end
     
-  --seek and destroy player
+  --seek player
   else
     local z = e.dungeon:getZone()
     local dijkstra = ROT.Path.Dijkstra(e.player.x, e.player.y,

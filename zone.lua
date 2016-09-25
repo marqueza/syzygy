@@ -147,7 +147,8 @@ function Zone:dungeonDig()
         "GOO", 
         randX,randY, 
         1,2, 
-        nil, 
+        nil,
+        'foe',
         {Item("GREY MATTER", 1,1, '1-2',4, false)}
         )
       table.insert(self.mobs, mob)
@@ -159,6 +160,7 @@ function Zone:dungeonDig()
         randX,randY, 
         3,2, 
         nil, 
+        'foe',
         {Item("BONES", 1,1, 4,3, false) }
         )
       table.insert(self.mobs, mob)
@@ -309,7 +311,7 @@ function Zone:load(depth)
   
   -- i: index, d :dataTable contains info to init new item
   for i, d in ipairs(data.mobs) do
-    self.mobs[i] = Actor(d.name, d.x, d.y, d.sheetX, d.sheetY)
+    self.mobs[i] = Actor(d.name, d.x, d.y, d.sheetX, d.sheetY, d.id, d.faction)
     for j, item in ipairs(d.inv) do -- iterate through the new actor and re-populate its inv
       table.insert(self.mobs[i].inv, Item(item.name, item.x, item.y, item.sheetX, item.sheetY, item.onFloor) )
     end
