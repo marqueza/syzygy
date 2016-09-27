@@ -14,7 +14,7 @@ rng:randomseed()
 function Engine:initialize()
   
 
-  self.player = Player(1,1, nil, 4,1)
+  self.player = Player(1,1, nil, 1,4)
   self.dungeon = Dungeon(self.player, Zone(self.player, 5, 5, "ARENA", 1) )
   self.dungeon:getZone():spawnMob(Actor("SKELETON", 1,1, 3,2))
   self.screen = Screen(MLayer(self.player, self.dungeon:getZone() ) )

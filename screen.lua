@@ -4,6 +4,7 @@ local timer = require 'lib.timer'
 local UI = require 'lib.UI'
 local term = require 'term'
 require "menu"
+require "craftMenu"
 require "mLayer"
 Screen = class('mLayer')
 
@@ -42,6 +43,8 @@ function Screen:update(dt)
   self.term:update(dt)
   if self.invMenu then self.invMenu:update(dt) end
   if self.interMenu then self.interMenu:update(dt) end
+  if self.craftMenu then self.craftMenu:update(dt) end
+
 end
 
 
@@ -55,6 +58,7 @@ function Screen:draw()
   self.term:draw()
   if self.invMenu then self.invMenu:draw() end
   if self.interMenu then self.interMenu:draw() end
+  if self.craftMenu then self.craftMenu:draw() end
   love.graphics.setColor(255,255,255,255)
 end
 
@@ -72,4 +76,8 @@ end
 
 function Screen:spawnInteraction(interTable)
   self.interMenu = Menu(0, 0, interTable)
+end
+
+function Screen:spawnCrafting()
+  self.craftMenu = CraftMenu(0, 0)
 end

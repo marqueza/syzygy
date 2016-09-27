@@ -1,7 +1,7 @@
 local state = require "lib.gamestate"
 require "inter_state"
 require "inv_state"
-
+require "craft_state"
 action_state = {}
 
 function action_state:update(dt)
@@ -41,6 +41,10 @@ function action_state:keypressed(key)
     elseif key == 'd' then
       e.screen:sendMessage("Drop which item? ")
       state.switch(inv_state)
+      e:nextTurn()
+    elseif key == 'c' then
+      e.screen:sendMessage("Select recipe to craft. ")
+      state.switch(craft_state)
       e:nextTurn()
     elseif key == 'z' then
       local mob = e.player:getAdjMob(e.dungeon:getZone())
