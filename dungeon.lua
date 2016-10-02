@@ -30,46 +30,22 @@ function Dungeon:downZone()
       if not self.zones[self.depth] then 
         --set up new zone
 
-        if self.depth ~= 4 then
-          self.zones[self.depth] = Zone(self.player, 10*self.depth, 10*self.depth, "DUNGEON", self.depth)
-          local z = self.zones[self.depth]
-          z:createUpStairs(self.player.x, self.player.y)
-          self:transferAllies(self.depth-1, self.depth)
-          --place items
-          z:spawnItem(Item("KEY", 1,1, '1-2',1) )
-          z:spawnItem(Item("KEY", 1,1, '1-2',1) )
-          z:spawnItem(Item("HEART", 1,1, '1-2',2) )
-          z:spawnItem(Item("HEART", 1,1,  '1-2',2) )
-          z:spawnItem(Item("MAGIC DUST", 1,1, '1-2',3))
-          z:spawnMob(Actor(
-        "FAIRY", 
-        1,1, 
-        1,3, 
-        nil,
-        'foe',
-        {Item("GREY MATTER", 1,1, '1-2',4, false)}
-        ) )
+        self.zones[self.depth] = Zone(self.player, 20, 20, "DUNGEON", self.depth)
+        local z = self.zones[self.depth]
+        z:createUpStairs(self.player.x, self.player.y)
+        self:transferAllies(self.depth-1, self.depth)
 
-        else
-          self.zones[self.depth] = Zone(self.player, 50, 50, "DUNGEON", self.depth)
-          self.zones[self.depth]:createUpStairs(self.player.x, self.player.y)
-          self:transferAllies(self.depth-1, self.depth)
-          local z = self:getZone()
+        z:spawnItem(Item('heart'))
+        z:spawnItem(Item('key'))
+        z:spawnItem(Item('heart'))
+        z:spawnItem(Item('key'))
+        z:spawnMob(Actor("fairy"))
+        z:spawnMob(Actor("goo"))
+        z:spawnMob(Actor("skeleton"))
+        z:spawnMob(Actor("goo"))
+        z:spawnMob(Actor("skeleton"))
 
-          --[[remove downstairs
-          for i,feat in ipairs(z.feats) do
-            if feat.name == "DOWN STAIRWAY" then
-              table.remove(z.feats,i)
-            end
-          end
-          --]]
-          --[[place gateway
-          local randX, randY = z:getRandFloor()
-          table.insert(z.feats, Feature("GLASS GATE", randX,randY, 7,1, false))
-          z.map[randX][randY] = 1
-          --]]
 
-        end
       else
         --visit old zone
         self.player:teleport(
@@ -148,11 +124,7 @@ function Dungeon:load()
   end
 
   local p = data.player
-  self.player = Player(p.x, p.y, p.inv, p.sheetX, p.sheetY, p.id, p.faction)
-  
-  for i, item in ipairs(p.inv) do -- iterate through the new actor and re-populate its inv
-    table.insert(self.player.inv, Item(item.name, item.x, item.y, item.sheetX, item.sheetY, item.onFloor) )
-  end
+  self.player = Player(p)
   data.player = nil
 end
 

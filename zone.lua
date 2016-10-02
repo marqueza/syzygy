@@ -9,6 +9,7 @@ require "actor"
 require "feature"
 require "item"
 require "cell"
+
 --
 --a zone is a mapped level
 --
@@ -151,26 +152,15 @@ function Zone:dungeonDig()
     local randX = rng:random(room:getLeft(), room:getRight())
     local randY = rng:random(room:getTop(), room:getBottom())
     local mob
+    --[[
     if (rng:random(1,2) == 1) then
-      mob = Actor(
-        "GOO", 
-        randX,randY, 
-        1,2, 
-        nil,
-        'foe',
-        {Item("GREY MATTER", 1,1, '1-2',4, false)}
-      )
+      mob = Actor('goo')
     else
-      mob = Actor(
-        "SKELETON", 
-        randX,randY, 
-        3,2, 
-        nil, 
-        'foe',
-        {Item("BONES", 1,1, 4,3, false) }
-        )
+      mob = Actor('skeleton')
     end
-    self:spawnMob(mob)
+    --self:spawnMob(mob)
+    
+    --]]
   end
   
   --place stairs
@@ -209,7 +199,9 @@ function Zone:spawnMob(mob)
     local randX, randY = self:getRandFloor()
     mob:teleport(randX, randY, self, nil)
   end
+  mob:teleport(mob.x, mob.y, self, self)
   table.insert(self.mobs, mob)
+  
   self:regActor(mob)
 end
 
@@ -382,17 +374,14 @@ function Zone:load(depth)
 
   -- i: index, d :dataTable contains info to init new item
   for i, d in ipairs(data.items) do
-    self.items[i] = Item(d.name, d.x, d.y, d.sheetX, d.sheetY, d.onFloor)
+    self.items[i] = Item(d)
     self:regItem(self.items[i])
   end
   data.items = nil  --remove items from data  
   
   -- i: index, d :dataTable contains info to init new item
   for i, d in ipairs(data.mobs) do
-    self.mobs[i] = Actor(d.name, d.x, d.y, d.sheetX, d.sheetY, d.id, d.faction)
-    for j, item in ipairs(d.inv) do -- iterate through the new actor and re-populate its inv
-      table.insert(self.mobs[i].inv, Item(item.name, item.x, item.y, item.sheetX, item.sheetY, item.onFloor) )
-    end
+    self.mobs[i] = Actor(d)
     self:regActor(self.mobs[i])
   end
   --fix the inv

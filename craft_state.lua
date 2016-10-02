@@ -44,14 +44,27 @@ function craft_state:update(dt)
         
       if canCraft then
         --zone spawn key golem
-        e.dungeon:getZone():spawnMob(Actor("KEY GOLEM", 
-          e.player.x,e.player.y, 
-          3,3, 
-          nil,
-          'ally',
-          nil) )
-        e.screen:sendMessage("A KEY GOLEM HAS BEEN FORMED. ")
+        local mob = Actor(craft)
+        mob.x = e.player.x
+        mob.y = e.player.y
+        mob.faction = 'ally'
+        
+        e.dungeon:getZone():spawnMob(mob)
+        e.screen:sendMessage("A "..craft.." HAS BEEN FORMED. ")
         state.switch(action_state)
+        
+        --expend items used
+        local indexesToRemove = {}
+        for itemName, remaining in pairs(dupList) do
+          for i, item in ipairs(e.player.inv) do
+            if itemName == item.name and remaining > 0 then
+              table.insert(indexesToRemove, i)
+            end
+          end
+        end
+        for i, indexToRemove in ipairs(indexesToRemove) do
+          table.remove(e.player.inv, indexToRemove)
+        end
       else
         e.screen:sendMessage("NOT ENOUGH INGREDIENTS. ")
         state.switch(action_state)

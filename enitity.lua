@@ -6,9 +6,9 @@ Enitity = class("Enitity")
 --they have a grid position and sprite
 function Enitity:initialize(name, x, y, imgName)
   
-  self.name = name
-  self.x = x
-  self.y = y
+  self.name = name or "VOID"
+  self.x = x or 1
+  self.y = y or 1
 end
 
 function Enitity:getData()

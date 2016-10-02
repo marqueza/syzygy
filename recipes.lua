@@ -1,26 +1,26 @@
 return {
   {
-    product = 'KEY GOLEM',
+    product = 'key golem',
     ingredients = 
     {
-      {name = 'KEY', amount = 3}
+      {name = 'key', amount = 3}
     }
   },
   
   {
-    product = 'FAIRY',
+    product = 'fairy',
     ingredients = 
     {
-      {name = 'HEART', amount = 1},
-      {name = 'MAGIC DUST', amount = 3},
+      {name = 'heart', amount = 1},
+      {name = 'magic dust', amount = 3},
     }
   },
    {
-    product = 'SKELETON',
+    product = 'skeleton',
     ingredients = 
     {
-      {name = 'BONES', amount = 1},
-      {name = 'MAGIC DUST', amount = 1},
+      {name = 'bones', amount = 1},
+      {name = 'magic dust', amount = 1},
     }
   },
   

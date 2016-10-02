@@ -3,29 +3,51 @@ local ROT= require "lib.rotLove"
 
 require "enitity"
 require "actorsprite"
+local actorInfo = require("actor_info")
 
 Actor = class("Actor", Enitity)
 Actor.id = 0
-function Actor:initialize(name, x, y, sheetX, sheetY, id, faction, inv)
-  Enitity.initialize(self, name, x, y)--invoke parent class Enitity
-
-  self.sheetX = sheetX
-  self.sheetY = sheetY
-  self.sprite = ActorSprite(name, 64*x, 64*y, sheetX or 1, sheetY or 1, "img/char.png")
-  self.inv = inv or {} -- if inv is a table of classes vs a table of data
-  if id then
-    self.id = id
-  else
-    Actor.id = Actor.id + 1
-    self.id = Actor.id
+function Actor:initialize(args)
+  
+  --args can either be a single string or a table of arguments
+  --after this block args will be a table of arguments
+  if type(args) == 'string' then
+    local actorName = args
+    args = actorInfo[actorName]
   end
   
-  self.faction = faction or 'foe'
+  --Enitity.initialize(self, args.name, args.x, args.y)--invoke parent class Enitity
 
-  self.sprite.grid_x = x*self.sprite.charSize
-  self.sprite.grid_y = y*self.sprite.charSize
-  self.sprite.actual_x = x*self.sprite.charSize
-  self.sprite.actual_y = y*self.sprite.charSize
+  self.name = args.name
+  self.x = args.x or 1
+  self.y = args.y or 1
+  self.sheetX = args.sheetX or 1
+  self.sheetY = args.sheetY or 1
+  
+  self.sprite = ActorSprite(self.name, 64*self.x, 64*self.y, self.sheetX or 1, self.sheetY or 1, "img/char.png")
+  self.inv = {}
+  if args.inv then
+    --inventory, strings -> objects 
+    for i, item in ipairs(args.inv) do
+      if type(item) == 'string' then
+        local itemName = item
+        self.inv[i] = Item(itemName)
+      elseif type(item) == 'table' then
+        local itemArgs = item
+        self.inv[i] = Item(itemArgs)
+      end
+    end
+  end
+  
+    Actor.id = Actor.id + 1
+    self.id = Actor.id
+  
+  self.faction = args.faction or 'foe'
+
+  self.sprite.grid_x = self.x*self.sprite.charSize
+  self.sprite.grid_y = self.y*self.sprite.charSize
+  self.sprite.actual_x = self.x*self.sprite.charSize
+  self.sprite.actual_y = self.y*self.sprite.charSize
 end
 
 function Actor:move(dx,dy, zone)
@@ -53,7 +75,7 @@ function Actor:move(dx,dy, zone)
     if self.faction ~= mob.faction then
       self:attack(mob)
     else
-      if self.name == "PLAYER" then
+      if self.name == "player" then
         --player is displacing ally
         mob.x = self.x
         mob.y = self.y
@@ -125,7 +147,7 @@ end
 
 function Actor:act(zone)
   --randomMovement
-  if self.name == "GOO" then
+  if self.name == "goo" then
     if (rng:random(1,2) == 1) then 
       local randX, randY = rng:random(-1,1), rng:random(-1,1)
       self:move(randX, randY, zone)
@@ -175,7 +197,7 @@ function Actor:getData()
 end
 
 function Actor:die()
-  e.screen:sendMessage("The "..self.name.." dies.")
+  e.screen:sendMessage("The "..self.name.." ".. self.id.." dies.")
   
   --drop inventory
   for i, item in ipairs(self.inv) do
@@ -194,6 +216,7 @@ function Actor:die()
 end
 
 function Actor:dropItem(index, zone)
+  e.screen:sendMessage("Dropped "..self.inv[index].name.." "..self.inv[index].id)
   zone = zone or e.dungeon:getZone()
   zone:placeItem(self.inv[index], self.x, self.y)
   table.remove(self.inv, index)

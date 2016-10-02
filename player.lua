@@ -3,8 +3,15 @@ require "actor"
 
 Player = class("Player", Actor)
 
-function Player:initialize(x, y, inv, sheetX, sheetY)
-  Actor.initialize(self, "PLAYER", x or 1, y or 1, sheetX, sheetY, nil, 'ally')--invoke parent class Actor
+function Player:initialize(args)
+  if args == nil then
+    args = {}
+    args.name = "player"
+    args.faction = "ally"
+    args.sheetX = 1
+    args.sheetY = 4
+  end
+    Actor.initialize(self, args)--invoke parent class Actor
 end
 
 function Player:move(dx,dy,zone)

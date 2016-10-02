@@ -72,8 +72,12 @@ function action_state:keypressed(key)
     e:save()
   elseif key == '.' then
     e:downZone()
+    e:save()
+    --e:loadGame()
   elseif key == ',' then
     e:upZone()
+    e:save()
+    --e:loadGame()
   end
   
 end

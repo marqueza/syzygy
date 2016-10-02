@@ -11,7 +11,7 @@ function ActorSprite:initialize(aniType, x, y, sheetX, sheetY, filename)
   self.override = false
   
   --animations
-  if aniType == "GOO" or aniType == "FAIRY" then
+  if aniType == "goo" or aniType == "fairy" then
      self.ani = {
       idleLeft = anim8.newAnimation(self.g(sheetX, sheetY, sheetX+1, sheetY), 1),
       idleRight = anim8.newAnimation(self.g(sheetX, sheetY, sheetX+1, sheetY), 1):flipH(),
