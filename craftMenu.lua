@@ -2,27 +2,7 @@ local Theme = require('theme')
 local UI = require 'lib.UI'
 local class = require "lib.middleclass"
 CraftMenu = class('CraftMenu', Menu)
-
-local recipes = {
-  {
-    product = 'KEY GOLEM',
-    ingredients = 
-    {
-      {name = 'KEY', amount = 5}
-    }
-  },
-  
-  {
-    product = 'KEY FAIRY',
-    ingredients = 
-    {
-      {name = 'KEY', amount = 1},
-      {name = 'HEART', amount = 5},
-    }
-  },
-  
-}
-
+local recipes = require 'recipes'
 
 --if product is selected then create a description panel, a textarea with same h,w as menu
 --the panel contains:
@@ -36,10 +16,13 @@ local recipes = {
 function CraftMenu:initialize(x, y)
 
   self.inputList = {}
+  self.valueList = {}
 
   for i, recipe in ipairs(recipes) do
     self.inputList[i] = recipe.product
+    self.valueList[i] = recipe.amount
   end
+  
   self.x = x
   self.y = y
   UI.DefaultTheme = Theme
@@ -52,27 +35,15 @@ function CraftMenu:initialize(x, y)
   self.textList = {}
   self.dupList = {}
   self.outList = {}
-  --store duplicates values in dupList
-  for i,object in ipairs(self.inputList) do
-    local text = object.name or object
-    if not self.dupList[text] then
-      self.dupList[text] = 1
-    else
-      self.dupList[text] = self.dupList[text] + 1
-    end
-  end
-  --get a sorted indexed table 
-  for item, value in pairs(self.dupList) do
-    if value == 1 then 
+  
+  --create textList and outList
+  for i, item in pairs(self.inputList) do
       table.insert(self.outList, item)
       table.insert(self.textList, item)
-    else
-      table.insert(self.outList, item .. ' ' .. value)
-      table.insert(self.textList, item)
-    end
+
   end
-  table.sort(self.textList)
-  table.sort(self.outList)
+  --table.sort(self.textList)
+ -- table.sort(self.outList)
 
   --determine width based on text
   --count the text for the bigger charCount

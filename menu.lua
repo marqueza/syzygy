@@ -15,15 +15,16 @@ function Menu:initialize(x, y, inputList)
     self.textList = {}
     self.dupList = {}
     self.outList = {}
+    
     --store duplicates values in dupList
     for i,object in ipairs(inputList) do
       local text = object.name or object
-        if not self.dupList[text] then
-          self.dupList[text] = 1
-        else
-          self.dupList[text] = self.dupList[text] + 1
-        end
+      if not self.dupList[text] then
+        self.dupList[text] = 1
+      else
+        self.dupList[text] = self.dupList[text] + 1
       end
+    end
     --get a sorted indexed table 
     for item, value in pairs(self.dupList) do
      if value == 1 then 
