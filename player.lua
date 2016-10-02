@@ -10,6 +10,7 @@ function Player:initialize(args)
     args.faction = "ally"
     args.sheetX = 1
     args.sheetY = 4
+    args.hp = 40
   end
     Actor.initialize(self, args)--invoke parent class Actor
 end
@@ -46,10 +47,15 @@ function Player:grabFloorItem(zone)
 end
 
 
-function Player:attack(target)
-  target:die()
-end
 
 function Player:recruit(target)
   target.faction = 'ally'
+  target.hp = 40
+end
+
+function Player:attack(target)
+  Actor.attack(self, target)
+end
+function Player:die()
+  e:loadGame()
 end

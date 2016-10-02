@@ -16,11 +16,11 @@ function Actor:initialize(args)
     args = actorInfo[actorName]
   end
   
-  --Enitity.initialize(self, args.name, args.x, args.y)--invoke parent class Enitity
-
   self.name = args.name
+  self.hp = args.hp or 2
   self.x = args.x or 1
   self.y = args.y or 1
+  
   self.sheetX = args.sheetX or 1
   self.sheetY = args.sheetY or 1
   
@@ -65,9 +65,11 @@ function Actor:move(dx,dy, zone)
   local newY = self.y+dy
   
   --check if we are bumping a player
-  if newX == e.player.x and newY == e.player.y then
+  --[[if newX == e.player.x and newY == e.player.y then
+    self:attack(e.player)
     return
   end
+  --]]
   
   --check if we are bumping an actor
   local mob = zone:getActor(newX, newY)
@@ -146,17 +148,48 @@ function Actor:touch()
 end
 
 function Actor:act(zone)
+  
+  zone = zone or e.dungeon:getZone()
   --randomMovement
   if self.name == "goo" then
     if (rng:random(1,2) == 1) then 
       local randX, randY = rng:random(-1,1), rng:random(-1,1)
       self:move(randX, randY, zone)
     end
-    
   --seek player
+  elseif self.faction == 'foe' then
+    self:seek(e.player.x, e.player.y)
+  elseif self.faction == 'ally' then
+    --attack adj monsters
+    local target = self:getAdjFoe(zone)
+    if target then
+      self:attack(target)
+    else -- seek player
+      self:seek(e.player.x, e.player.y)
+    end
+  end
+end
+
+function Actor:getAdjFoe(zone)
+  local foes = {}
+  for offX=-1,1,1 do
+    for offY=-1,1,1 do 
+      local target = zone:getActor(self.x+offX, self.y+offY)
+      if target and target.faction ~= self.faction then
+        table.insert(foes, target)
+      end
+    end
+  end
+  
+  if foes[1] then
+    return foes[1] 
   else
-    local z = e.dungeon:getZone()
-    local dijkstra = ROT.Path.Dijkstra(e.player.x, e.player.y,
+    return nil
+  end
+end
+function Actor:seek(destX, destY, z)
+  z = z or e.dungeon:getZone()
+  local dijkstra = ROT.Path.Dijkstra(destX, destY,
       function (x, y)
         if z.map[x] and z.map[x][y] then
           return z.map[x][y].isPassable
@@ -174,10 +207,7 @@ function Actor:act(zone)
         end
         dij_step = dij_step + 1
       end )
-  end
 end
-
-
 function Actor:getData()
   local data = {}
   for k,v in pairs(self) do
@@ -197,7 +227,7 @@ function Actor:getData()
 end
 
 function Actor:die()
-  e.screen:sendMessage("The "..self.name.." ".. self.id.." dies.")
+  e.screen:sendMessage("The "..self.name.." dies.")
   
   --drop inventory
   for i, item in ipairs(self.inv) do
@@ -223,5 +253,10 @@ function Actor:dropItem(index, zone)
 end
 
 function Actor:attack(target)
-  return
+  target.hp = target.hp - 1
+  e.screen:sendMessage(self.name.." robusts the ".. target.name.. " hp: "..target.hp)
+  if target.hp < 1 then 
+    target:die()
+  end
+  
 end
