@@ -28,13 +28,13 @@ function MLayer:initialize(player, zone)
   self.mapImage = love.graphics.newImage("img/tiles.png")
   
    -- grey floor
-  self.mapQuads[0] = love.graphics.newQuad(0 * self.gridPixels, 0 * self.gridPixels, self.gridPixels, self.gridPixels,
+  self.mapQuads['floor'] = love.graphics.newQuad(0 * self.gridPixels, 0 * self.gridPixels, self.gridPixels, self.gridPixels,
     self.mapImage:getWidth(), self.mapImage:getHeight())
   -- stone wall
-  self.mapQuads[1] = love.graphics.newQuad(1 * self.gridPixels, 0 * self.gridPixels, self.gridPixels, self.gridPixels,
+  self.mapQuads['wall'] = love.graphics.newQuad(1 * self.gridPixels, 0 * self.gridPixels, self.gridPixels, self.gridPixels,
     self.mapImage:getWidth(), self.mapImage:getHeight())
   -- door
-  self.mapQuads[2] = love.graphics.newQuad(2 * self.gridPixels, 0 * self.gridPixels, self.gridPixels, self.gridPixels,
+  self.mapQuads['door'] = love.graphics.newQuad(2 * self.gridPixels, 0 * self.gridPixels, self.gridPixels, self.gridPixels,
     self.mapImage:getWidth(), self.mapImage:getHeight())
   
   
@@ -43,7 +43,7 @@ function MLayer:initialize(player, zone)
   for x=1, self.zone.width do
     for y=1, self.zone.height do
       if self.zone.seen[x][y] == 1 then
-        self.mapBatch:add(self.mapQuads[self.zone.map[x][y]], x*self.gridPixels, y*self.gridPixels)
+        self.mapBatch:add(self.mapQuads[self.zone.map[x][y].tile], x*self.gridPixels, y*self.gridPixels)
       end
     end
   end
@@ -62,7 +62,7 @@ function MLayer:updateMapBatch()
           self.mapBatch:setColor(100,100,100) --greyed
         end
          
-         self.mapBatch:add(self.mapQuads[self.zone.map[x][y]], x*self.gridPixels, y*self.gridPixels)
+         self.mapBatch:add(self.mapQuads[self.zone.map[x][y].tile], x*self.gridPixels, y*self.gridPixels)
 
       end
     end

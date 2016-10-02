@@ -33,13 +33,13 @@ end
 function Feature:bump(zone)
   if self.name == "DOOR" then
     self:activate()
-    zone.map[self.x][self.y] = 0
+    zone.map[self.x][self.y]:createFloor()
   end
 end
 function Feature:touch(zone)
   if self.name == "DOOR" then
     self:activate()
-    zone.map[self.x][self.y] = 0
+    zone.map[self.x][self.y]:createFloor()
   end
   
   if self.name == "GLASS GATE" then

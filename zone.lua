@@ -7,17 +7,20 @@ require "lib.mapgeneration"
 
 require "actor"
 require "feature"
+require "item"
+require "cell"
 --
 --a zone is a mapped level
 --
 Zone = class("Zone")
 
-
 function Zone:initialize(player, width, height, mapType, depth)
   self.player = player
+
   self.map = {}
   self.seen = {}
   self.field = {}
+  
   self.width = width or 20
   self.height = height or 20
   self.mapType = mapType or "ARENA"
@@ -32,7 +35,7 @@ function Zone:initialize(player, width, height, mapType, depth)
   self.fov=ROT.FOV.Precise:new( 
     function (fov, x, y)
       if self.map[x] and self.map[x][y] then
-          return self.map[x][y]==0
+          return self.map[x][y].isOpaque==false
       end
       return false
     end
@@ -55,7 +58,7 @@ function Zone:initMap()
     self.field[x] = {}
     
     for y=1,self.height do
-      self.map[x][y] = 1
+      self.map[x][y] = Cell()
       self.seen[x][y] = 0
       self.field[x][y] = 0
     end
@@ -110,7 +113,8 @@ function Zone:cellDig()
   for x=1,self.width do
     for y=1,self.height do
       if not tempMap[x][y] then
-        self.map[x][y] = 0
+        --create floor
+        self.map[x][y]:createFloor()
       end
     end
   end
@@ -127,14 +131,20 @@ function Zone:dungeonDig()
     nocorridorsmode=true
   }
   local digger=ROT.Map.Digger(self.width, self.height, opts)
-  digger:create( function (x, y, val) self.map[x][y] = val end )
+  digger:create( function (x, y, val) 
+      if val == 0 then 
+        self.map[x][y]:createFloor() 
+      else
+        self.map[x][y]:createWall() 
+      end 
+    end )
   
   --make doors and store them in feats table
   local doors = digger:getDoors()
   for i,door in ipairs(doors) do
     --                            name,       x,y, sheetX,sheetY, zone
     table.insert(self.feats, Feature("DOOR", door.x,door.y, 3,1))
-    self.map[door.x][door.y] = 1
+    self.map[door.x][door.y]:createWall()
   end
   
   --place mobs
@@ -177,12 +187,16 @@ end
 function Zone:arenaDig()
   --dig out map
   digger=ROT.Map.Arena(self.width, self.height, opts)
-  digger:create(function (x, y, val) self.map[x][y] = val end)
+  digger:create(function (x, y, val) 
+      if val == 0 then
+        self.map[x][y]:createFloor() 
+      else
+        self.map[x][y]:createWall() 
+      end
+    end)
   
   --place stairs
-  local feat = Feature("DOWN STAIRWAY", 1,1, 5,1, true)
-  table.insert(self.feats, feat)
-  feat:place(self:getRandFloor())
+  self:createDownStairs(self:getRandFloor())
   
 end
 
@@ -190,7 +204,7 @@ function Zone:getRandFloor()
   while true do
     local randX = rng:random(1,self.width)
     local randY = rng:random(1,self.height)
-    if self.map[randX][randY] == 0 then
+    if self.map[randX][randY].isPassable then
       return randX, randY
     end
   end
@@ -198,51 +212,42 @@ end
 
 function Zone:spawnMob(mob)
   local randX, randY = self:getRandFloor()
-  mob:teleport(randX, randY)
+  mob:teleport(randX, randY, self, nil)
   table.insert(self.mobs, mob)
+  self.map[randX][randY].actor = mob
 end
+
 function Zone:spawnPlayer()
-  while true do
-    local randX = rng:random(1,self.width)
-    local randY = rng:random(1,self.height)
-    if self.map[randX][randY] == 0 then
-      self.player:teleport(randX,randY)
-      break
-    end
-  end
+  local randX, randY = self:getRandFloor()
+  self.map[randX][randY].actor = self.player
+  self.player:teleport(randX,randY, self, nil)
 end
 
 function Zone:createUpStairs(x, y)
   local feat = Feature("UP STAIRWAY", x,y, 6,1, true)
   table.insert(self.feats, feat)
+  self.map[x][y].feat = feat
 end
 
 function Zone:createDownStairs(x, y)
   local feat = Feature("DOWN STAIRWAY", x,y, 6,1, true)
   table.insert(self.feats, feat)
+  self.map[x][y].feat = feat
 end
 
 
 function Zone:spawnItem(item)
-  --store in in table
   table.insert(self.items, item)
-  
-  --determine spawn point
-  
-  while true do
-    local randX = rng:random(1,self.width)
-    local randY = rng:random(1,self.height)
-    if self.map[randX][randY] == 0 then
-      item:place(randX,randY)
-      break
-    end
-  end
+  local randX, randY = self:getRandFloor()
+  item:place(randX,randY)
+  table.insert(self.map[randX][randY].inv, item)
 end
 
 function Zone:placeItem(item, x, y)
   item.onFloor = false
   item:place(x,y)
   table.insert(self.items,item)
+  table.insert(self.map[x][y].inv, item)
   --delay for smoother sprite placement
   Timer.after(.05, function ()  item.onFloor = true end) 
 
@@ -260,12 +265,45 @@ function Zone:update(dt)
   end
 end
 
+function Zone:regActor(actor)
+  self.map[actor.x][actor.y].actor = actor
+end
+
+function Zone:unregActor(actor)
+  --assert(self.map[actor.x][actor.y].actor, "Actor not in map location.")
+  self.map[actor.x][actor.y].actor = nil
+end
+
+
+function Zone:regItem(item)
+  table.insert(self.map[item.x][item.y].inv, item)
+end
+
+function Zone:unregItem(item)
+  for i, floorItem in ipairs(self.map[item.x][item.y].inv) do
+    if item.name == foorItem.name then
+      table.remove(self.map[item.x][item.y].inv, i)
+      return
+    end
+  end
+  --assert(nil, "Item not in map location.")
+end
+
+function Zone:regFeat(feat)
+  table.insert(self.map[feat.x][feat.y].inv, feat)
+end
+
+function Zone:unregFeat(feat)
+  self.map[feat.x][feat.y].feat = nil
+end
+
+
 function Zone:save()
   --save everything but call the save functions on items and feats, maybe player too
   --for now save the map into map file
   local zdata = {}
   for k,v in pairs(self) do
-      if k ~= "player" and k ~= "items" and k ~= "feats" and k~="fov" and k~="class" then
+      if k ~= "player" and k ~= "items" and k ~= "feats" and k~="fov" and k~="class" and k~= "map" then
         zdata[k] = v
       end
   end
@@ -288,6 +326,15 @@ function Zone:save()
   end
   zdata["feats"]  = featsData
   
+  local mapData = {}
+  for i in ipairs(self.map) do
+    for j in ipairs(self.map[i]) do
+      if j == 1 then mapData[i] = {} end
+      mapData[i][j] = self.map[i][j]:getData()
+    end
+  end
+  zdata["map"] = mapData
+  
   love.filesystem.write('z'..self.depth..'.lua', serpent.dump(zdata, {indent = ' ', sortkeys=true}) )
   return
 end
@@ -297,15 +344,28 @@ function Zone:load(depth)
   --for now load the map from map file
   local data = loadstring(love.filesystem.read('z'..depth..'.lua')) ()
   
+  --recreate the map cells objects
+  for i in ipairs(data.map) do
+    for j, d in ipairs(data.map[i]) do 
+      if j == 1 then self.map[i] = {} end
+      self.map[i][j] = Cell(d.tile, d.isPassable, d.isOpaque)
+      self.map[i][j].isOpaque = d.isOpaque
+    end
+  end
+  data.map = nil -- remove the map array from data
+    
+  
   -- i: index, d :dataTable contains info to init new feat
   for i, d in ipairs(data.feats) do
-    self.feats[i] = Feature(d.name, d.x, d.y, d.sheetX, d.sheetY, d.isPassible, d.active)
+    self.feats[i] = Feature(d.name, d.x, d.y, d.sheetX, d.sheetY, d.isPassable, d.active)
+    self:regFeat(self.feats[i])
   end
   data.feats = nil  --remove feats from data  
-   
+
   -- i: index, d :dataTable contains info to init new item
   for i, d in ipairs(data.items) do
     self.items[i] = Item(d.name, d.x, d.y, d.sheetX, d.sheetY, d.onFloor)
+    self:regItem(self.items[i])
   end
   data.items = nil  --remove items from data  
   
@@ -315,9 +375,13 @@ function Zone:load(depth)
     for j, item in ipairs(d.inv) do -- iterate through the new actor and re-populate its inv
       table.insert(self.mobs[i].inv, Item(item.name, item.x, item.y, item.sheetX, item.sheetY, item.onFloor) )
     end
+    self:regActor(self.mobs[i])
   end
   --fix the inv
   data.mobs = nil  --remove items from data  
+  
+
+  
      
   for k, v in pairs(data) do
     self[k] = v

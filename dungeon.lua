@@ -56,22 +56,28 @@ function Dungeon:downZone()
           self:transferAllies(self.depth-1, self.depth)
           local z = self:getZone()
 
-          --remove downstairs
+          --[[remove downstairs
           for i,feat in ipairs(z.feats) do
             if feat.name == "DOWN STAIRWAY" then
               table.remove(z.feats,i)
             end
           end
-
-          --place gateway
+          --]]
+          --[[place gateway
           local randX, randY = z:getRandFloor()
           table.insert(z.feats, Feature("GLASS GATE", randX,randY, 7,1, false))
           z.map[randX][randY] = 1
+          --]]
 
         end
       else
         --visit old zone
-        self.player:teleport(self.zones[self.depth].lastX, self.zones[self.depth].lastY)
+        self.player:teleport(
+          self.zones[self.depth].lastX,
+          self.zones[self.depth].lastY,
+          self.zones[self.depth],
+          self.zones[self.depth-1]
+          )
         self:transferAllies(self.depth-1, self.depth)
       end
     end
@@ -92,7 +98,12 @@ function Dungeon:upZone()
       else
         --elevate
         self.depth = self.depth - 1
-        self.player:teleport(self.zones[self.depth].lastX, self.zones[self.depth].lastY)
+        self.player:teleport(
+          self.zones[self.depth].lastX, 
+          self.zones[self.depth].lastY,
+          self.zones[self.depth],
+          self.zones[self.depth+1]
+          )
         self:transferAllies(self.depth+1, self.depth)
 
       end
@@ -138,7 +149,7 @@ function Dungeon:load()
 
   local p = data.player
   self.player = Player(p.x, p.y, p.inv, p.sheetX, p.sheetY, p.id, p.faction)
-
+  
   for i, item in ipairs(p.inv) do -- iterate through the new actor and re-populate its inv
     table.insert(self.player.inv, Item(item.name, item.x, item.y, item.sheetX, item.sheetY, item.onFloor) )
   end
@@ -152,7 +163,12 @@ function Dungeon:transferAllies(oldDepth, newDepth)
       table.insert(e.dungeon.zones[newDepth].mobs, mob)
       table.insert(removeIndices, i)
       --teleport near player
-      mob:teleport(self.zones[newDepth].lastX, self.zones[newDepth].lastY)
+      mob:teleport(
+        self.zones[newDepth].lastX, 
+        self.zones[newDepth].lastY,
+        self.zones[newDepth],
+        self.zones[oldDepth]
+        )
     end
   end
   

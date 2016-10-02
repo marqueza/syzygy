@@ -22,24 +22,26 @@ function Actor:initialize(name, x, y, sheetX, sheetY, id, faction, inv)
   
   self.faction = faction or 'foe'
 
-  self:teleport(x,y)
+  self.sprite.grid_x = x*self.sprite.charSize
+  self.sprite.grid_y = y*self.sprite.charSize
+  self.sprite.actual_x = x*self.sprite.charSize
+  self.sprite.actual_y = y*self.sprite.charSize
 end
 
 function Actor:move(dx,dy, zone)
   assert( (dx == -1 or dx == 0 or dx == 1) and
           (dy == -1 or dy == 0 or dy == 1),
           "Invalid dx and dy values: must be -1,0,1")
-  zone = e.dungeon:getZone()
+  zone = zone or e.dungeon:getZone()
 
   --change direction of sprite
   if dx ~= 0 then 
     self.sprite.direction = dx
   end
 
-  --check for wall and dungeon features
   local newX = self.x+dx
   local newY = self.y+dy
-
+  
   --check if we are bumping a player
   if newX == e.player.x and newY == e.player.y then
     return
@@ -52,15 +54,19 @@ function Actor:move(dx,dy, zone)
         self:attack(mob)
       else
         if self.name == "PLAYER" then
+          --player is displacing ally
           mob.x = self.x
           mob.y = self.y
           mob.sprite.grid_x = self.sprite.grid_x
           mob.sprite.grid_y = self.sprite.grid_y
+          zone.map[mob.x][mob.y].actor = mob
+          zone:regActor(mob)
           
           self.x = self.x + dx
           self.y = self.y + dy
           self.sprite.grid_x = self.x*self.sprite.charSize
           self.sprite.grid_y = self.y*self.sprite.charSize
+          zone:regActor(self)
         else
           return
         end
@@ -76,23 +82,29 @@ function Actor:move(dx,dy, zone)
   end
 
   --floor is an allowed move
-  if zone.map[newX][newY]==0 then  
+  if zone.map[newX][newY].isPassable then  
+    zone:unregActor(self)
     self.x = self.x + dx
     self.y = self.y + dy
     self.sprite.grid_x = self.x*self.sprite.charSize
     self.sprite.grid_y = self.y*self.sprite.charSize
+    zone:regActor(self)
+    
   end
 
 
 end
 
-function Actor:teleport(x,y)
+function Actor:teleport(x,y, newZone, oldZone)
+  newZone = newZone or e.dungeon:getZone()
+  if oldZone then oldZone:unregActor(self) end
   self.x = x
   self.y = y
   self.sprite.grid_x = x*self.sprite.charSize
   self.sprite.grid_y = y*self.sprite.charSize
   self.sprite.actual_x = x*self.sprite.charSize
   self.sprite.actual_y = y*self.sprite.charSize
+  newZone:regActor(self)
 end
 
 
@@ -126,7 +138,7 @@ function Actor:act(zone)
     local dijkstra = ROT.Path.Dijkstra(e.player.x, e.player.y,
       function (x, y)
         if z.map[x] and z.map[x][y] then
-          return z.map[x][y]==0
+          return z.map[x][y].isPassable
         end
         return false
       end )
