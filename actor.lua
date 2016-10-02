@@ -48,37 +48,36 @@ function Actor:move(dx,dy, zone)
   end
   
   --check if we are bumping an actor
-  for i,mob in ipairs(zone.mobs) do
-    if newX == mob.x and newY == mob.y then
-      if self.faction ~= mob.faction then
-        self:attack(mob)
+  local mob = zone:getActor(newX, newY)
+  if mob then
+    if self.faction ~= mob.faction then
+      self:attack(mob)
+    else
+      if self.name == "PLAYER" then
+        --player is displacing ally
+        mob.x = self.x
+        mob.y = self.y
+        mob.sprite.grid_x = self.sprite.grid_x
+        mob.sprite.grid_y = self.sprite.grid_y
+        zone.map[mob.x][mob.y].actor = mob
+        zone:regActor(mob)
+
+        self.x = self.x + dx
+        self.y = self.y + dy
+        self.sprite.grid_x = self.x*self.sprite.charSize
+        self.sprite.grid_y = self.y*self.sprite.charSize
+        zone:regActor(self)
       else
-        if self.name == "PLAYER" then
-          --player is displacing ally
-          mob.x = self.x
-          mob.y = self.y
-          mob.sprite.grid_x = self.sprite.grid_x
-          mob.sprite.grid_y = self.sprite.grid_y
-          zone.map[mob.x][mob.y].actor = mob
-          zone:regActor(mob)
-          
-          self.x = self.x + dx
-          self.y = self.y + dy
-          self.sprite.grid_x = self.x*self.sprite.charSize
-          self.sprite.grid_y = self.y*self.sprite.charSize
-          zone:regActor(self)
-        else
-          return
-        end
+        return
       end
-      return
     end
+    return
   end
-  --check if we are bumping a feature
-  for i,feat in ipairs(zone.feats) do
-    if newX == feat.x and newY == feat.y then
-      feat:bump(zone)
-    end
+  
+  --check if we are bumping a feat
+  local feat = zone:getFeat(newX, newY)
+  if feat then
+    feat:bump(zone)
   end
 
   --floor is an allowed move
@@ -183,12 +182,15 @@ function Actor:die()
     self:dropItem(i)
   end
   
+  local zone = e.dungeon:getZone()
   --remove entry from zone mob table
   for i,mob in ipairs(e.dungeon:getZone().mobs) do
     if self.id == mob.id then
-      table.remove(e.dungeon:getZone().mobs, i)
+      table.remove(zone.mobs, i)
     end
   end
+  --unregister from zone
+  zone:unregActor(self)
 end
 
 function Actor:dropItem(index, zone)

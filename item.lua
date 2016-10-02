@@ -10,18 +10,25 @@ function Item:initialize(name, x,y, sheetX,sheetY, onFloor)
   self.sheetX = sheetX
   self.sheetY = sheetY
   self.sprite = ItemSprite("img/item.png", 64*x, 64*y, sheetX or 1,sheetY or 1)
-  self:place(x,y)
 
+  self.sprite.actual_x = x*64
+  self.sprite.actual_y = y*64
+  self.sprite.grid_x = x*64
+  self.sprite.grid_y = y*64
+  
   self.onFloor = onFloor or true
 end
 
-function Item:place(x,y)
+function Item:place(x,y, zone)
+  zone = zone or e.dungeon:getZone()
+  zone:regItem(self)
   self.x = x
   self.y = y
   self.sprite.actual_x = x*64
   self.sprite.actual_y = y*64
   self.sprite.grid_x = x*64
   self.sprite.grid_y = y*64
+  
 end
 function Item:draw()
   if self.onFloor then 

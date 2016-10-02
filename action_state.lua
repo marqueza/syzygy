@@ -36,7 +36,7 @@ function action_state:keypressed(key)
       e.player:touchArea(e.dungeon:getZone())
       e:nextTurn()
     elseif key == 'g' then
-      e.player:grabFloor(e.dungeon:getZone())
+      e.player:grabFloorItem(e.dungeon:getZone())
       e:nextTurn()
     elseif key == 'd' then
       e.screen:sendMessage("Drop which item? ")

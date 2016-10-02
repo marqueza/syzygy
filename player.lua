@@ -12,20 +12,10 @@ function Player:move(dx,dy,zone)
   zone:updateFov(self.x, self.y)
 end
 
-function Player:touchArea(zone)
-    
-    for i, feat in ipairs(zone.feats) do
-      if ((feat.x == self.x or feat.x == self.x+1 or feat.x == self.x-1) and (feat.y == self.y or feat.y == self.y+1 or feat.y == self.y-1) ) then
-        feat:touch(zone)
-        return
-      end
-    end
-    
-end
-
-
-function Player:getAdjMob(zone)
-  
+--
+--must be updated or deprecated, when targeting commands are written
+--
+function Player:getAdjMob(zone)  
     for i, mob in ipairs(zone.mobs) do
       if ((mob.x == self.x or mob.x == self.x+1 or mob.x == self.x-1) and 
           (mob.y == self.y or mob.y == self.y+1 or mob.y == self.y-1) ) then
@@ -33,8 +23,8 @@ function Player:getAdjMob(zone)
       end
     end
 end
-function Player:grabFloor(zone)
-  
+
+function Player:grabFloorItem(zone)
     --interact with items
     for i,item in ipairs(zone.items) do
       if (item.x == self.x and item.y == self.y ) then
@@ -46,7 +36,6 @@ function Player:grabFloor(zone)
         return 
       end
     end
-
 end
 
 
