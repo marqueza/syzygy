@@ -38,6 +38,7 @@ function ActorSprite:initialize(aniType, x, y, sheetX, sheetY, filename)
   end
   self.foot = 1
   self.wasMoving = false
+  self.speed = 20
   self.lastMapX, self.lastMapY = self:mapLocation()
   
   --set up spritebatch
