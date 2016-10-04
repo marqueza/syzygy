@@ -6,14 +6,13 @@ Feature = class("Feature", Enitity)
 
 --features are things in the dungeon can be interacted with
 --such as buttons, doors, statues, etc
-function Feature:initialize(name, x,y, sheetX,sheetY, isPassable, active)
+function Feature:initialize(name, x,y, ani, active)
   Enitity.initialize(self,name, x, y)
   self.sheetX = sheetX
   self.sheetY = sheetY
-  self.sprite = FeatureSprite("img/tiles.png", 64*x, 64*y, sheetX or 1,sheetY or 1)
+  self.sprite = FeatureSprite("img/tiles.png", 64*x, 64*y, ani)
   
   --all features belong to a zone
-  self.isPassable = isPassable or false
   self.active = active or false
   
   if (self.active) then
@@ -51,7 +50,6 @@ end
 function Feature:activate()
   self.active = true
   self.sprite.curAni = self.sprite.ani.active
-  self.isPassable = true
 end
 function Feature:place(x,y)
   self.x = x

@@ -4,15 +4,15 @@ require "sprite"
 
 FeatureSprite = class("FeatureSprite", Sprite)
 
-function FeatureSprite:initialize(filename, x, y, sheetX, sheetY)
+function FeatureSprite:initialize(filename, x, y, ani)
   
    --init from parent
   Sprite.initialize(self, filename, x, y, sheetX, sheetY)
   
   --animations
   self.ani = {
-   inert = anim8.newAnimation(self.g(sheetX,sheetY, sheetX,sheetY), 1),
-   active = anim8.newAnimation(self.g(sheetX+1,sheetY, sheetX+1,sheetY), 1),
+   inert = anim8.newAnimation(self.g(ani.inert.x, ani.inert.y), 1),
+   active = anim8.newAnimation(self.g(ani.active.x, ani.active.y), 1),
   }
 
   --set up spritebatch

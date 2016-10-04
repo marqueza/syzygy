@@ -7,7 +7,7 @@ Dungeon = class('Dungeon')
 
 function Dungeon:initialize(player, startingZone)
   self.player = player
-  self.zones = {startingZone} or {Zone(self.player, 20, 20, "ARENA", 1)} 
+  self.zones = {startingZone or Zone(self.player, 16, 16, "nexus", 1)} 
   self.depth = 1
   self.maxDepth = 1
 end
@@ -30,7 +30,7 @@ function Dungeon:downZone()
       if not self.zones[self.depth] then 
         --set up new zone
 
-        self.zones[self.depth] = Zone(self.player, 20, 20, "DUNGEON", self.depth)
+        self.zones[self.depth] = Zone(self.player, 20, 20, "dungeon", self.depth)
         local z = self.zones[self.depth]
         z:createUpStairs(self.player.x, self.player.y)
         self:transferAllies(self.depth-1, self.depth)
@@ -70,7 +70,7 @@ function Dungeon:upZone()
 
       if not self.zones[self.depth-1] then --exit the dungeon
         --enter the nexus
-        self.zones = {Zone(self.player, 20, 20, "ARENA", 1)}
+        self.zones = {Zone(self.player, 20, 20, "arena", 1)}
       else
         --elevate
         self.depth = self.depth - 1

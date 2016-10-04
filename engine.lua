@@ -15,7 +15,7 @@ function Engine:initialize()
   
 
   self.player = Player()
-  self.dungeon = Dungeon(self.player, Zone(self.player, 5, 5, "ARENA", 1) )
+  self.dungeon = Dungeon(self.player)
  -- self.dungeon:getZone():spawnMob(Actor('skeleton'))
   -- self.dungeon:getZone():spawnMob(Actor('skeleton'))
   self.screen = Screen(MLayer(self.player, self.dungeon:getZone() ) )
