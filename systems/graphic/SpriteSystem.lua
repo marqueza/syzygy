@@ -8,11 +8,13 @@ function SpriteDrawSystem:draw()
     for i, v in pairs(self.targets) do
         local position = v:get("Position")
         local sprite = v:get("Sprite")
-        love.graphics.draw(sprite.image, sprite:getFrame(count), position.x*sprite.size, position.y*sprite.size)
+        love.graphics.draw(sprite.image, sprite:getFrame(count), engine.ui.gameBox.frame.x+position.x*sprite.size-64, engine.ui.gameBox.frame.y+position.y*sprite.size-64)
     end
 end
 
+function SpriteDrawSystem:update()
 
+end
 function SpriteDrawSystem:requires()
     return {"Position", "Sprite"}
 end

@@ -1,18 +1,20 @@
-debug.debug()
-
 -- Importing lovetoys
 lovetoys = require("lib/lovetoys/lovetoys")
 lovetoys.initialize({
     globals = true,
     debug = true
 })
+
+--Importing thranduil UI lib
+UI = require 'lib.UI'
+
 --Event Systems
 CommandKeySystem = require("systems/event/CommandKeySystem")
 MoveSystem = require("systems/event/MoveSystem")
 MessageSystem = require("systems/event/MessageSystem")
 
---Draw Systems
-SpriteSystem = require("systems/draw/SpriteSystem")
+--Graphic Systems(update and draw)
+SpriteSystem = require("systems/graphic/SpriteSystem")
 
 --Events
 require("events/CommandKeyEvent")
@@ -23,17 +25,25 @@ Factory = require("factories/Factory")
 
 --map
 Map = require("map/Map")
+
+
+--ui
+GameBox = require("ui/GameBox")
 function love.load()
+    love.window.setMode(1280,720)
     --instances of engine and eventManager
-	engine = Engine()
+    UI.registerEvents()
+
+    engine = Engine()
     eventManager = EventManager()
     time = 1
-	
+
     --add draw systems to engine
-	engine:addSystem(SpriteSystem())
-	
+    engine:addSystem(SpriteSystem(), "draw")
+    engine:addSystem(SpriteSystem(), "update")
+
     --instances of event systems
-	moveSystem = MoveSystem()
+    moveSystem = MoveSystem()
     commandKeySystem = CommandKeySystem()
     messageSystem = MessageSystem()
 
@@ -50,15 +60,26 @@ function love.load()
     engine.turn = 1
     engine.messageLog = {"Welcome!"}
 
+    engine.ui = {}
+    engine.ui.gameBox = GameBox(1*64, 1*64, 10*64, 7*64 )
+
 end
 
 function love.update(dt)
     time = time + dt
     engine:update(dt)
+    engine.ui.gameBox:update(dt)
 end
 
 function love.draw()
-	engine:draw()
+
+    engine.ui.gameBox:draw()
+    love.graphics.setColor(255, 255, 255)
+    engine:draw()
+    love.graphics.setColor(255, 0, 0)
+    --love.graphics.rectangle("line", 1*64, 1*64, 10*64, 7*64 )
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.print("x:" .. engine.ui.gameBox.frame.x .. " y:" .. engine.ui.gameBox.frame.y, 10, 200)
 end
 
 function love.keypressed(key)

@@ -466,10 +466,10 @@ function Textarea:draw()
         love.graphics.setStencil()
     else
         love.graphics.stencil(function() love.graphics.rectangle('fill', self.x, self.y, self.w, self.h) end)
-        love.graphics.setStencilTest(true)
+        --love.graphics.setStencilTest("equal", 1)
         self:basePreDraw()
         self:basePostDraw()
-        love.graphics.setStencilTest(false)
+        --love.graphics.setStencilTest("notequal", 1)
     end
 end
 
