@@ -8,7 +8,13 @@ function SpriteDrawSystem:draw()
     for i, v in pairs(self.targets) do
         local position = v:get("Position")
         local sprite = v:get("Sprite")
-        love.graphics.draw(sprite.image, sprite:getFrame(count), engine.ui.gameBox.frame.x+position.x*sprite.size-64, engine.ui.gameBox.frame.y+position.y*sprite.size-64)
+        love.graphics.draw(sprite.image, 
+            sprite:getFrame(count), 
+            engine.ui.gameBox.frame.x+position.x*sprite.size-sprite.size, 
+            engine.ui.gameBox.frame.y+position.y*sprite.size-sprite.size,
+            0,
+            4,
+            4 )
     end
 end
 

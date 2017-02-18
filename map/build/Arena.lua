@@ -12,6 +12,21 @@ local function Arena(length, width)
         end
     end
 	engine:addEntity(Factory.Goo(2,2))
+	engine:addEntity(Factory.Fairy(3,2))
+	engine:addEntity(Factory.Ghost(4,2))
+	engine:addEntity(Factory.Kobold(5,2))
+	engine:addEntity(Factory.Orc(6,2))
+	engine:addEntity(Factory.Angel(7,2))
+	engine:addEntity(Factory.Skeleton(8,2))
+	engine:addEntity(Factory.Zombie(9,2))
+	engine:addEntity(Factory.Goblin(2,3))
+	engine:addEntity(Factory.Golem(2,4))
+
+	engine:addEntity(Factory.Dust(2,6))
+	engine:addEntity(Factory.Key(3,6))
+	engine:addEntity(Factory.Heart(4,6))
+	engine:addEntity(Factory.Goop(5,6))
+	engine:addEntity(Factory.Sword(6,6))
 end
 
 return Arena
