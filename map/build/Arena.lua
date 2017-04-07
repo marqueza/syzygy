@@ -27,6 +27,9 @@ local function Arena(length, width)
 	engine:addEntity(Factory.Heart(4,6))
 	engine:addEntity(Factory.Goop(5,6))
 	engine:addEntity(Factory.Sword(6,6))
+	engine:addEntity(Factory.Mail(7,6))
+	engine:addEntity(Factory.Boots(8,6))
+	engine:addEntity(Factory.Spear(9,6))
 end
 
 return Arena
