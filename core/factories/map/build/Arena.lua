@@ -12,7 +12,8 @@ local function Arena(length, width)
             end
         end
     end
-	engine:addEntity(Factory.Angel(7,2))
+	engine:addEntity(Factory.Orc(7,2))
+	engine:addEntity(Factory.Golem(7,6))
     --[[
 	engine:addEntity(Factory.Goo(2,2))
 	engine:addEntity(Factory.Fairy(3,2))

@@ -1,8 +1,8 @@
 local physics  = Component.create("physics")
 
-function physics:initialize(x, y, hp, blocks)
-    self.x = x
-    self.y = y
-    self.hp = hp or 10
-    self.blocks = blocks
+function physics:initialize(args)
+    self.x = args.x
+    self.y = args.y
+    self.blocks = args.blocks
+    self.hp = args.hp or 10
 end
