@@ -7,6 +7,7 @@ lovetoys.initialize({
 -- serpent?
 serpent = require "serpent"
 
+require "core.config"
 --Event Systems
 CommandKeySystem = require("core/systems/event/CommandKeySystem")
 MoveSystem = require("core/systems/event/MoveSystem")
