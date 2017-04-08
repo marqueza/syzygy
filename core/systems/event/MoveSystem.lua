@@ -1,3 +1,5 @@
+local events = require "core.events.events"
+
 local MoveSystem = class("MoveSystem", System)
 
 function MoveSystem:fireEvent(moveEvent)
@@ -8,10 +10,10 @@ function MoveSystem:fireEvent(moveEvent)
             local faction = target:get("faction")
             if (target:has("faction")) then
                 if moveEvent.mover.faction.name ~= target.faction.name then
-                  eventManager:fireEvent(MessageEvent(moveEvent.mover.name .. " smacks ".. target.name))
+                  events.fireEvent(MessageEvent(moveEvent.mover.name .. " smacks ".. target.name))
                 end
             else
-                eventManager:fireEvent(MessageEvent(moveEvent.mover.name .. " bumps " .. target.name))
+                events.fireEvent(MessageEvent(moveEvent.mover.name .. " bumps " .. target.name))
             end
             engine.turn = engine.turn + 1
             return

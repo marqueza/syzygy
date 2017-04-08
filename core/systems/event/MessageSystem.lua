@@ -4,8 +4,11 @@ function MessageSystem:initialize()
     self.logFile:open("a")
 end
 function MessageSystem:fireEvent(messageEvent)
-    formattedMessage = "[" .. engine.turn  .. "] " .. messageEvent.text .. "\n"
+    local formattedMessage = "[" .. engine.turn  .. "] " .. messageEvent.text .. "\n"
     formattedMessage = string.upper(formattedMessage)
+    formattedMessage = string.gsub(formattedMessage, '{', '[')
+    formattedMessage = string.gsub(formattedMessage, '}', ']')
+    formattedMessage = string.gsub(formattedMessage, '\"', ' ')
     self.logFile:write(formattedMessage)
     table.insert(engine.log, 1, formattedMessage)
     PromptSystem:flushPrompt()
