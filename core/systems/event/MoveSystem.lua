@@ -1,8 +1,10 @@
 local events = require "core.events.events"
+local engine = require "core.engine"
+
 local MoveSystem = class("MoveSystem", System)
 
 function MoveSystem:fireEvent(moveEvent)
-    for index, target in pairs(engine:getEntitiesWithComponent("physics")) do
+    for index, target in pairs(engine.getEntitiesWithComponent("physics")) do
         local physics = target:get("physics")
         if moveEvent.x == physics.x and moveEvent.y == physics.y then
           if (physics.blocks == true) then
@@ -14,7 +16,7 @@ function MoveSystem:fireEvent(moveEvent)
             else
                 events.fireEvent(MessageEvent(moveEvent.mover.name .. " bumps " .. target.name))
             end
-            engine.turn = engine.turn + 1
+            game.turn = game.turn + 1
             return
           end
         end
@@ -24,7 +26,7 @@ function MoveSystem:fireEvent(moveEvent)
     local moverphysics = moveEvent.mover:get("physics")
     moverphysics.x = moveEvent.x
     moverphysics.y = moveEvent.y
-    engine.turn = engine.turn + 1
+    game.turn = game.turn + 1
     return
 end
 

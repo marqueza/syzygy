@@ -1,4 +1,5 @@
 MessageEvent = class("MessageEvent")
+local engine = require "core.engine"
 
 function MessageEvent:initialize(text)
     self.text = text

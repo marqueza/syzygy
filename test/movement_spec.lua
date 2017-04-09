@@ -14,7 +14,7 @@ describe("arena", function()
     describe("movement", function()
         local oldX, oldY, newX, newY
         local events = require("../core/events/events")
-        events.register()
+        events.init()
         it("right", function ()
             oldX, oldY = game.player.physics.x, game.player.physics.y
             local s = spy.on(MoveEvent, "initialize")
@@ -57,7 +57,7 @@ describe("arena", function()
         end)
 
     end)
-    describe("", function()
+    describe("attack", function()
         it()
     end)
 end)

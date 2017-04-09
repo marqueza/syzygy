@@ -11,8 +11,8 @@ function PromptSystem:draw()
 end
 function PromptSystem:getLatestLines(lines)
     self.text = ""
-    for i = 1, math.min(#(engine.log), lines) do
-        self.text = self.text .. engine.log[i]
+    for i = 1, math.min(#(game.log), lines) do
+        self.text = self.text .. game.log[i]
     end
 end
 function PromptSystem:flushPrompt()

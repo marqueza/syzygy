@@ -1,6 +1,6 @@
 local events = {}
 
-function events.register()
+function events.init()
     require "core.systems.event.MessageSystem"
     require "core.systems.event.CommandKeySystem"
     require "core.systems.event.MoveSystem"
