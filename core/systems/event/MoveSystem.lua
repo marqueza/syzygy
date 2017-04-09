@@ -1,5 +1,4 @@
 local events = require "core.events.events"
-
 local MoveSystem = class("MoveSystem", System)
 
 function MoveSystem:fireEvent(moveEvent)

@@ -11,9 +11,8 @@ local function Arena(length, width)
             end
         end
     end
-	engine:addEntity(Factory.Orc(7,2))
-	engine:addEntity(Factory.Golem(7,6))
-	engine:addEntity(Factory.Player(2,3))
+	engine:addEntity(Factory.Orc(4,2))
+	engine:addEntity(Factory.Golem(2,4))
 end
 
 return Arena

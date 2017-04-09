@@ -20,7 +20,7 @@ PromptSystem = require("core/systems/graphic/PromptSystem")
 --Events
 require("core/events/CommandKeyEvent")
 require("core/events/MessageEvent")
-events = require("core/events/events")
+
 --Factories
 EntityFactory = require("core/factories/entity/EntityFactory")
 Map = require("core/factories/map/Map")

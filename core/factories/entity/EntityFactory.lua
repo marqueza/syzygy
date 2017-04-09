@@ -15,8 +15,17 @@ function split(inputstr, sep)
         end
         return t
 end
-local dir = love.filesystem.getSourceBaseDirectory()
-local files = love.filesystem.getDirectoryItems( "core/factories/entity" )
+function getDirectoryItems(dir)
+    local i, t = 0, {}
+    local pfile = io.popen('ls "'..dir..'"')
+    for filename in pfile:lines() do
+        i = i + 1
+        t[i] = filename:match( '^(.+)%..+$' )
+    end
+    pfile:close()
+    return t
+end
+local files = getDirectoryItems( "core/factories/entity" )
 for k, file in ipairs(files) do
     tokens = split(file, ".")
     file = tokens[1]
