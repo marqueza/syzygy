@@ -1,5 +1,6 @@
+local lovetoys = require "lib.lovetoys.lovetoys"
 local function Player(x, y)
-	entity = Entity()
+	entity = lovetoys.Entity()
 	entity.name = "player"
 	entity:add(
 		physics{

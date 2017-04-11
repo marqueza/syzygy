@@ -1,5 +1,6 @@
+local lovetoys = require "lib.lovetoys.lovetoys"
 local function Floor(x, y)
-	entity = Entity()
+	entity = lovetoys.Entity()
 	entity.name = "floor"
 	entity:add(physics{x=x, y=y, hp=1, blocks=false})
 	entity:add(sprite("img/sprites/floor.png"))

@@ -1,20 +1,20 @@
+local lovetoys = "lib.lovetoys.lovetoys"
+local class = require "lib.middleclass"
+local systems = require "core.systems.systems"
 local MessageSystem = class("MessageSystem", System)
-local engine = require "core.engine"
+
 function MessageSystem:initialize()
-    --[[
-    self.logFile = love.filesystem.newFile("log.txt")
-    self.logFile:open("a")
-    --]]
+    self.name = "Message System"
+    self.log = {}
 end
 function MessageSystem:fireEvent(messageEvent)
-    local formattedMessage = "[" .. game.turn  .. "] " .. messageEvent.text .. "\n"
+    local formattedMessage = "[" .. systems.turnSystem.turn .. "] " .. messageEvent.text .. "\n"
     formattedMessage = string.upper(formattedMessage)
     formattedMessage = string.gsub(formattedMessage, '{', '[')
     formattedMessage = string.gsub(formattedMessage, '}', ']')
     formattedMessage = string.gsub(formattedMessage, '\"', ' ')
     --self.logFile:write(formattedMessage)
-    table.insert(game.log, 1, formattedMessage)
-    PromptSystem:flushPrompt()
+    table.insert(self.log, 1, formattedMessage)
     return
 end
 return MessageSystem

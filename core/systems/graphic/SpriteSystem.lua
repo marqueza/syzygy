@@ -1,8 +1,11 @@
-local SpriteSystem = class("SpriteSystem", System)
+local lovetoys = require "lib.lovetoys.lovetoys"
+local class = require "lib.middleclass"
+local SpriteSystem = class("SpriteSystem", lovetoys.System)
+
 function SpriteSystem:initialize()
     love.window.setMode(1280,720)
     love.graphics.setNewFont("res/font/Pixeled.ttf", 10)
-    System.initialize(self)
+    lovetoys.System.initialize(self)
     self.maxCount = 4
 end
 function SpriteSystem:draw()

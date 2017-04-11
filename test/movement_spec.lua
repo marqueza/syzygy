@@ -17,47 +17,51 @@ describe("arena", function()
         events.init()
         it("right", function ()
             oldX, oldY = game.player.physics.x, game.player.physics.y
-            local s = spy.on(MoveEvent, "initialize")
+            local move = spy.on(events.MoveEvent, "initialize")
 
-            events.fireEvent(CommandKeyEvent("right"))
+            events.fireEvent(events.CommandKeyEvent("right"))
             newX, newY = game.player.physics.x, game.player.physics.y
 
-            assert.spy(s).was_called()
+            assert.spy(move).was_called(1)
             assert.are_equal(oldY,  newY)
             assert.are_equal(oldX+1,  newX)
         end)
         it("left", function ()
             oldX, oldY = game.player.physics.x, game.player.physics.y
-            events.fireEvent(CommandKeyEvent("left"))
+            events.fireEvent(events.CommandKeyEvent("left"))
             newX, newY = game.player.physics.x, game.player.physics.y
             assert.are_equal(oldY,  newY)
             assert.are_equal(oldX-1,  newX)
         end)
         it("up", function ()
             oldX, oldY = game.player.physics.x, game.player.physics.y
-            events.fireEvent(CommandKeyEvent("up"))
+            events.fireEvent(events.CommandKeyEvent("up"))
             newX, newY = game.player.physics.x, game.player.physics.y
             assert.are_equal(oldY-1,  newY)
             assert.are_equal(oldX,  newX)
         end)
         it("down", function ()
             oldX, oldY = game.player.physics.x, game.player.physics.y
-            events.fireEvent(CommandKeyEvent("down"))
+            events.fireEvent(events.CommandKeyEvent("down"))
             newX, newY = game.player.physics.x, game.player.physics.y
             assert.are_equal(oldY+1,  newY)
             assert.are_equal(oldX,  newX)
         end)
         it("bump", function ()
-            events.fireEvent(CommandKeyEvent("left"))
+            local mess = spy.on(events.MessageEvent, "initialize")
+
+            events.fireEvent(events.CommandKeyEvent("left"))
             oldX, oldY = game.player.physics.x, game.player.physics.y
-            events.fireEvent(CommandKeyEvent("left"))
+            events.fireEvent(events.CommandKeyEvent("left"))
             newX, newY = game.player.physics.x, game.player.physics.y
+
+            assert.spy(mess).was_called(1)
             assert.are_equal(oldY,  newY)
             assert.are_equal(oldX,  newX)
         end)
 
     end)
-    describe("attack", function()
+    describe("", function()
         it()
     end)
 end)

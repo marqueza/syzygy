@@ -1,4 +1,5 @@
-local sprite  = Component.create("sprite")
+local lovetoys = require 'lib.lovetoys.lovetoys'
+local sprite  = lovetoys.Component.create("sprite")
 
 sprite.size = 64
 

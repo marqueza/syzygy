@@ -1,25 +1,32 @@
+local serpent = require "serpent"
+local lovetoys = require "lib.lovetoys.lovetoys"
+local systems = require "core.systems.systems"
 local events = {}
 
+events.CommandKeyEvent = require "core.events.CommandKeyEvent"
+events.MessageEvent = require "core.events.MessageEvent"
+events.MoveEvent = require "core.events.MoveEvent"
+events.TurnEvent = require "core.events.TurnEvent"
+
 function events.init()
-    require "core.systems.event.MessageSystem"
-    require "core.systems.event.CommandKeySystem"
-    require "core.systems.event.MoveSystem"
 
+    events.eventManager = lovetoys.EventManager()
 
-    events.eventManager = EventManager()
+    events.eventManager:addListener("CommandKeyEvent", systems.commandKeySystem, systems.commandKeySystem.fireEvent)
+    events.eventManager:addListener("MoveEvent", systems.moveSystem, systems.moveSystem.fireEvent)
+    events.eventManager:addListener("MessageEvent", systems.messageSystem, systems.messageSystem.fireEvent)
+    events.eventManager:addListener("TurnEvent", systems.turnSystem, systems.turnSystem.fireEvent)
 
-    local moveSystem = MoveSystem()
-    local commandKeySystem = CommandKeySystem()
-    local messageSystem = MessageSystem()
-
-    events.eventManager:addListener("CommandKeyEvent", commandKeySystem, commandKeySystem.fireEvent)
-    events.eventManager:addListener("MoveEvent", moveSystem, moveSystem.fireEvent)
-    events.eventManager:addListener("MessageEvent", messageSystem, messageSystem.fireEvent)
+    if not game.options.headless then
+        events.eventManager:addListener("TurnEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
+    end
 end
 
 function events.fireEvent(event)
     if game.options.debug then
-        events.eventManager:fireEvent(MessageEvent("[DEBUG] Firing " ..  serpent.line(event:reflect(), {comment=false})))
+        if event.reflect then
+            events.eventManager:fireEvent(events.MessageEvent("[DEBUG] Firing " ..  serpent.line(event:reflect(), {comment=false})))
+        end
     end
     events.eventManager:fireEvent(event)
 end

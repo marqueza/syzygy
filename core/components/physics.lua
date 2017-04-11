@@ -1,4 +1,5 @@
-local physics  = Component.create("physics")
+local lovetoys = require "lib.lovetoys.lovetoys"
+local physics  = lovetoys.Component.create("physics")
 
 function physics:initialize(args)
     self.x = args.x

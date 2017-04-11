@@ -1,6 +1,5 @@
-dofile('core/includes.lua')
 local events = require "core.events.events"
-local engine = require "core.engine"
+local systems = require "core.systems.systems"
 game = {}
 function game.load(options)
     game.options = options
@@ -8,23 +7,21 @@ function game.load(options)
 
     --shared info between systems
     game.time = 1
-    game.turn = 1
-    game.log = {"", ""}
-    engine.init()
+    systems.init()
     events.init()
 end
 
 
 function game.update(dt)
     game.time = game.time + dt
-    engine.update(dt)
+    systems.update(dt)
 end
 
 function game.draw()
-    engine.draw()
+    systems.draw()
 end
 
 function game.keypressed(key)
-    events.fireEvent(CommandKeyEvent(key))
+    events.fireEvent(events.CommandKeyEvent(key))
 end
 return game

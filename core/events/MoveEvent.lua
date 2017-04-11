@@ -1,4 +1,5 @@
-MoveEvent = class("MoveEvent")
+local class = require "lib.middleclass"
+local MoveEvent = class("MoveEvent")
 
 function MoveEvent:initialize(mover, newX, newY)
     self.mover = mover
@@ -15,3 +16,5 @@ function MoveEvent:reflect()
   end
   return t
 end
+
+return MoveEvent
