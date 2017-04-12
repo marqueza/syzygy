@@ -7,7 +7,7 @@ function MessageSystem:initialize()
     self.name = "Message System"
     self.log = {}
 end
-function MessageSystem:fireEvent(messageEvent)
+function MessageSystem:onNotify(messageEvent)
     local formattedMessage = "[" .. systems.turnSystem.turn .. "] " .. messageEvent.text .. "\n"
     formattedMessage = string.upper(formattedMessage)
     formattedMessage = string.gsub(formattedMessage, '{', '[')

@@ -9,7 +9,7 @@ function TurnSystem:initialize()
     self.turn = 1
 end
 
-function TurnSystem:fireEvent(TurnEvent)
+function TurnSystem:onNotify(TurnEvent)
     self.turn = self.turn+1
 end
 

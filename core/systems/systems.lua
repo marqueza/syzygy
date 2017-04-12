@@ -14,6 +14,7 @@ function systems.init()
     local PromptSystem = require "core.systems.graphic.PromptSystem"
     local MessageSystem = require "core.systems.event.MessageSystem"
     local TurnSystem = require "core.systems.event.TurnSystem"
+    local SaveSystem = require "core.systems.event.SaveSystem"
 
     --engine instance
     systems.engine = lovetoys.Engine()
@@ -23,6 +24,7 @@ function systems.init()
     systems.commandKeySystem = CommandKeySystem()
     systems.moveSystem = MoveSystem()
     systems.turnSystem = TurnSystem()
+    systems.saveSystem = SaveSystem()
 
     --add draw systems to table
     if not game.options.headless then

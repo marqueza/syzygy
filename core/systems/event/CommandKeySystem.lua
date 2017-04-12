@@ -9,7 +9,7 @@ function CommandKeySystem:initialize()
     self.name = "CommandKeySystem"
 end
 
-function CommandKeySystem:fireEvent(CommandKeyEvent)
+function CommandKeySystem:onNotify(CommandKeyEvent)
     if CommandKeyEvent.key == "up" then
         for index, entity in pairs(systems.getEntitiesWithComponent("control")) do
             local physics = entity:get("physics")
@@ -30,6 +30,8 @@ function CommandKeySystem:fireEvent(CommandKeyEvent)
             local physics = entity:get("physics")
             events.fireEvent(events.MoveEvent(entity, physics.x-1, physics.y))
         end
+    elseif CommandKeyEvent.key == "s" then
+        events.fireEvent(events.SaveEvent())
     end
 end
 

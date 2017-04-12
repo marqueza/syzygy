@@ -7,7 +7,7 @@ function MoveSystem:initialize()
     self.name = "Move System"
 end
 
-function MoveSystem:fireEvent(moveEvent)
+function MoveSystem:onNotify(moveEvent)
     for index, target in pairs(systems.getEntitiesWithComponent("physics")) do
         local physics = target:get("physics")
         if moveEvent.x == physics.x and moveEvent.y == physics.y then

@@ -1,19 +1,10 @@
 local class = require "lib.middleclass"
+local Serializable = require "data.serializable"
 local CommandKeyEvent = class("CommandKeyEvent")
+CommandKeyEvent:include(Serializable)
 
 function CommandKeyEvent:initialize(key)
     self.key = key
-    self.name = "CommandKeyEvent"
-end
-
-function CommandKeyEvent:reflect()
-  local t = {}
-  for k, v in pairs(self) do
-    if not string.match(k, "class") then
-      t[k] = v
-    end
-  end
-  return t
 end
 
 return CommandKeyEvent

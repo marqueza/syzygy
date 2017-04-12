@@ -1,11 +1,13 @@
 local lovetoys = require 'lib.lovetoys.lovetoys'
 local sprite  = lovetoys.Component.create("sprite")
+local Serializable = require "data.serializable"
+sprite:include(Serializable)
 
 sprite.size = 64
 
-function sprite:initialize(filename)
+function sprite:initialize(args)
     if not game.options.headless then
-        self.filename = filename
+        self.filename = args.filename
         self.image = love.graphics.newImage('res/' .. self.filename)
         self.image:setFilter("nearest", "nearest")
         local width = self.image:getWidth()
