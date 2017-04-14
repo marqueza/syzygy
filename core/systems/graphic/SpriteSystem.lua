@@ -11,13 +11,13 @@ end
 function SpriteSystem:draw()
     local count = (math.floor(game.time) % self.maxCount) + 1
     for i, v in pairs(self.targets) do
-        local physics = v:get("physics")
-        local sprite = v:get("sprite")
+        local Physics = v:get("Physics")
+        local Sprite = v:get("Sprite")
 
-        love.graphics.draw(sprite.image,
-            sprite:getFrame(count),
-            0+physics.x*sprite.size-sprite.size,
-            0+physics.y*sprite.size-sprite.size,
+        love.graphics.draw(Sprite.image,
+            Sprite:getFrame(count),
+            0+Physics.x*Sprite.size-Sprite.size,
+            0+Physics.y*Sprite.size-Sprite.size,
             0,
             4,
             4 )
@@ -28,7 +28,7 @@ function SpriteSystem:update()
 
 end
 function SpriteSystem:requires()
-    return {"physics", "sprite"}
+    return {"Physics", "Sprite"}
 end
 
 return SpriteSystem

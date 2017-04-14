@@ -18,4 +18,14 @@ function Serializable:reflect()
     return t
 end
 
+function Serializable:restore(string)
+    local ok, t = serpent.load(string)
+    assert(ok)
+    for k, v in pairs(t) do
+        if k ~= 'class' then
+            self[k] = v
+        end
+    end
+end
+
 return Serializable

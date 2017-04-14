@@ -1,7 +1,7 @@
 local function Goo(x, y)
 	entity = Entity()
-	entity:add(physics(x, y))
-	entity:add(sprite("img/sprites/goo.png"))
+	entity:add(Physics(x, y))
+	entity:add(Sprite("img/sprites/goo.png"))
 	return entity
 end
 return Goo

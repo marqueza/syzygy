@@ -1,8 +1,9 @@
 local lovetoys = require "lib.lovetoys.lovetoys"
-lovetoys.initialize({
+if not lovetoys.initialized then lovetoys.initialize({
     globals = false,
     debug = true
 })
+end
 local map = require 'core.factories.map.Map'
 systems = {}
 
@@ -28,10 +29,10 @@ function systems.init()
 
     --add draw systems to table
     if not game.options.headless then
-        systems.spriteSystem = SpriteSystem()
+        systems.SpriteSystem = SpriteSystem()
         systems.promptSystem = PromptSystem()
 
-        systems.engine:addSystem(systems.spriteSystem, "draw")
+        systems.engine:addSystem(systems.SpriteSystem, "draw")
         systems.engine:addSystem(systems.promptSystem, "draw")
     end
 

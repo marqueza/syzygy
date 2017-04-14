@@ -54,7 +54,7 @@ Software.
 
 2.7 BACKUP
 You may make backup copies of the Font Software for archival purposes only,
-provided that You retain exclusive custody and control over such copies. Any
+provided that You retain exclusive custody and Control over such copies. Any
 backup copy of the Font Software must contain the same copyright, trademark, and
 other proprietary information as the original.
 

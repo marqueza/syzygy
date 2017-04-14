@@ -8,6 +8,7 @@ events.MessageEvent = require "core.events.MessageEvent"
 events.MoveEvent = require "core.events.MoveEvent"
 events.TurnEvent = require "core.events.TurnEvent"
 events.SaveEvent = require "core.events.SaveEvent"
+events.LoadEvent = require "core.events.LoadEvent"
 
 function events.init()
 
@@ -17,11 +18,13 @@ function events.init()
     events.eventManager:addListener("MoveEvent", systems.moveSystem, systems.moveSystem.onNotify)
     events.eventManager:addListener("MessageEvent", systems.messageSystem, systems.messageSystem.onNotify)
     events.eventManager:addListener("TurnEvent", systems.turnSystem, systems.turnSystem.onNotify)
-    events.eventManager:addListener("SaveEvent", systems.saveSystem, systems.saveSystem.onNotify)
+    events.eventManager:addListener("SaveEvent", systems.saveSystem, systems.saveSystem.onSaveNotify)
+    events.eventManager:addListener("LoadEvent", systems.saveSystem, systems.saveSystem.onLoadNotify)
 
     if not game.options.headless then
         events.eventManager:addListener("TurnEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("SaveEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
+        events.eventManager:addListener("LoadEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
     end
 end
 

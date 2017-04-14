@@ -1,11 +1,11 @@
 local lovetoys = require 'lib.lovetoys.lovetoys'
-local sprite  = lovetoys.Component.create("sprite")
+local Sprite  = lovetoys.Component.create("Sprite")
 local Serializable = require "data.serializable"
-sprite:include(Serializable)
+Sprite:include(Serializable)
 
-sprite.size = 64
+Sprite.size = 64
 
-function sprite:initialize(args)
+function Sprite:initialize(args)
     if not game.options.headless then
         self.filename = args.filename
         self.image = love.graphics.newImage('res/' .. self.filename)
@@ -16,11 +16,12 @@ function sprite:initialize(args)
         for i = 1, math.floor(width/height) do
             self.frames[i] = love.graphics.newQuad(i*height-height, 0, height, height, self.image:getWidth(), self.image:getHeight())
         end
-
     end
 end
 
-function sprite:getFrame(index)
+function Sprite:getFrame(index)
     local i = (index) % table.getn(self.frames)
     return self.frames[i+1]
 end
+
+return Sprite

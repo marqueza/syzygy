@@ -172,7 +172,7 @@ Systems provide the functionality for your game. The engine manages all Systems 
 
 All your systems have to be derived from the `System` class. An example how to do this can be found below.
 
-There are two types of Systems: "update" and "draw" Systems. Update systems perform logic operations, like moving a player and updating physics. Their `update` method is called by the engine.
+There are two types of Systems: "update" and "draw" Systems. Update systems perform logic operations, like moving a player and updating Physics. Their `update` method is called by the engine.
 Draw systems are responsible for rendering your game world on screen. Their `draw` method is also called by the engine.
 
 #### An example for a custom system
@@ -295,7 +295,7 @@ require("lib.lovetoys.lovetoys")
 
 function love.load()
     engine = Engine()
-    world = love.physics.newWorld(0, 9.81*80, true)
+    world = love.Physics.newWorld(0, 9.81*80, true)
     world:setCallbacks(beginContact, endContact)
     eventmanager = EventManager()
 end

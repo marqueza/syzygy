@@ -1,11 +1,13 @@
 local lovetoys = require "lib.lovetoys.lovetoys"
-local physics  = lovetoys.Component.create("physics")
+local Physics  = lovetoys.Component.create("Physics")
 local Serializable = require "data.serializable"
-physics:include(Serializable)
+Physics:include(Serializable)
 
-function physics:initialize(args)
+function Physics:initialize(args)
     self.x = args.x
     self.y = args.y
     self.blocks = args.blocks
     self.hp = args.hp or 10
 end
+
+return Physics
