@@ -5,7 +5,7 @@ local PromptSystem = class("PromptSystem", lovetoys.System)
 function PromptSystem:initialize()
     lovetoys.System.initialize(self)
     self.margin = 10
-    self.text = nil -- I dont know why I cant set this to a default
+    self.text = nil
 end
 function PromptSystem:draw()
     love.graphics.print(self.text or "BLANK",

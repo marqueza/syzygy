@@ -13,7 +13,6 @@ function MessageSystem:onNotify(messageEvent)
     formattedMessage = string.gsub(formattedMessage, '{', '[')
     formattedMessage = string.gsub(formattedMessage, '}', ']')
     formattedMessage = string.gsub(formattedMessage, '\"', ' ')
-    --self.logFile:write(formattedMessage)
     table.insert(self.log, 1, formattedMessage)
     return
 end

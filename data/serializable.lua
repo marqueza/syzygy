@@ -18,9 +18,7 @@ function Serializable:reflect()
     return t
 end
 
-function Serializable:restore(string)
-    local ok, t = serpent.load(string)
-    assert(ok)
+function Serializable:restore(t)
     for k, v in pairs(t) do
         if k ~= 'class' then
             self[k] = v
