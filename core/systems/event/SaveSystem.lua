@@ -1,10 +1,18 @@
-modlocal class = require "lib.middleclass"
+local class = require "lib.middleclass"
 local lovetoys = require "lib.lovetoys.lovetoys"
 local serpent = require "serpent"
 local events = require "core.events.events"
 local components = require "core.components.components"
 local systems = require "core.systems.systems"
 local SaveSystem = class("SaveSystem", System)
+
+--private methods
+local _saveMessageLog
+local _saveTurn
+local _saveEntities
+local _loadMessageLog
+local _loadTurn
+local _loadEntities
 
 function SaveSystem:initialize()
     self.name = "SaveSystem"
@@ -22,13 +30,13 @@ function SaveSystem:onLoadNotify(LoadEvent)
     _loadTurn()
 end
 
-local _saveMessageLog = function (self)
+_saveMessageLog = function (self)
     f = io.open("messages.save.txt", 'w')
     f:write(serpent.dump(systems.messageSystem.log))
     f:close()
 end
 
-local _loadMessageLog = function (self)
+_loadMessageLog = function (self)
     f = io.open("messages.save.txt", 'r')
     local logString = f:read()
     local ok, logTable = serpent.load(logString)
@@ -36,13 +44,13 @@ local _loadMessageLog = function (self)
     f:close()
 end
 
-local _saveTurn = function (self)
+_saveTurn = function (self)
     f = io.open("turn.save.txt", 'w')
     f:write(systems.turnSystem:toString())
     f:close()
 end
 
-local _loadTurn = function (self)
+_loadTurn = function (self)
     f = io.open("turn.save.txt", 'r')
     local turnString = f:read()
     local ok, turnTable = serpent.load(turnString)
@@ -50,7 +58,7 @@ local _loadTurn = function (self)
     f:close()
 end
 
-local _saveEntities = function (self)
+_saveEntities = function (self)
     f = io.open("1.save.txt", "w")
     for index, entity in pairs(systems.getEntitiesWithComponent("Physics")) do
         f:write("entity ".."{id = "..entity.id..", name = \""..entity.name.."\"}\n")
@@ -61,7 +69,7 @@ local _saveEntities = function (self)
     f:close()
 end
 
-local _loadEntities = function (self)
+_loadEntities = function (self)
     local tempEnts = {}
     for k, v in pairs(systems.engine.entities) do
         tempEnts[k] = v
