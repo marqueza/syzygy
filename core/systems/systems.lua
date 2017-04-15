@@ -4,7 +4,6 @@ if not lovetoys.initialized then lovetoys.initialize({
     debug = true
 })
 end
-local map = require 'core.factories.map.Map'
 systems = {}
 
 function systems.init()
@@ -16,6 +15,7 @@ function systems.init()
     local MessageSystem = require "core.systems.event.MessageSystem"
     local TurnSystem = require "core.systems.event.TurnSystem"
     local SaveSystem = require "core.systems.event.SaveSystem"
+    local LevelSystem = require "core.systems.event.LevelSystem"
 
     --engine instance
     systems.engine = lovetoys.Engine()
@@ -26,6 +26,7 @@ function systems.init()
     systems.moveSystem = MoveSystem()
     systems.turnSystem = TurnSystem()
     systems.saveSystem = SaveSystem()
+    systems.levelSystem = LevelSystem()
 
     --add draw systems to table
     if not game.options.headless then
@@ -35,9 +36,6 @@ function systems.init()
         systems.engine:addSystem(systems.SpriteSystem, "draw")
         systems.engine:addSystem(systems.promptSystem, "draw")
     end
-
-    --add entities to engine
-    map.Build.Arena(systems.addEntity)
 
 end
 function systems.getEntitiesWithComponent(component)

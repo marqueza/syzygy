@@ -9,6 +9,10 @@ function game.load(options)
     game.time = 1
     systems.init()
     events.init()
+    if not game.options.headless then
+        events.fireEvent(events.LevelEvent("1-1", options))
+    end
+
 end
 
 

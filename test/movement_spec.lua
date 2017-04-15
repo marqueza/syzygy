@@ -1,5 +1,6 @@
 describe("arena", function()
     local game
+    local events = require("../core/events/events")
     setup("arena load", function()
         --test code
         game = require("../core/game")
@@ -7,14 +8,22 @@ describe("arena", function()
             debug = false,
             headless = true
         })
+        events.init()
+
+
+        local lspy = spy.on(events.LevelEvent, "initialize")
+
+        local options = {}
+        options.empty = false
+        events.fireEvent(events.LevelEvent("1-1", options))
+
+        assert.spy(lspy).was_called(1)
         assert.truthy(game)
         assert.truthy(game.player)
     end)
 
     describe("movement", function()
         local oldX, oldY, newX, newY
-        local events = require("../core/events/events")
-        events.init()
         it("right", function ()
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
             local move = spy.on(events.MoveEvent, "initialize")
@@ -60,8 +69,5 @@ describe("arena", function()
             assert.are_equal(oldX,  newX)
         end)
 
-    end)
-    describe("", function()
-        it()
     end)
 end)

@@ -9,6 +9,7 @@ events.MoveEvent = require "core.events.MoveEvent"
 events.TurnEvent = require "core.events.TurnEvent"
 events.SaveEvent = require "core.events.SaveEvent"
 events.LoadEvent = require "core.events.LoadEvent"
+events.LevelEvent = require "core.events.LevelEvent"
 
 function events.init()
 
@@ -20,6 +21,7 @@ function events.init()
     events.eventManager:addListener("TurnEvent", systems.turnSystem, systems.turnSystem.onNotify)
     events.eventManager:addListener("SaveEvent", systems.saveSystem, systems.saveSystem.onSaveNotify)
     events.eventManager:addListener("LoadEvent", systems.saveSystem, systems.saveSystem.onLoadNotify)
+    events.eventManager:addListener("LevelEvent", systems.levelSystem, systems.levelSystem.onNotify)
 
     if not game.options.headless then
         events.eventManager:addListener("TurnEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
