@@ -39,17 +39,20 @@ describe("arena", function()
             assert.is_true(beforeCount >= 1)
             local beforeTurn = systems.turnSystem.turn
             local beforeLog = systems.messageSystem.log
+            local beforeEventLog = systems.messageSystem.eventLog
 
             events.fireEvent(events.CommandKeyEvent("l"))
 
             local afterCount = #systems.engine.entities
             local afterTurn = systems.turnSystem.turn
             local afterLog = systems.messageSystem.log
+            local afterEventLog = systems.messageSystem.eventLog
 
             assert.spy(levent).was_called(1)
             assert.are_same(beforeCount, afterCount)
             assert.are_same(beforeTurn, afterTurn)
             assert.are_same(beforeLog, afterLog)
+            assert.are_same(beforeEventLog, afterEventLog)
         end)
     end)
 end)

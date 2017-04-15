@@ -6,8 +6,8 @@ Sprite:include(Serializable)
 Sprite.size = 64
 
 function Sprite:initialize(args)
-    if not game.options.headless then
         self.filename = args.filename
+    if not game.options.headless then
         self.image = love.graphics.newImage('res/' .. self.filename)
         self.image:setFilter("nearest", "nearest")
         local width = self.image:getWidth()

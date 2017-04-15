@@ -19,28 +19,38 @@ function SaveSystem:initialize()
 end
 
 function SaveSystem:onSaveNotify(SaveEvent)
-    _saveMessageLog()
+    _saveMessageLogs()
     _saveEntities()
     _saveTurn()
 end
 
 function SaveSystem:onLoadNotify(LoadEvent)
     _loadEntities()
-    _loadMessageLog()
+    _loadMessageLogs()
     _loadTurn()
 end
 
-_saveMessageLog = function (self)
+_saveMessageLogs = function (self)
     f = io.open("messages.save.txt", 'w')
-    f:write(serpent.dump(systems.messageSystem.log))
+    f:write(serpent.dump(systems.messageSystem.log, {indent = " "}))
+    f:close()
+
+    f = io.open("events.save.txt", 'w')
+    f:write(serpent.dump(systems.messageSystem.eventLog, {indent = " "}))
     f:close()
 end
 
-_loadMessageLog = function (self)
+_loadMessageLogs = function (self)
     f = io.open("messages.save.txt", 'r')
-    local logString = f:read()
+    local logString = f:read("*all")
     local ok, logTable = serpent.load(logString)
     systems.messageSystem.log = logTable
+    f:close()
+
+    f = io.open("events.save.txt", 'r')
+    local logString = f:read("*all")
+    local ok, logTable = serpent.load(logString)
+    systems.messageSystem.eventLog = logTable
     f:close()
 end
 

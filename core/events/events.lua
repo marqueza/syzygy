@@ -31,10 +31,11 @@ function events.init()
 end
 
 function events.fireEvent(event)
-    if game.options.debug then
-        if event.toString then
-            events.eventManager:fireEvent(events.MessageEvent("[DEBUG] " .. event:toString()))
+    if event.toString then
+        if game.options.debug then
+            events.eventManager:fireEvent(events.MessageEvent("[DEBUG] " .. event:toString(), "visual"))
         end
+        events.eventManager:fireEvent(events.MessageEvent(event:toString(), "event"))
     end
     events.eventManager:fireEvent(event)
 end

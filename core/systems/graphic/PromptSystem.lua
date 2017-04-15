@@ -15,7 +15,14 @@ end
 function PromptSystem:getLatestLines(lines)
     self.text = ""
     for i = 1, math.min(#(systems.messageSystem.log), lines) do
-        self.text = self.text .. systems.messageSystem.log[i]
+
+        local formattedMessage = "[" .. systems.turnSystem.turn .. "] " .. systems.messageSystem.log[i] .. "\n"
+        formattedMessage = string.upper(formattedMessage)
+        formattedMessage = string.gsub(formattedMessage, '{', '[')
+        formattedMessage = string.gsub(formattedMessage, '}', ']')
+        formattedMessage = string.gsub(formattedMessage, '\"', ' ')
+
+        self.text = self.text .. formattedMessage 
     end
 end
 function PromptSystem:flushPrompt()--flush on a new turn!

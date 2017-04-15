@@ -57,14 +57,12 @@ describe("arena", function()
             assert.are_equal(oldX,  newX)
         end)
         it("bump", function ()
-            local mess = spy.on(events.MessageEvent, "initialize")
 
             events.fireEvent(events.CommandKeyEvent("left"))
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
             events.fireEvent(events.CommandKeyEvent("left"))
             newX, newY = game.player.Physics.x, game.player.Physics.y
 
-            assert.spy(mess).was_called(1)
             assert.are_equal(oldY,  newY)
             assert.are_equal(oldX,  newX)
         end)
