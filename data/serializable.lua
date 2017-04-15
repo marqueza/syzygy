@@ -1,4 +1,4 @@
-local class = require 'middleclass'
+local class = require 'lib.middleclass'
 local serpent = require 'serpent'
 Serializable = {}
 

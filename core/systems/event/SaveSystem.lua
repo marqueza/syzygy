@@ -1,5 +1,6 @@
 local class = require "lib.middleclass"
 local lovetoys = require "lib.lovetoys.lovetoys"
+local lfs = require "lfs"
 local serpent = require "serpent"
 local events = require "core.events.events"
 local components = require "core.components.components"
@@ -16,38 +17,46 @@ local _loadEntities
 
 function SaveSystem:initialize()
     self.name = "SaveSystem"
+    self.gameId = 2
+    self.saveDir = "save/" .. self.gameId .. "/latest"
 end
 
 function SaveSystem:onSaveNotify(SaveEvent)
-    _saveMessageLogs()
-    _saveEntities()
-    _saveTurn()
+    if lfs.attributes(self.saveDir) == nil then
+      lfs.mkdir("save/" .. self.gameId)
+      lfs.mkdir(self.saveDir)
+    else
+        os.execute("cp save/"..self.gameId.."/latest".." ".."save/"..self.gameId.."_"..os.time())
+    end
+    _saveMessageLogs(self)
+    _saveEntities(self)
+    _saveTurn(self)
 end
 
 function SaveSystem:onLoadNotify(LoadEvent)
-    _loadEntities()
-    _loadMessageLogs()
-    _loadTurn()
+    _loadEntities(self)
+    _loadMessageLogs(self)
+    _loadTurn(self)
 end
 
 _saveMessageLogs = function (self)
-    f = io.open("messages.save.txt", 'w')
+    local f = io.open(self.saveDir .. "/messages.save.txt", 'w')
     f:write(serpent.dump(systems.messageSystem.log, {indent = " "}))
     f:close()
 
-    f = io.open("events.save.txt", 'w')
+    f = io.open(self.saveDir .. "/events.save.txt", 'w')
     f:write(serpent.dump(systems.messageSystem.eventLog, {indent = " "}))
     f:close()
 end
 
 _loadMessageLogs = function (self)
-    f = io.open("messages.save.txt", 'r')
+    local f = io.open(self.saveDir .. "/messages.save.txt", 'r')
     local logString = f:read("*all")
     local ok, logTable = serpent.load(logString)
     systems.messageSystem.log = logTable
     f:close()
 
-    f = io.open("events.save.txt", 'r')
+    f = io.open(self.saveDir .. "/events.save.txt", 'r')
     local logString = f:read("*all")
     local ok, logTable = serpent.load(logString)
     systems.messageSystem.eventLog = logTable
@@ -55,13 +64,13 @@ _loadMessageLogs = function (self)
 end
 
 _saveTurn = function (self)
-    f = io.open("turn.save.txt", 'w')
+    local f = io.open(self.saveDir .. "/turn.save.txt", 'w')
     f:write(systems.turnSystem:toString())
     f:close()
 end
 
 _loadTurn = function (self)
-    f = io.open("turn.save.txt", 'r')
+    local f = io.open(self.saveDir .. "/turn.save.txt", 'r')
     local turnString = f:read()
     local ok, turnTable = serpent.load(turnString)
     systems.turnSystem:restore(turnTable)
@@ -69,7 +78,7 @@ _loadTurn = function (self)
 end
 
 _saveEntities = function (self)
-    f = io.open("1.save.txt", "w")
+    local f = io.open(self.saveDir .. "/" .. self.gameId ..".save.txt", "w")
     for index, entity in pairs(systems.getEntitiesWithComponent("Physics")) do
         f:write("entity ".."{id = "..entity.id..", name = \""..entity.name.."\"}\n")
         for k, v in pairs(entity.components) do
@@ -89,7 +98,7 @@ _loadEntities = function (self)
     end
 
     local e = nil
-    f = io.open("1.save.txt", "r")
+    local f = io.open(self.saveDir .. "/" .. self.gameId ..".save.txt", "r")
     for line in f:lines() do
         if string.find(line, 'entity') then
             if e ~= nil then

@@ -27,6 +27,7 @@ function events.init()
         events.eventManager:addListener("TurnEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("SaveEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("LoadEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
+        events.eventManager:addListener("LevelEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
     end
 end
 
