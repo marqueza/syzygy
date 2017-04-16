@@ -26,7 +26,7 @@ function SaveSystem:onSaveNotify(SaveEvent)
       lfs.mkdir("save/" .. self.gameId)
       lfs.mkdir(self.saveDir)
     else
-        os.execute("cp save/"..self.gameId.."/latest".." ".."save/"..self.gameId.."_"..os.time())
+        os.execute("cp -r save/"..self.gameId.."/latest".." ".."save/"..self.gameId .. "/backup")
     end
     _saveMessageLogs(self)
     _saveEntities(self)
