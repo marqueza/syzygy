@@ -1,5 +1,6 @@
 local lovetoys = require "lib.lovetoys.lovetoys"
 local class = require "lib.middleclass"
+local systems = require "core.systems.systems"
 local PromptSystem = class("PromptSystem", lovetoys.System)
 
 function PromptSystem:initialize()
@@ -14,15 +15,18 @@ function PromptSystem:draw()
 end
 function PromptSystem:getLatestLines(lines)
     self.text = ""
-    for i = 1, math.min(#(systems.messageSystem.log), lines) do
+    if systems.logSystem.messageLog == nil then
+      systems.logSystem.messageLog = {}
+    end
+    for i = 1, math.min(#(systems.logSystem.messageLog), lines) do
 
-        local formattedMessage = "[" .. systems.turnSystem.turn .. "] " .. systems.messageSystem.log[i] .. "\n"
+        local formattedMessage = systems.logSystem.messageLog[i] .. "\n"
         formattedMessage = string.upper(formattedMessage)
         formattedMessage = string.gsub(formattedMessage, '{', '[')
         formattedMessage = string.gsub(formattedMessage, '}', ']')
         formattedMessage = string.gsub(formattedMessage, '\"', ' ')
 
-        self.text = self.text .. formattedMessage 
+        self.text = self.text .. formattedMessage
     end
 end
 function PromptSystem:flushPrompt()--flush on a new turn!

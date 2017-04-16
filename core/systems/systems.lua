@@ -12,7 +12,7 @@ function systems.init()
     local MoveSystem = require "core.systems.event.MoveSystem"
     local SpriteSystem = require "core.systems.graphic.SpriteSystem"
     local PromptSystem = require "core.systems.graphic.PromptSystem"
-    local MessageSystem = require "core.systems.event.MessageSystem"
+    local LogSystem = require "core.systems.event.LogSystem"
     local TurnSystem = require "core.systems.event.TurnSystem"
     local SaveSystem = require "core.systems.event.SaveSystem"
     local LevelSystem = require "core.systems.event.LevelSystem"
@@ -21,7 +21,7 @@ function systems.init()
     systems.engine = lovetoys.Engine()
 
     --add event systems to table
-    systems.messageSystem = MessageSystem()
+    systems.logSystem = LogSystem()
     systems.commandKeySystem = CommandKeySystem()
     systems.moveSystem = MoveSystem()
     systems.turnSystem = TurnSystem()

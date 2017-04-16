@@ -41,11 +41,11 @@ end
 
 _saveMessageLogs = function (self)
     local f = io.open(self.saveDir .. "/messages.save.txt", 'w')
-    f:write(serpent.dump(systems.messageSystem.log, {indent = " "}))
+    f:write(serpent.dump(systems.logSystem.messageLog, {indent = " "}))
     f:close()
 
     f = io.open(self.saveDir .. "/events.save.txt", 'w')
-    f:write(serpent.dump(systems.messageSystem.eventLog, {indent = " "}))
+    f:write(serpent.dump(systems.logSystem.eventLog, {indent = " "}))
     f:close()
 end
 
@@ -53,13 +53,13 @@ _loadMessageLogs = function (self)
     local f = io.open(self.saveDir .. "/messages.save.txt", 'r')
     local logString = f:read("*all")
     local ok, logTable = serpent.load(logString)
-    systems.messageSystem.log = logTable
+    systems.logSystem.messageLog = logTable
     f:close()
 
     f = io.open(self.saveDir .. "/events.save.txt", 'r')
     local logString = f:read("*all")
     local ok, logTable = serpent.load(logString)
-    systems.messageSystem.eventLog = logTable
+    systems.logSystem.eventLog = logTable
     f:close()
 end
 

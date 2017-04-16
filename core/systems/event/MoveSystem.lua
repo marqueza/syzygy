@@ -15,10 +15,10 @@ function MoveSystem:onNotify(moveEvent)
             local Faction = target:get("Faction")
             if (target:has("Faction")) then
                 if moveEvent.mover.Faction.name ~= target.Faction.name then
-                  events.fireEvent(events.MessageEvent(moveEvent.mover.name .. " smacks ".. target.name))
+                  events.fireEvent(events.LogEvent(moveEvent.mover.name .. " smacks ".. target.name))
                 end
             else
-                events.fireEvent(events.MessageEvent(moveEvent.mover.name .. " bumps " .. target.name))
+                events.fireEvent(events.LogEvent(moveEvent.mover.name .. " bumps " .. target.name))
             end
             events.fireEvent(events.TurnEvent())
             return

@@ -4,7 +4,7 @@ local systems = require "core.systems.systems"
 local events = {}
 
 events.CommandKeyEvent = require "core.events.CommandKeyEvent"
-events.MessageEvent = require "core.events.MessageEvent"
+events.LogEvent = require "core.events.LogEvent"
 events.MoveEvent = require "core.events.MoveEvent"
 events.TurnEvent = require "core.events.TurnEvent"
 events.SaveEvent = require "core.events.SaveEvent"
@@ -17,7 +17,7 @@ function events.init()
 
     events.eventManager:addListener("CommandKeyEvent", systems.commandKeySystem, systems.commandKeySystem.onNotify)
     events.eventManager:addListener("MoveEvent", systems.moveSystem, systems.moveSystem.onNotify)
-    events.eventManager:addListener("MessageEvent", systems.messageSystem, systems.messageSystem.onNotify)
+    events.eventManager:addListener("LogEvent", systems.logSystem, systems.logSystem.onNotify)
     events.eventManager:addListener("TurnEvent", systems.turnSystem, systems.turnSystem.onNotify)
     events.eventManager:addListener("SaveEvent", systems.saveSystem, systems.saveSystem.onSaveNotify)
     events.eventManager:addListener("LoadEvent", systems.saveSystem, systems.saveSystem.onLoadNotify)
@@ -34,9 +34,9 @@ end
 function events.fireEvent(event)
     if event.toString then
         if game.options.debug then
-            events.eventManager:fireEvent(events.MessageEvent("[DEBUG] " .. event:toString(), "visual"))
+            events.eventManager:fireEvent(events.LogEvent("[DEBUG] " .. event:toString(), "visual"))
         end
-        events.eventManager:fireEvent(events.MessageEvent(event:toString(), "event"))
+        events.eventManager:fireEvent(events.LogEvent(event:toString(), "event"))
     end
     events.eventManager:fireEvent(event)
 end
