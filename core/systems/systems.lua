@@ -16,6 +16,7 @@ function systems.init()
     local TurnSystem = require "core.systems.event.TurnSystem"
     local SaveSystem = require "core.systems.event.SaveSystem"
     local LevelSystem = require "core.systems.event.LevelSystem"
+    local ReplaySystem = require "core.systems.event.ReplaySystem"
 
     --engine instance
     systems.engine = lovetoys.Engine()
@@ -27,13 +28,14 @@ function systems.init()
     systems.turnSystem = TurnSystem()
     systems.saveSystem = SaveSystem()
     systems.levelSystem = LevelSystem()
+    systems.replaySystem = ReplaySystem()
 
     --add draw systems to table
     if not game.options.headless then
-        systems.SpriteSystem = SpriteSystem()
+        systems.spriteSystem = SpriteSystem()
         systems.promptSystem = PromptSystem()
 
-        systems.engine:addSystem(systems.SpriteSystem, "draw")
+        systems.engine:addSystem(systems.spriteSystem, "draw")
         systems.engine:addSystem(systems.promptSystem, "draw")
     end
 
@@ -43,6 +45,12 @@ function systems.getEntitiesWithComponent(component)
 end
 function systems.addEntity(entity)
     systems.engine:addEntity(entity)
+end
+function systems.getEntityById(entityId)
+    return systems.engine.entities[entityId]
+end
+function systems.getEntities(entityId)
+    return systems.engine.entities
 end
 function systems.update()
     love.graphics.setColor(255, 255, 255)

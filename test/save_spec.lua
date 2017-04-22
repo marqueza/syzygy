@@ -1,13 +1,11 @@
 describe("arena", function()
-    events = require("../core/events/events")
-    --test code
-    game = require("../core/game")
+    local game = require("../core/game")
     game.load( {
         debug = false,
         headless = true
     })
-    events.init()
-    systems.init()
+    events = game.events
+    systems = game.systems
     setup("arena load", function()
 
         local lspy = spy.on(events.LevelEvent, "initialize")
@@ -21,14 +19,17 @@ describe("arena", function()
         assert.truthy(game.player)
     end)
 
-    describe("save & load", function()
+    describe("saveSystem", function()
 
         it("save", function ()
             local beforeCount = #systems.engine.entities
             assert.is_true(beforeCount >= 1)
             local save = spy.on(events.SaveEvent, "initialize")
 
-            events.fireEvent(events.CommandKeyEvent("s"))
+            events.fireEvent(events.CommandKeyEvent{key="left"})
+            events.fireEvent(events.CommandKeyEvent{key="left"})
+            events.fireEvent(events.CommandKeyEvent{key="left"})
+            events.fireEvent(events.CommandKeyEvent{key="s"})
 
             assert.spy(save).was_called(1)
         end)
@@ -40,8 +41,11 @@ describe("arena", function()
             local beforeTurn = systems.turnSystem.turn
             local beforeLog = systems.logSystem.messageLog
             local beforeEventLog = systems.logSystem.eventLog
+            assert.truthy(beforeLog)
+            assert.truthy(beforeEventLog)
+            assert.truthy(beforeTurn)
 
-            events.fireEvent(events.CommandKeyEvent("l"))
+            events.fireEvent(events.CommandKeyEvent{key="l"})
 
             local afterCount = #systems.engine.entities
             local afterTurn = systems.turnSystem.turn
@@ -52,7 +56,9 @@ describe("arena", function()
             assert.are_same(beforeCount, afterCount)
             assert.are_same(beforeTurn, afterTurn)
             assert.are_same(beforeLog, afterLog)
-            assert.are_same(beforeEventLog, afterEventLog)
+
+            assert.are_not_equal(#afterLog, 0)
+            assert.are_not_equal(#afterEventLog, 0)
         end)
     end)
 end)

@@ -3,9 +3,9 @@ local Serializable = require "data.serializable"
 local LevelEvent = class("LevelEvent")
 LevelEvent:include(Serializable)
 
-function LevelEvent:initialize(levelName, options)
-    self.levelName = levelName
-    self.options = options
+function LevelEvent:initialize(args)
+    self.levelName = args.levelName
+    self.options = args.options
 end
 
 return LevelEvent

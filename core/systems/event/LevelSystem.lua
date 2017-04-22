@@ -11,7 +11,7 @@ local _storeLevel
 
 function LevelSystem:initialize()
     self.name = "LevelSystem"
-    self.seed = 1
+    self.seed = 8
 end
 
 function LevelSystem:onNotify(levelEvent)

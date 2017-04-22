@@ -8,17 +8,18 @@ function MoveSystem:initialize()
 end
 
 function MoveSystem:onNotify(moveEvent)
+    local mover = systems.getEntityById(moveEvent.moverId)
     for index, target in pairs(systems.getEntitiesWithComponent("Physics")) do
         local Physics = target:get("Physics")
         if moveEvent.x == Physics.x and moveEvent.y == Physics.y then
           if (Physics.blocks == true) then
             local Faction = target:get("Faction")
             if (target:has("Faction")) then
-                if moveEvent.mover.Faction.name ~= target.Faction.name then
-                  events.fireEvent(events.LogEvent(moveEvent.mover.name .. " smacks ".. target.name))
+                if mover.Faction.name ~= target.Faction.name then
+                  events.fireEvent(events.LogEvent{text=mover.name .. " smacks ".. target.name})
                 end
             else
-                events.fireEvent(events.LogEvent(moveEvent.mover.name .. " bumps " .. target.name))
+                events.fireEvent(events.LogEvent{text=mover.name .. " bumps " .. target.name})
             end
             events.fireEvent(events.TurnEvent())
             return
@@ -27,7 +28,7 @@ function MoveSystem:onNotify(moveEvent)
     end
 
     --successful move
-    local moverPhysics = moveEvent.mover:get("Physics")
+    local moverPhysics = mover:get("Physics")
     moverPhysics.x = moveEvent.x
     moverPhysics.y = moveEvent.y
     events.fireEvent(events.TurnEvent())

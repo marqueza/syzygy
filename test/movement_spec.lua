@@ -1,6 +1,12 @@
 describe("arena", function()
-    local game
-    local events = require("../core/events/events")
+    local game = require("../core/game")
+    game.load( {
+        debug = false,
+        headless = true
+    })
+    events = game.events
+    systems = game.systems
+    
     setup("arena load", function()
         --test code
         game = require("../core/game")
@@ -8,9 +14,6 @@ describe("arena", function()
             debug = false,
             headless = true
         })
-        events.init()
-
-
         local lspy = spy.on(events.LevelEvent, "initialize")
 
         local options = {}
@@ -28,7 +31,7 @@ describe("arena", function()
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
             local move = spy.on(events.MoveEvent, "initialize")
 
-            events.fireEvent(events.CommandKeyEvent("right"))
+            events.fireEvent(events.CommandKeyEvent({key="right"}))
             newX, newY = game.player.Physics.x, game.player.Physics.y
 
             assert.spy(move).was_called(1)
@@ -37,34 +40,36 @@ describe("arena", function()
         end)
         it("left", function ()
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
-            events.fireEvent(events.CommandKeyEvent("left"))
+            events.fireEvent(events.CommandKeyEvent({key="left"}))
             newX, newY = game.player.Physics.x, game.player.Physics.y
             assert.are_equal(oldY,  newY)
             assert.are_equal(oldX-1,  newX)
         end)
         it("up", function ()
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
-            events.fireEvent(events.CommandKeyEvent("up"))
+            events.fireEvent(events.CommandKeyEvent({key="up"}))
             newX, newY = game.player.Physics.x, game.player.Physics.y
             assert.are_equal(oldY-1,  newY)
             assert.are_equal(oldX,  newX)
         end)
         it("down", function ()
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
-            events.fireEvent(events.CommandKeyEvent("down"))
+            events.fireEvent(events.CommandKeyEvent({key="down"}))
             newX, newY = game.player.Physics.x, game.player.Physics.y
             assert.are_equal(oldY+1,  newY)
             assert.are_equal(oldX,  newX)
         end)
         it("bump", function ()
 
-            events.fireEvent(events.CommandKeyEvent("left"))
+            events.fireEvent(events.CommandKeyEvent({key="left"}))
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
-            events.fireEvent(events.CommandKeyEvent("left"))
+            events.fireEvent(events.CommandKeyEvent({key="left"}))
             newX, newY = game.player.Physics.x, game.player.Physics.y
 
             assert.are_equal(oldY,  newY)
             assert.are_equal(oldX,  newX)
+            assert.truthy(systems.logSystem.messageLog)
+            assert.are_not_equal(#systems.logSystem.messageLog, 0)
         end)
 
     end)

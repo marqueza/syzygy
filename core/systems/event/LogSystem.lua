@@ -9,6 +9,7 @@ function LogSystem:initialize()
     self.eventLog = {}
 end
 function LogSystem:onNotify(logEvent)
+    if self.messageLog == nil then self.messageLog = {} end
     if logEvent.type == "message" then
         table.insert(self.messageLog, 1, logEvent.text)
     end
