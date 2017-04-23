@@ -6,7 +6,7 @@ describe("arena", function()
     })
     events = game.events
     systems = game.systems
-    
+
     setup("arena load", function()
         --test code
         game = require("../core/game")
@@ -31,7 +31,7 @@ describe("arena", function()
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
             local move = spy.on(events.MoveEvent, "initialize")
 
-            events.fireEvent(events.CommandKeyEvent({key="right"}))
+            events.fireEvent(events.KeyPressEvent({key="right"}))
             newX, newY = game.player.Physics.x, game.player.Physics.y
 
             assert.spy(move).was_called(1)
@@ -40,30 +40,30 @@ describe("arena", function()
         end)
         it("left", function ()
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
-            events.fireEvent(events.CommandKeyEvent({key="left"}))
+            events.fireEvent(events.KeyPressEvent({key="left"}))
             newX, newY = game.player.Physics.x, game.player.Physics.y
             assert.are_equal(oldY,  newY)
             assert.are_equal(oldX-1,  newX)
         end)
         it("up", function ()
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
-            events.fireEvent(events.CommandKeyEvent({key="up"}))
+            events.fireEvent(events.KeyPressEvent({key="up"}))
             newX, newY = game.player.Physics.x, game.player.Physics.y
             assert.are_equal(oldY-1,  newY)
             assert.are_equal(oldX,  newX)
         end)
         it("down", function ()
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
-            events.fireEvent(events.CommandKeyEvent({key="down"}))
+            events.fireEvent(events.KeyPressEvent({key="down"}))
             newX, newY = game.player.Physics.x, game.player.Physics.y
             assert.are_equal(oldY+1,  newY)
             assert.are_equal(oldX,  newX)
         end)
         it("bump", function ()
 
-            events.fireEvent(events.CommandKeyEvent({key="left"}))
+            events.fireEvent(events.KeyPressEvent({key="left"}))
             oldX, oldY = game.player.Physics.x, game.player.Physics.y
-            events.fireEvent(events.CommandKeyEvent({key="left"}))
+            events.fireEvent(events.KeyPressEvent({key="left"}))
             newX, newY = game.player.Physics.x, game.player.Physics.y
 
             assert.are_equal(oldY,  newY)

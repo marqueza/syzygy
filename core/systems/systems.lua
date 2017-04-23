@@ -8,33 +8,41 @@ systems = {}
 
 function systems.init()
 
-    local CommandKeySystem = require "core.systems.event.CommandKeySystem"
+    local KeyPressSystem = require "core.systems.event.KeyPressSystem"
     local MoveSystem = require "core.systems.event.MoveSystem"
-    local SpriteSystem = require "core.systems.graphic.SpriteSystem"
-    local PromptSystem = require "core.systems.graphic.PromptSystem"
     local LogSystem = require "core.systems.event.LogSystem"
     local TurnSystem = require "core.systems.event.TurnSystem"
     local SaveSystem = require "core.systems.event.SaveSystem"
     local LevelSystem = require "core.systems.event.LevelSystem"
     local ReplaySystem = require "core.systems.event.ReplaySystem"
+    local TargetSystem = require "core.systems.event.TargetSystem"
+    local StateSystem = require "core.systems.event.StateSystem"
+
+    local SpriteSystem = require "core.systems.graphic.SpriteSystem"
+    local PromptSystem = require "core.systems.graphic.PromptSystem"
+    local CursorSystem = require "core.systems.graphic.CursorSystem"
 
     --engine instance
     systems.engine = lovetoys.Engine()
 
     --add event systems to table
     systems.logSystem = LogSystem()
-    systems.commandKeySystem = CommandKeySystem()
+    systems.commandKeyPressSystem = KeyPressSystem()
     systems.moveSystem = MoveSystem()
     systems.turnSystem = TurnSystem()
     systems.saveSystem = SaveSystem()
     systems.levelSystem = LevelSystem()
     systems.replaySystem = ReplaySystem()
+    systems.targetSystem = TargetSystem()
+    systems.stateSystem = StateSystem()
 
     --add draw systems to table
     if not game.options.headless then
         systems.spriteSystem = SpriteSystem()
         systems.promptSystem = PromptSystem()
+        systems.cursorSystem = CursorSystem()
 
+        systems.engine:addSystem(systems.cursorSystem, "draw")
         systems.engine:addSystem(systems.spriteSystem, "draw")
         systems.engine:addSystem(systems.promptSystem, "draw")
     end
@@ -58,5 +66,6 @@ function systems.update()
 end
 function systems.draw()
     systems.engine:draw()
+    systems.cursorSystem:draw()
 end
 return systems

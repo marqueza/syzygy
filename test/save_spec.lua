@@ -26,10 +26,10 @@ describe("arena", function()
             assert.is_true(beforeCount >= 1)
             local save = spy.on(events.SaveEvent, "initialize")
 
-            events.fireEvent(events.CommandKeyEvent{key="left"})
-            events.fireEvent(events.CommandKeyEvent{key="left"})
-            events.fireEvent(events.CommandKeyEvent{key="left"})
-            events.fireEvent(events.CommandKeyEvent{key="s"})
+            events.fireEvent(events.KeyPressEvent{key="left"})
+            events.fireEvent(events.KeyPressEvent{key="left"})
+            events.fireEvent(events.KeyPressEvent{key="left"})
+            events.fireEvent(events.KeyPressEvent{key="s"})
 
             assert.spy(save).was_called(1)
         end)
@@ -45,7 +45,7 @@ describe("arena", function()
             assert.truthy(beforeEventLog)
             assert.truthy(beforeTurn)
 
-            events.fireEvent(events.CommandKeyEvent{key="l"})
+            events.fireEvent(events.LoadEvent{})
 
             local afterCount = #systems.engine.entities
             local afterTurn = systems.turnSystem.turn
