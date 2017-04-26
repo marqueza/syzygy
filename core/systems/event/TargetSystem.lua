@@ -19,18 +19,12 @@ function TargetSystem:onFocusNotify(focusEvent)
     for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
         if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y and e.Physics.blocks then
             self.focus = e
-            events.fireEvent(events.LogEvent{
-                text="[FOCUS] " .. self.focus.name,
-            })
             return
         end
     end
     for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
         if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y then
             self.focus = e
-            events.fireEvent(events.LogEvent{
-                text="[FOCUS] " .. self.focus.name,
-            })
             return
         end
     end

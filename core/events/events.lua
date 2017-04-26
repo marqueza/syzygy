@@ -32,6 +32,7 @@ function events.init()
     events.eventManager:addListener("StateEvent", systems.stateSystem, systems.stateSystem.onNotify)
 
     if not game.options.headless then
+        --promptSystem
         events.eventManager:addListener("TurnEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("SaveEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("LoadEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
@@ -39,6 +40,9 @@ function events.init()
         events.eventManager:addListener("ReplayEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("StateEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("FocusEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
+
+        --infoBoxSystem
+        events.eventManager:addListener("FocusEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
     end
 end
 

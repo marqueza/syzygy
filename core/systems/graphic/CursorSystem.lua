@@ -4,6 +4,7 @@ local systems = require "core.systems.systems"
 local CursorSystem = class("CursorSystem", lovetoys.System)
 
 function CursorSystem:initialize()
+    lovetoys.System.initialize(self)
     self.image = love.graphics.newImage('res/img/sprites/cursor.png')
     self.gridSize = 64
 end
