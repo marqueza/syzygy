@@ -91,7 +91,22 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
                 text="[COMMANDKEY] FOUND ENTRANCE" .. entrance.Physics.x.. " " .. entrance.Physics.y.. " "..game.player.Physics.x.." "..game.player.Physics.y
                 })
         if entrance.Physics.x == game.player.Physics.x and
-          entrance.Physics.y == game.player.Physics.y then
+          entrance.Physics.y == game.player.Physics.y and
+          entrance.Entrance.commandKey == "<" then
+            events.fireEvent(events.LevelEvent{levelName=entrance.Entrance.levelName})
+        end
+    end
+    elseif KeyPressEvent.key == "." then
+        for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
+            game.player = entity
+        end
+      for index, entrance in pairs(systems.getEntitiesWithComponent("Entrance")) do
+        events.eventManager:fireEvent(events.LogEvent{
+                text="[COMMANDKEY] FOUND ENTRANCE" .. entrance.Physics.x.. " " .. entrance.Physics.y.. " "..game.player.Physics.x.." "..game.player.Physics.y
+                })
+        if entrance.Physics.x == game.player.Physics.x and
+          entrance.Physics.y == game.player.Physics.y and
+          entrance.Entrance.commandKey == ">" then
             events.fireEvent(events.LevelEvent{levelName=entrance.Entrance.levelName})
         end
       end

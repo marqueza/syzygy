@@ -15,13 +15,13 @@ function arena.build(entityCallback, seed, options)
     for i=1, arena.length do
         for j=1, arena.width do
             if i == 1 or i == arena.length or j == 1 or j == arena.width then
-                entityCallback(Factory.Wall(i, j))
+                entityCallback(Factory.Wall(i, j, options.color))
             else
-                entityCallback(Factory.Floor(i, j))
+                entityCallback(Factory.Floor(i, j, options.color))
             end
         end
     end
-    entityCallback(Factory.Upstairs(arena.getRandX(), arena.getRandY()))
+    entityCallback(Factory.Upstairs(arena.getRandX(), arena.getRandY(), options.color))
 
     if not options.empty then
 

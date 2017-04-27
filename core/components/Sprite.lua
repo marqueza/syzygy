@@ -7,6 +7,9 @@ Sprite.size = 64
 
 function Sprite:initialize(args)
         self.filename = args.filename
+        self.direction = args.direction
+        self.color = args.color
+
     if not game.options.headless then
         self.image = love.graphics.newImage('res/' .. self.filename)
         self.image:setFilter("nearest", "nearest")

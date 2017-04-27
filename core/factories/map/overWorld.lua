@@ -1,8 +1,8 @@
 local Factory = require("core/factories/entity/EntityFactory")
 
-local overWorld = {}
+local arena = {}
 
-function overWorld.build(entityCallback, seed, options)
+function arena.build(entityCallback, seed, options)
     math.randomseed(seed)
     local options = options or {}
     arena.length = options.length or 10
@@ -12,25 +12,36 @@ function overWorld.build(entityCallback, seed, options)
     for i=1, arena.length do
         for j=1, arena.width do
             if i == 1 or i == arena.length or j == 1 or j == arena.width then
-                entityCallback(Factory.Wall(i, j))
+                if i == 1 and j ==1 then
+                    entityCallback(Factory.Shore(i, j, "up", true))
+                elseif i == arena.length and j == 1 then
+                    entityCallback(Factory.Shore(i, j, "right", true))
+                elseif i == 1 and j == arena.width then
+                    entityCallback(Factory.Shore(i, j, "left", true))
+                elseif i == arena.length and j == arena.width then
+                    entityCallback(Factory.Shore(i, j, "down", true))
+                elseif i == 1 then
+                    entityCallback(Factory.Shore(i, j, "left"))
+                elseif i == arena.length then
+                    entityCallback(Factory.Shore(i, j, "right"))
+                elseif j == 1 then
+                    entityCallback(Factory.Shore(i, j, "up"))
+                elseif j == arena.width then
+                    entityCallback(Factory.Shore(i, j, "down"))
+                end
             else
-                entityCallback(Factory.Floor(i, j))
+                entityCallback(Factory.Grass(i, j))
             end
         end
     end
-    entityCallback(Factory.Upstairs(arena.getRandX(), arena.getRandY()))
 
-    if not options.empty then
-
-        entityCallback(Factory.Orc(arena.getRandX(), arena.getRandY()))
-        entityCallback(Factory.Orc(arena.getRandX(), arena.getRandY()))
-        entityCallback(Factory.Orc(arena.getRandX(), arena.getRandY()))
-        entityCallback(Factory.Orc(arena.getRandX(), arena.getRandY()))
-    end
-
+    entityCallback(Factory.Castle(2, 2))
+    entityCallback(Factory.Cave(4, 4))
     --set player
-    game.player = Factory.Player(3,3)
-    entityCallback(game.player)
+    if options.player then
+        game.player = Factory.Player(3,3)
+        entityCallback(game.player)
+    end
 end
 
 function arena.getRandX()

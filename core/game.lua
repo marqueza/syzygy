@@ -11,7 +11,7 @@ function game.load(options)
     game.systems.init()
     game.events.init()
     if not game.options.headless then
-        game.events.fireEvent(game.events.LevelEvent{levelName="1-1", options=options})
+        game.events.fireEvent(game.events.LevelEvent{levelName="1-1", options=options, firstLevel=true})
     end
     game.events.fireEvent(game.events.FocusEvent{x=3,y=3})
 
