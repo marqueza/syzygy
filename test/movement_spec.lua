@@ -18,7 +18,7 @@ describe("arena", function()
 
         local options = {}
         options.empty = false
-        events.fireEvent(events.LevelEvent("1-1", options))
+        events.fireEvent(events.LevelEvent{"1-1", options})
 
         assert.spy(lspy).was_called(1)
         assert.truthy(game)

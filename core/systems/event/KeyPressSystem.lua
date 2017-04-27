@@ -80,8 +80,21 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
         events.fireEvent(events.ReplayEvent())
     elseif KeyPressEvent.key == "q" then
         events.fireEvent(events.ToggleRecordingEvent())
-    elseif KeyPressEvent.key == "." or KeyPressEvent.key == "l" then
+    elseif KeyPressEvent.key == "l" then
         events.fireEvent(events.StateEvent{state="focus"})
+    elseif KeyPressEvent.key == "," then
+        for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
+            game.player = entity
+        end
+      for index, entrance in pairs(systems.getEntitiesWithComponent("Entrance")) do
+        events.eventManager:fireEvent(events.LogEvent{
+                text="[COMMANDKEY] FOUND ENTRANCE" .. entrance.Physics.x.. " " .. entrance.Physics.y.. " "..game.player.Physics.x.." "..game.player.Physics.y
+                })
+        if entrance.Physics.x == game.player.Physics.x and
+          entrance.Physics.y == game.player.Physics.y then
+            events.fireEvent(events.LevelEvent{levelName=entrance.Entrance.levelName})
+        end
+      end
     end
 end
 

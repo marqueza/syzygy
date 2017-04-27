@@ -1,15 +1,12 @@
 local Factory = require("core/factories/entity/EntityFactory")
 
-local arena = {}
+local overWorld = {}
 
-function arena.build(entityCallback, seed, options)
+function overWorld.build(entityCallback, seed, options)
     math.randomseed(seed)
     local options = options or {}
     arena.length = options.length or 10
     arena.width = options.width or 7
-
-    --root for level
-    --local parent = entityCallback(Factory.Wall(1, 1))
 
     --build basic map
     for i=1, arena.length do
@@ -32,10 +29,8 @@ function arena.build(entityCallback, seed, options)
     end
 
     --set player
-    if options.player then
-        game.player = Factory.Player(3,3)
-        entityCallback(game.player)
-    end
+    game.player = Factory.Player(3,3)
+    entityCallback(game.player)
 end
 
 function arena.getRandX()

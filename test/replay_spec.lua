@@ -12,7 +12,7 @@ describe("arena", function()
 
         local lspy = spy.on(events.LevelEvent, "initialize")
 
-        events.fireEvent(events.LevelEvent("1-1", {}))
+        events.fireEvent(events.LevelEvent{"1-1", {} })
 
         local beforeCount = #systems.engine.entities
         assert.spy(lspy).was_called(1)

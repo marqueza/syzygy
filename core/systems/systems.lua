@@ -66,7 +66,15 @@ function systems.getEntityById(entityId)
     return systems.engine.entities[entityId]
 end
 
-function systems.getEntities(entityId)
+function systems.removeAllEntitiesExcept(entityToSpare)
+    for i, e in ipairs(systems.engine.entities) do
+        if e ~= entityToSpare then
+            systems.engine:removeEntity(e)
+        end
+    end
+end
+
+function systems.getEntities()
     return systems.engine.entities
 end
 

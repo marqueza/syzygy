@@ -1,5 +1,4 @@
 local lovetoys = "lib.lovetoys.lovetoys"
-local Timer = require "lib.hump.timer"
 local serpent = require "serpent"
 local class = require "lib.middleclass"
 local systems = require "core.systems.systems"
@@ -12,7 +11,6 @@ function ReplaySystem:initialize()
     self.recording = false
 end
 function ReplaySystem:pushEventsFromSave(saveEvent)
-    local replayTimer = Timer.new()
 
   --read in desired events file
   local f = io.open(systems.saveSystem:getLatestDir() .. "/events.save.txt", 'r')

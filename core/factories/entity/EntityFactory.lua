@@ -1,9 +1,7 @@
 local lovetoys = require "lib.lovetoys.lovetoys"
-require("core/components/Sprite")
-require("core/components/Faction")
-require("core/components/Physics")
-require("core/components/Control")
-Sprite, Faction, Physics, Control = lovetoys.Component.load({'Sprite', 'Faction', 'Physics', 'Control'})
+require("core.components.components")
+
+Sprite, Faction, Physics, Control, Entrance = lovetoys.Component.load({'Sprite', 'Faction', 'Physics', 'Control', 'Entrance'})
 local Factory = {}
 function split(inputstr, sep)
         if sep == nil then

@@ -14,6 +14,7 @@ local _saveEntities
 local _loadMessageLog
 local _loadTurn
 local _loadEntities
+local _backupSave
 
 function SaveSystem:initialize()
     self.name = "SaveSystem"
@@ -29,19 +30,16 @@ end
 
 function SaveSystem:onSaveNotify(saveEvent)
     self.saveSlot = saveEvent.saveSlot
+    _backupSave(self)
 
-    if lfs.attributes("save/") == nil or lfs.attributes(self:getSaveDir()) == nil then
-      lfs.mkdir("save/")
-      lfs.mkdir("save/" .. self.gameId)
-      lfs.mkdir(self:getSaveDir())
-    else
-        os.execute("rm -r save/"..self.gameId .. "/backup")
-        os.execute("cp -r save/"..self.gameId.."/latest".." ".."save/"..self.gameId .. "/backup")
+    if saveEvent.saveType == "full" then
+        _saveMessageLogs(self)
+        _saveEntities(self)
+        _saveTurn(self)
+        self.saveSlot = "latest"
+    elseif saveEvent.saveType == "level" then
+        _saveEntities(self, saveEvent.prefix)
     end
-    _saveMessageLogs(self)
-    _saveEntities(self)
-    _saveTurn(self)
-    self.saveSlot = "latest"
 end
 
 function SaveSystem:onLoadNotify(loadEvent)
@@ -50,6 +48,17 @@ function SaveSystem:onLoadNotify(loadEvent)
     _loadMessageLogs(self)
     _loadTurn(self)
     self.saveSlot = "latest"
+end
+
+_backupSave = function (self)
+    if lfs.attributes("save/") == nil or lfs.attributes(self:getSaveDir()) == nil then
+        lfs.mkdir("save/")
+        lfs.mkdir("save/" .. self.gameId)
+        lfs.mkdir(self:getSaveDir())
+    else
+        os.execute("rm -r save/"..self.gameId .. "/backup")
+        os.execute("cp -r save/"..self.gameId.."/latest".." ".."save/"..self.gameId .. "/backup")
+    end
 end
 
 _saveMessageLogs = function (self)
@@ -90,8 +99,9 @@ _loadTurn = function (self)
     f:close()
 end
 
-_saveEntities = function (self)
-    local f = io.open(self:getSaveDir() .. "/" .. self.gameId ..".save.txt", "w")
+_saveEntities = function (self, prefix)
+    prefix = prefix or ""
+    local f = io.open(self:getSaveDir() .. "/" .. prefix .. self.gameId ..".save.txt", "w")
     for index, entity in pairs(systems.getEntitiesWithComponent("Physics")) do
         f:write("entity ".."{id = "..entity.id..", name = \""..entity.name.."\"}\n")
         for k, v in pairs(entity.components) do
@@ -101,7 +111,8 @@ _saveEntities = function (self)
     f:close()
 end
 
-_loadEntities = function (self)
+_loadEntities = function (self, prefix)
+    prefix = prefix or ""
     local tempEnts = {}
     for k, v in pairs(systems.engine.entities) do
         tempEnts[k] = v
@@ -111,7 +122,7 @@ _loadEntities = function (self)
     end
 
     local e = nil
-    local f = io.open(self:getSaveDir() .. "/" .. self.gameId ..".save.txt", "r")
+    local f = io.open(self:getSaveDir() .. "/" .. prefix .. self.gameId ..".save.txt", "r")
     for line in f:lines() do
         if string.find(line, 'entity') then
             if e ~= nil then
@@ -128,6 +139,7 @@ _loadEntities = function (self)
         else
             local ok, t = serpent.load(line)
             if ok then
+                assert(t.class)
                 e:add(components[t.class](t))
             end
         end
