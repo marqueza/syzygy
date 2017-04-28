@@ -14,7 +14,8 @@ events.ReplayEvent = require "core.events.ReplayEvent"
 events.ToggleRecordingEvent = require "core.events.ToggleRecordingEvent"
 events.FocusEvent = require "core.events.FocusEvent"
 events.StateEvent = require "core.events.StateEvent"
-events.ReservesEvent = require "core.events.ReservesEvent"
+events.ReservesEnterEvent = require "core.events.ReservesEnterEvent"
+events.ReservesExitEvent = require "core.events.ReservesExitEvent"
 
 function events.init()
 
@@ -31,7 +32,8 @@ function events.init()
     events.eventManager:addListener("ToggleRecording", systems.replaySystem, systems.replaySystem.toggleRecording)
     events.eventManager:addListener("FocusEvent", systems.targetSystem, systems.targetSystem.onFocusNotify)
     events.eventManager:addListener("StateEvent", systems.stateSystem, systems.stateSystem.onNotify)
-    events.eventManager:addListener("ReservesEvent", systems.reservesSystem, systems.reservesSystem.onNotify)
+    events.eventManager:addListener("ReservesEnterEvent", systems.reservesSystem, systems.reservesSystem.onEnterNotify)
+    events.eventManager:addListener("ReservesExitEvent", systems.reservesSystem, systems.reservesSystem.onExitNotify)
 
     if not game.options.headless then
         --promptSystem

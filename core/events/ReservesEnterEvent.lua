@@ -5,6 +5,7 @@ ReservesEvent:include(Serializable)
 
 function ReservesEvent:initialize(args)
     args = args or {}
+    self.entityId = args.entityId
 end
 
 return ReservesEvent
