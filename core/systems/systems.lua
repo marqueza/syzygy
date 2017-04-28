@@ -18,6 +18,7 @@ function systems.init()
     local ReplaySystem = require "core.systems.event.ReplaySystem"
     local TargetSystem = require "core.systems.event.TargetSystem"
     local StateSystem = require "core.systems.event.StateSystem"
+    local ReservesSystem = require "core.systems.event.ReservesSystem"
 
     --draw systems
     local SpriteSystem = require "core.systems.graphic.SpriteSystem"
@@ -38,6 +39,7 @@ function systems.init()
     systems.replaySystem = ReplaySystem()
     systems.targetSystem = TargetSystem()
     systems.stateSystem = StateSystem()
+    systems.reservesSystem = ReservesSystem()
 
     --add draw systems to table
     if not game.options.headless then

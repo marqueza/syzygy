@@ -1,4 +1,3 @@
-require "core.events.MoveEvent"
 local class = require "lib.middleclass"
 local events = require "core.events.events"
 local systems = require "core.systems.systems"

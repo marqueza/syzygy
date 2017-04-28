@@ -1,5 +1,5 @@
 local class = require "lib.middleclass"
-local Serializable = require "data.serializable"
+--local Serializable = require "data.serializable"
 local events = require "core.events.events"
 local TargetSystem = class("TargetSystem", System)
 

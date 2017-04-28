@@ -1,8 +1,5 @@
 local class = require "lib.middleclass"
-local Serializable = require "data.serializable"
-local events = require "core.events.events"
 local StateSystem = class("StateSystem", System)
-StateSystem:include(Serializable)
 
 function StateSystem:initialize()
     self.name = "StateSytem"
