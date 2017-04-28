@@ -10,11 +10,23 @@ function TargetSystem:initialize()
 end
 
 function TargetSystem:onFocusNotify(focusEvent)
-
-    if focusEvent.dx and focusEvent.dy then
-        focusEvent.x = self.focus.Physics.x + focusEvent.dx
-        focusEvent.y = self.focus.Physics.y + focusEvent.dy
+    if focusEvent.unfocus then
+        self.focus = nil
+        return
     end
+
+    if self.focus then
+        if focusEvent.dx and focusEvent.dy then
+            focusEvent.x = self.focus.Physics.x + focusEvent.dx
+            focusEvent.y = self.focus.Physics.y + focusEvent.dy
+        end
+    else
+        if focusEvent.dx and focusEvent.dy then
+            focusEvent.x = game.player.Physics.x + focusEvent.dx
+            focusEvent.y = game.player.Physics.y + focusEvent.dy
+        end
+    end
+
 
     for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
         if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y and e.Physics.blocks then

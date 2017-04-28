@@ -19,9 +19,12 @@ function LevelSystem:initialize()
 end
 
 function LevelSystem:onNotify(levelEvent)
+        events.eventManager:fireEvent(events.LogEvent{
+                text="ENTERING LEVEL " .. levelEvent.levelName
+                })
 
     --first level
-    if self.currentLevelName == nil then 
+    if self.currentLevelName == nil then
         self.currentLevelName = levelEvent.levelName
         local options = levelEvent.options
         options.player = true

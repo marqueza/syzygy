@@ -30,6 +30,7 @@ function KeyPressSystem:doFocusKey(KeyPressEvent)
     elseif KeyPressEvent.key == '.' or
             KeyPressEvent.key == "return" or
             KeyPressEvent.key == "l" then
+        events.fireEvent(events.FocusEvent{unfocus=true})
         events.fireEvent(events.StateEvent{state="command"})
     end
 end
@@ -82,14 +83,12 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
         events.fireEvent(events.ToggleRecordingEvent())
     elseif KeyPressEvent.key == "l" then
         events.fireEvent(events.StateEvent{state="focus"})
+        events.fireEvent(events.FocusEvent{dx=0, dy=0})
     elseif KeyPressEvent.key == "," then
         for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
             game.player = entity
         end
       for index, entrance in pairs(systems.getEntitiesWithComponent("Entrance")) do
-        events.eventManager:fireEvent(events.LogEvent{
-                text="[COMMANDKEY] FOUND ENTRANCE" .. entrance.Physics.x.. " " .. entrance.Physics.y.. " "..game.player.Physics.x.." "..game.player.Physics.y
-                })
         if entrance.Physics.x == game.player.Physics.x and
           entrance.Physics.y == game.player.Physics.y and
           entrance.Entrance.commandKey == "<" then
@@ -101,9 +100,6 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
             game.player = entity
         end
       for index, entrance in pairs(systems.getEntitiesWithComponent("Entrance")) do
-        events.eventManager:fireEvent(events.LogEvent{
-                text="[COMMANDKEY] FOUND ENTRANCE" .. entrance.Physics.x.. " " .. entrance.Physics.y.. " "..game.player.Physics.x.." "..game.player.Physics.y
-                })
         if entrance.Physics.x == game.player.Physics.x and
           entrance.Physics.y == game.player.Physics.y and
           entrance.Entrance.commandKey == ">" then

@@ -16,7 +16,9 @@ end
 
 --listen to focus events to update self.text
 function InfoBoxSystem:onFocusNotify()
-    self.text = "FOCUS: " .. string.upper(systems.targetSystem.focus.name)
+    if systems.targetSystem.focus then
+        self.text = "FOCUS: " .. string.upper(systems.targetSystem.focus.name)
+    end
 end
 
 function InfoBoxSystem:requires()

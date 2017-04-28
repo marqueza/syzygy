@@ -8,6 +8,7 @@ function FocusEvent:initialize(args)
     self.y = args.y
     self.dx = args.dx
     self.dy = args.dy
+    self.unfocus = args.unfocus or false
 end
 
 return FocusEvent
