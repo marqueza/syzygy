@@ -1,4 +1,4 @@
-describe("arena", function()
+describe("arena >", function()
     local game = require("../core/game")
     game.load( {
         debug = false,
@@ -25,7 +25,7 @@ describe("arena", function()
         assert.truthy(game.player)
     end)
 
-    describe("movement", function()
+    describe("movement >", function()
         local oldX, oldY, newX, newY
         it("right", function ()
             oldX, oldY = game.player.Physics.x, game.player.Physics.y

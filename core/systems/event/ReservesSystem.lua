@@ -8,15 +8,17 @@ function ReservesSystem:initialize()
     self.name = "ReservesSystem"
 end
 
-function ReservesSystem:onEnterNotify(EnterReservesEvent)
-    local e = systems.getEntityById(EnterReservesEvent.entityId)
+function ReservesSystem:onEnterNotify(ReservesEnterEvent)
+    assert(ReservesEnterEvent.entityId)
+    local e = systems.getEntityById(ReservesEnterEvent.entityId)
     if e:has("Sprite") then
         e.Sprite.isVisible = false
     end
     if e:has("Physics") then
         e:remove("Physics")
     end
-    e:add(Reserve())
+    e:add(components.Reserve())
+    assert(e:has("Reserve"))
 end
 
 function ReservesSystem:onExitNotify(ExitReservesEvent)
@@ -24,7 +26,7 @@ function ReservesSystem:onExitNotify(ExitReservesEvent)
     if e:has("Sprite") then
         e.Sprite.isVisible = true
     end
-    e:remove("Reserves")
+    e:remove("Reserve")
 end
 
 return ReservesSystem

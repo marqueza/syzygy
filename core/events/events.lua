@@ -16,6 +16,9 @@ events.FocusEvent = require "core.events.FocusEvent"
 events.StateEvent = require "core.events.StateEvent"
 events.ReservesEnterEvent = require "core.events.ReservesEnterEvent"
 events.ReservesExitEvent = require "core.events.ReservesExitEvent"
+events.MissionEnterEvent = require "core.events.MissionEnterEvent"
+events.MissionExitEvent = require "core.events.MissionExitEvent"
+events.SpawnEvent = require "core.events.SpawnEvent"
 
 function events.init()
 
@@ -25,6 +28,7 @@ function events.init()
     events.eventManager:addListener("MoveEvent", systems.replaySystem, systems.replaySystem.pushEvent)
     events.eventManager:addListener("LogEvent", systems.logSystem, systems.logSystem.onNotify)
     events.eventManager:addListener("TurnEvent", systems.turnSystem, systems.turnSystem.onNotify)
+    events.eventManager:addListener("TurnEvent", systems.missionSystem, systems.missionSystem.onTurnNotify)
     events.eventManager:addListener("SaveEvent", systems.saveSystem, systems.saveSystem.onSaveNotify)
     events.eventManager:addListener("LoadEvent", systems.saveSystem, systems.saveSystem.onLoadNotify)
     events.eventManager:addListener("LevelEvent", systems.levelSystem, systems.levelSystem.onNotify)
@@ -34,6 +38,9 @@ function events.init()
     events.eventManager:addListener("StateEvent", systems.stateSystem, systems.stateSystem.onNotify)
     events.eventManager:addListener("ReservesEnterEvent", systems.reservesSystem, systems.reservesSystem.onEnterNotify)
     events.eventManager:addListener("ReservesExitEvent", systems.reservesSystem, systems.reservesSystem.onExitNotify)
+    events.eventManager:addListener("MissionEnterEvent", systems.missionSystem, systems.missionSystem.onEnterNotify)
+    events.eventManager:addListener("MissionExitEvent", systems.missionSystem, systems.missionSystem.onExitNotify)
+    events.eventManager:addListener("SpawnEvent", systems.spawnSystem, systems.spawnSystem.onNotify)
 
     if not game.options.headless then
         --promptSystem

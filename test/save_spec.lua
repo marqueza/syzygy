@@ -1,4 +1,4 @@
-describe("arena", function()
+describe("arena >", function()
     local game = require("../core/game")
     game.load( {
         debug = false,
@@ -19,7 +19,7 @@ describe("arena", function()
         assert.truthy(game.player)
     end)
 
-    describe("saveSystem", function()
+    describe("save & load >", function()
 
         it("save", function ()
             local beforeCount = #systems.engine.entities

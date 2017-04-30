@@ -5,4 +5,5 @@ components.Physics = require("core/components/Physics")
 components.Control = require("core/components/Control")
 components.Entrance = require("core/components/Entrance")
 components.Reserve = require("core/components/Reserve")
+components.Mission = require("core/components/Mission")
 return components

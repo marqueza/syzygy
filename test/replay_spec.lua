@@ -1,4 +1,4 @@
-describe("arena", function()
+describe("arena >", function()
     events = require("../core/events/events")
     --test code
     game = require("../core/game")
@@ -8,7 +8,7 @@ describe("arena", function()
     })
     events.init()
     systems.init()
-    setup("arena load", function()
+    setup("arena load >", function()
 
         local lspy = spy.on(events.LevelEvent, "initialize")
 
@@ -21,7 +21,7 @@ describe("arena", function()
         assert.truthy(game.player)
     end)
 
-    describe("ReplaySystem", function()
+    describe("replay >", function()
 
         it("series of popEvent", function ()
 

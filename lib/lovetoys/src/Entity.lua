@@ -3,6 +3,7 @@ local folderOfThisFile = (...):match("(.-)[^%/%.]+$")
 
 local lovetoys = require(folderOfThisFile .. 'namespace')
 local ComponentAdded = require(folderOfThisFile..'events.ComponentAdded')
+local ComponentRemoved = require(folderOfThisFile..'events.ComponentRemoved')
 local Entity = lovetoys.class("Entity")
 
 function Entity:initialize(parent, name)

@@ -19,6 +19,8 @@ function systems.init()
     local TargetSystem = require "core.systems.event.TargetSystem"
     local StateSystem = require "core.systems.event.StateSystem"
     local ReservesSystem = require "core.systems.event.ReservesSystem"
+    local MissionSystem = require "core.systems.event.MissionSystem"
+    local SpawnSystem = require "core.systems.event.SpawnSystem"
 
     --draw systems
     local SpriteSystem = require "core.systems.graphic.SpriteSystem"
@@ -40,6 +42,8 @@ function systems.init()
     systems.targetSystem = TargetSystem()
     systems.stateSystem = StateSystem()
     systems.reservesSystem = ReservesSystem()
+    systems.missionSystem = MissionSystem()
+    systems.spawnSystem = SpawnSystem()
 
     --add draw systems to table
     if not game.options.headless then
