@@ -103,7 +103,7 @@ The Font Software is made available “as is” WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF
 COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT.THE FONT DESIGNER DOES NOT AND
-CANNOT GUARANTEE THE PERFORMANCE OR RESULTS YOU MAY OBTAIN BY USING THE FONT
+CANNOT GUARANTEE THE PERFORMANCE OR result YOU MAY OBTAIN BY USING THE FONT
 SOFTWARE.
 THE FONT DESIGNER SHALL IN NO EVENT BE LIABLE TO YOU FOR ANY CONSEQUENTIAL,
 INCIDENTAL OR SPECIAL DAMAGES, INCLUDING ANY LOST PROFITS OR LOST SAVINGS, OR
@@ -154,7 +154,7 @@ Please note that FontStruct (www.fontstruct.com) is not a party to this
 Agreement between You and the Font Designer.
 
 FontStruct makes no warranty of any kind in connection with the Font Software,
-its use or the results that You may obtain by using the Font Software.
+its use or the result that You may obtain by using the Font Software.
 
 FontStruct shall in no event be liable to You or any third party for any damages
 whatsoever arising out of or relating to this Agreement or the use of the Font

@@ -14,6 +14,8 @@ function KeyPressSystem:onNotify(KeyPressEvent)
         self:doCommandKey(KeyPressEvent)
     elseif state == "focus" then
         self:doFocusKey(KeyPressEvent)
+    elseif state == "menu" then
+        events.fireEvent(events.MenuCommandEvent{key=KeyPressEvent.key})
     end
 end
 
@@ -105,7 +107,14 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
             events.fireEvent(events.LevelEvent{levelName=entrance.Entrance.levelName})
         end
       end
-    end
+  elseif KeyPressEvent.key == "t" then
+      events.fireEvent(events.SpawnEvent{})
+      local unit = systems.getLastEntity()
+      events.fireEvent(events.ReservesEnterEvent{entityId=unit.id})
+      assert(unit:has("Reserve"))
+  elseif KeyPressEvent.key == "m" then
+      events.fireEvent(events.MissionUnitEvent{})
+  end
 end
 
 return KeyPressSystem

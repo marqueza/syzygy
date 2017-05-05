@@ -102,7 +102,8 @@ end
 _saveEntities = function (self, prefix)
     prefix = prefix or ""
     local f = io.open(self:getSaveDir() .. "/" .. prefix .. self.gameId ..".save.txt", "w")
-    for index, entity in pairs(systems.getEntitiesWithComponent("Physics")) do
+    --for index, entity in pairs(systems.getEntitiesWithComponent("Physics")) do
+    for index, entity in pairs(systems.engine.entities) do
         f:write("entity ".."{id = "..entity.id..", name = \""..entity.name.."\"}\n")
         for k, v in pairs(entity.components) do
             f:write(v:toString() .. "\n")

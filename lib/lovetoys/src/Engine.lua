@@ -274,7 +274,6 @@ function Engine:componentAdded(event)
     -- Adding the Entity to Entitylist
     if not self.entityLists[component] then self.entityLists[component] = {} end
     self.entityLists[component][entity.id] = entity
-
     -- Adding the Entity to the requiring systems
     if self.allRequirements[component] then
         for _, system in pairs(self.allRequirements[component]) do

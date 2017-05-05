@@ -27,6 +27,7 @@ function systems.init()
     local PromptSystem = require "core.systems.graphic.PromptSystem"
     local CursorSystem = require "core.systems.graphic.CursorSystem"
     local InfoBoxSystem = require "core.systems.graphic.InfoBoxSystem"
+    local MenuSystem = require "core.systems.graphic.MenuSystem"
 
     --engine instance
     systems.engine = lovetoys.Engine()
@@ -51,12 +52,14 @@ function systems.init()
         systems.promptSystem = PromptSystem()
         systems.cursorSystem = CursorSystem()
         systems.infoBoxSystem = InfoBoxSystem()
+        systems.menuSystem = MenuSystem()
 
         --order of drawing
         systems.engine:addSystem(systems.spriteSystem, "draw")
         systems.engine:addSystem(systems.promptSystem, "draw")
         systems.engine:addSystem(systems.infoBoxSystem, "draw")
         systems.engine:addSystem(systems.cursorSystem, "draw")
+        systems.engine:addSystem(systems.menuSystem, "draw")
     end
 end
 
@@ -72,6 +75,10 @@ function systems.getEntityById(entityId)
     return systems.engine.entities[entityId]
 end
 
+function systems.removeComponent(entity)
+    return systems.engine.entities[entityId]
+end
+
 function systems.removeAllEntitiesExcept(entityToSpare)
     for k, e in pairs(systems.engine.entities) do
         if e.id ~= entityToSpare.id then
@@ -80,6 +87,9 @@ function systems.removeAllEntitiesExcept(entityToSpare)
     end
 end
 
+function systems.getLastEntity()
+    return systems.engine.entities[#systems.engine.entities]
+end
 function systems.getEntities()
     return systems.engine.entities
 end

@@ -3,9 +3,9 @@ local serpent = require 'serpent'
 Serializable = {}
 
 function Serializable:toString()
-    return serpent.line(self:reflect(), {comment=false, valtypeignore = {'table', 'userdata', 'function'}})
+    return serpent.line(self:toTable(), {comment=false, valtypeignore = {'table', 'userdata', 'function'}})
 end
-function Serializable:reflect()
+function Serializable:toTable()
     local t = {}
     for k, v in pairs(self) do
         if k == 'class' then

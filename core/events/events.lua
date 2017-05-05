@@ -14,11 +14,20 @@ events.ReplayEvent = require "core.events.ReplayEvent"
 events.ToggleRecordingEvent = require "core.events.ToggleRecordingEvent"
 events.FocusEvent = require "core.events.FocusEvent"
 events.StateEvent = require "core.events.StateEvent"
+events.SpawnEvent = require "core.events.SpawnEvent"
+
 events.ReservesEnterEvent = require "core.events.ReservesEnterEvent"
 events.ReservesExitEvent = require "core.events.ReservesExitEvent"
-events.MissionEnterEvent = require "core.events.MissionEnterEvent"
+
+events.MissionEmbarkEvent = require "core.events.MissionEmbarkEvent"
 events.MissionExitEvent = require "core.events.MissionExitEvent"
-events.SpawnEvent = require "core.events.SpawnEvent"
+events.MissionUnitEvent = require "core.events.MissionUnitEvent"
+events.MissionLocationEvent = require "core.events.MissionLocationEvent"
+events.MissionTaskEvent = require "core.events.MissionTaskEvent"
+
+events.MenuCommandEvent = require "core.events.MenuCommandEvent"
+events.MenuDisplayEvent = require "core.events.MenuDisplayEvent"
+events.MenuResultEvent = require "core.events.MenuResultEvent"
 
 function events.init()
 
@@ -38,16 +47,19 @@ function events.init()
     events.eventManager:addListener("StateEvent", systems.stateSystem, systems.stateSystem.onNotify)
     events.eventManager:addListener("ReservesEnterEvent", systems.reservesSystem, systems.reservesSystem.onEnterNotify)
     events.eventManager:addListener("ReservesExitEvent", systems.reservesSystem, systems.reservesSystem.onExitNotify)
-    events.eventManager:addListener("MissionEnterEvent", systems.missionSystem, systems.missionSystem.onEnterNotify)
-    events.eventManager:addListener("MissionExitEvent", systems.missionSystem, systems.missionSystem.onExitNotify)
     events.eventManager:addListener("SpawnEvent", systems.spawnSystem, systems.spawnSystem.onNotify)
+    events.eventManager:addListener("MissionEmbarkEvent", systems.missionSystem, systems.missionSystem.onEmbarkNotify)
+    events.eventManager:addListener("MissionExitEvent", systems.missionSystem, systems.missionSystem.onExitNotify)
+    events.eventManager:addListener("MissionUnitEvent", systems.missionSystem, systems.missionSystem.onUnitNotify)
+    events.eventManager:addListener("MissionLocationEvent", systems.missionSystem, systems.missionSystem.onLocationNotify)
+    events.eventManager:addListener("MissionTaskEvent", systems.missionSystem, systems.missionSystem.onTaskNotify)
 
     if not game.options.headless then
-        --promptSystem
         events.eventManager:addListener("LogEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
-
-        --infoBoxSystem
         events.eventManager:addListener("FocusEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
+        events.eventManager:addListener("MenuCommandEvent", systems.menuSystem, systems.menuSystem.onCommmandNotify)
+        events.eventManager:addListener("MenuDisplayEvent", systems.menuSystem, systems.menuSystem.onDisplayNotify)
+    --events.eventManager:addListener("MenuResultEvent", systems.menuSystem, systems.menuSystem.onResultNotify)
     end
 end
 

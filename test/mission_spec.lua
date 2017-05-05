@@ -13,10 +13,10 @@ describe("clean start >", function()
             assert.truthy(unit)
             local beforeCount = #systems.getEntitiesWithComponent("Mission")
             assert.equals(0, beforeCount)
-            local eventSpy = spy.on(events, "MissionEnterEvent")
+            local eventSpy = spy.on(events, "MissionEmbarkEvent")
 
             --test
-            events.fireEvent(events.MissionEnterEvent{entityId=unit.id})
+            events.fireEvent(events.MissionEmbarkEvent{entityId=unit.id})
 
             --posttest
             assert.spy(eventSpy).was_called(1)

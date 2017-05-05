@@ -3,7 +3,7 @@ game.events = require "core.events.events"
 game.systems = require "core.systems.systems"
 function game.load(options)
     game.options = options
-    game.state = "rogue"
+    game.state = "command"
     dofile('core/startup.lua')
 
     --shared info between systems
@@ -12,7 +12,7 @@ function game.load(options)
     game.events.init()
     if not game.options.headless then
         game.events.fireEvent(game.events.LevelEvent{levelName="1-1", options=options, firstLevel=true})
-        game.events.fireEvent(game.events.SpawnEvent())
+        --game.events.fireEvent(game.events.SpawnEvent())
     end
 end
 
