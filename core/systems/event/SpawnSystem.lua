@@ -1,6 +1,6 @@
 local class = require "lib.middleclass"
 local Serializable = require "data.serializable"
-local Factory = require "core.factories.entity.EntityFactory"
+local Factory = require "core.factories.entity.Factory"
 local Systems = require "core.systems.systems"
 local SpawnSystem = class("SpawnSystem", System)
 SpawnSystem:include(Serializable)

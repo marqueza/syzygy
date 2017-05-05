@@ -1,9 +1,4 @@
+local filer = require "data.filer"
 local components = {}
-components.Sprite = require("core/components/Sprite")
-components.Faction = require("core/components/Faction")
-components.Physics = require("core/components/Physics")
-components.Control = require("core/components/Control")
-components.Entrance = require("core/components/Entrance")
-components.Reserve = require("core/components/Reserve")
-components.Mission = require("core/components/Mission")
+filer.requireDirectoryItems(components, "components", "core/components/")
 return components

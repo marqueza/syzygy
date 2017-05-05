@@ -1,38 +1,15 @@
 local serpent = require "serpent"
 local lovetoys = require "lib.lovetoys.lovetoys"
 local systems = require "core.systems.systems"
+local filer = require "data.filer"
 local events = {}
 
-events.KeyPressEvent = require "core.events.KeyPressEvent"
-events.LogEvent = require "core.events.LogEvent"
-events.MoveEvent = require "core.events.MoveEvent"
-events.TurnEvent = require "core.events.TurnEvent"
-events.SaveEvent = require "core.events.SaveEvent"
-events.LoadEvent = require "core.events.LoadEvent"
-events.LevelEvent = require "core.events.LevelEvent"
-events.ReplayEvent = require "core.events.ReplayEvent"
-events.ToggleRecordingEvent = require "core.events.ToggleRecordingEvent"
-events.FocusEvent = require "core.events.FocusEvent"
-events.StateEvent = require "core.events.StateEvent"
-events.SpawnEvent = require "core.events.SpawnEvent"
-
-events.ReservesEnterEvent = require "core.events.ReservesEnterEvent"
-events.ReservesExitEvent = require "core.events.ReservesExitEvent"
-
-events.MissionEmbarkEvent = require "core.events.MissionEmbarkEvent"
-events.MissionExitEvent = require "core.events.MissionExitEvent"
-events.MissionUnitEvent = require "core.events.MissionUnitEvent"
-events.MissionLocationEvent = require "core.events.MissionLocationEvent"
-events.MissionTaskEvent = require "core.events.MissionTaskEvent"
-
-events.MenuCommandEvent = require "core.events.MenuCommandEvent"
-events.MenuDisplayEvent = require "core.events.MenuDisplayEvent"
-events.MenuResultEvent = require "core.events.MenuResultEvent"
+filer.requireDirectoryItems(events, "events", "core/events/")
 
 function events.init()
 
     events.eventManager = lovetoys.EventManager()
-    events.eventManager:addListener("KeyPressEvent", systems.commandKeyPressSystem, systems.commandKeyPressSystem.onNotify)
+    events.eventManager:addListener("KeyPressEvent", systems.keyPressSystem, systems.keyPressSystem.onNotify)
     events.eventManager:addListener("MoveEvent", systems.moveSystem, systems.moveSystem.onNotify)
     events.eventManager:addListener("MoveEvent", systems.replaySystem, systems.replaySystem.pushEvent)
     events.eventManager:addListener("LogEvent", systems.logSystem, systems.logSystem.onNotify)

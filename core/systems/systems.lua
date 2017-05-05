@@ -1,58 +1,20 @@
 local lovetoys = require "lib.lovetoys.lovetoys"
+local filer = require "data.filer"
 if not lovetoys.initialized then lovetoys.initialize({
     globals = false,
     debug = true
 })
 end
+
 systems = {}
 
 function systems.init()
-
-    --event systems
-    local KeyPressSystem = require "core.systems.event.KeyPressSystem"
-    local MoveSystem = require "core.systems.event.MoveSystem"
-    local LogSystem = require "core.systems.event.LogSystem"
-    local TurnSystem = require "core.systems.event.TurnSystem"
-    local SaveSystem = require "core.systems.event.SaveSystem"
-    local LevelSystem = require "core.systems.event.LevelSystem"
-    local ReplaySystem = require "core.systems.event.ReplaySystem"
-    local TargetSystem = require "core.systems.event.TargetSystem"
-    local StateSystem = require "core.systems.event.StateSystem"
-    local ReservesSystem = require "core.systems.event.ReservesSystem"
-    local MissionSystem = require "core.systems.event.MissionSystem"
-    local SpawnSystem = require "core.systems.event.SpawnSystem"
-
-    --draw systems
-    local SpriteSystem = require "core.systems.graphic.SpriteSystem"
-    local PromptSystem = require "core.systems.graphic.PromptSystem"
-    local CursorSystem = require "core.systems.graphic.CursorSystem"
-    local InfoBoxSystem = require "core.systems.graphic.InfoBoxSystem"
-    local MenuSystem = require "core.systems.graphic.MenuSystem"
-
-    --engine instance
     systems.engine = lovetoys.Engine()
+    
+    filer.instantiateDirectoryItems(systems, "systems", "core/systems/event/")
 
-    --add event systems to table
-    systems.logSystem = LogSystem()
-    systems.commandKeyPressSystem = KeyPressSystem()
-    systems.moveSystem = MoveSystem()
-    systems.turnSystem = TurnSystem()
-    systems.saveSystem = SaveSystem()
-    systems.levelSystem = LevelSystem()
-    systems.replaySystem = ReplaySystem()
-    systems.targetSystem = TargetSystem()
-    systems.stateSystem = StateSystem()
-    systems.reservesSystem = ReservesSystem()
-    systems.missionSystem = MissionSystem()
-    systems.spawnSystem = SpawnSystem()
-
-    --add draw systems to table
     if not game.options.headless then
-        systems.spriteSystem = SpriteSystem()
-        systems.promptSystem = PromptSystem()
-        systems.cursorSystem = CursorSystem()
-        systems.infoBoxSystem = InfoBoxSystem()
-        systems.menuSystem = MenuSystem()
+        filer.instantiateDirectoryItems(systems, "systems", "core/systems/graphic/" )
 
         --order of drawing
         systems.engine:addSystem(systems.spriteSystem, "draw")

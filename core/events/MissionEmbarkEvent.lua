@@ -4,8 +4,8 @@ local MissionEmbarkEvent = class("MissionEmbarkEvent")
 MissionEmbarkEvent:include(Serializable)
 
 function MissionEmbarkEvent:initialize(args)
-    assert(type(args.unitId)=="number", "Expected a number, got: "..type(args.unitId))
-    assert(type(args.turnsRemaining)=="number", "Expected a number, got: "..type(args.turnsRemaining))
+    assert(type(args.unitId)=="number", "Expected a number for unitId, got: "..type(args.unitId))
+    assert(type(args.turnsRemaining)=="number", "Expected a number for turnsRemaining, got: "..type(args.turnsRemaining))
     self.unitId = args.unitId
     self.turnsRemaining = args.turnsRemaining
 end

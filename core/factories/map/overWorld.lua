@@ -1,4 +1,4 @@
-local Factory = require("core/factories/entity/EntityFactory")
+local Factory = require("core/factories/entity/Factory")
 
 local arena = {}
 

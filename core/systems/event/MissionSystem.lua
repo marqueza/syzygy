@@ -51,7 +51,7 @@ function MissionSystem:onUnitNotify(MissionUnitEvent)
         title="Select a unit in reserves:",
         resultKey="unitId",
         resultEvent=events.MissionEmbarkEvent,
-        resultEventArgs={},
+        resultEventArgs={turnsRemaining=10},
     })
 end
 
