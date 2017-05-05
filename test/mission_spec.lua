@@ -16,7 +16,8 @@ describe("clean start >", function()
             local eventSpy = spy.on(events, "MissionEmbarkEvent")
 
             --test
-            events.fireEvent(events.MissionEmbarkEvent{entityId=unit.id})
+            events.fireEvent(events.ReservesEnterEvent{entityId=unit.id})
+            events.fireEvent(events.MissionEmbarkEvent{unitId=1, turnsRemaining=2})
 
             --posttest
             assert.spy(eventSpy).was_called(1)

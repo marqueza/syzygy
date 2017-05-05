@@ -9,7 +9,7 @@ function ReservesSystem:initialize()
 end
 
 function ReservesSystem:onEnterNotify(ReservesEnterEvent)
-    assert(ReservesEnterEvent.entityId)
+    assert(type(ReservesEnterEvent.entityId)=="number")
     local e = systems.getEntityById(ReservesEnterEvent.entityId)
     if e:has("Sprite") then
         e.Sprite.isVisible = false
@@ -23,6 +23,10 @@ end
 
 function ReservesSystem:onExitNotify(ExitReservesEvent)
     local e = systems.getEntityById(ExitReservesEvent.entityId)
+    if not e:has("Reserve") then
+        print("ReserveSystem: this entity does not have the Reserve component")
+        return
+    end
     if e:has("Sprite") then
         e.Sprite.isVisible = true
     end

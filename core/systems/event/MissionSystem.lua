@@ -10,7 +10,6 @@ function MissionSystem:initialize()
 end
 
 function MissionSystem:onEmbarkNotify(MissionEmbarkEvent)
-  assert(type(MissionEmbarkEvent.unitId)=="number", "Expected a number, got: "..type(MissionEmbarkEvent.unitId))
     local e = systems.getEntityById(MissionEmbarkEvent.unitId)
     events.fireEvent(events.ReservesExitEvent{entityId=e.id})
 
@@ -21,7 +20,7 @@ function MissionSystem:onEmbarkNotify(MissionEmbarkEvent)
         e:remove("Physics")
     end
 
-    e:add(components.Mission({turnsRemaining=20}))
+    e:add(components.Mission({turnsRemaining=(MissionEmbarkEvent.turnsRemaining)}))
     events.fireEvent(events.LogEvent{text="["..e.id.."] " .. e.name.." embarked on a journey..."})
 end
 
