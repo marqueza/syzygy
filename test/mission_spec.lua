@@ -8,7 +8,7 @@ describe("clean start >", function()
 
         it("enter", function ()
             --pretest
-            events.fireEvent(events.SpawnEvent{})
+            events.fireEvent(events.SpawnEvent{name="Ghost", x=1,y=1})
             local unit = systems.getEntityById(1)
             assert.truthy(unit)
             local beforeCount = #systems.getEntitiesWithComponent("Mission")

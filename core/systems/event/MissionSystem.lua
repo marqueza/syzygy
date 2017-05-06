@@ -44,7 +44,6 @@ function MissionSystem:onExitNotify(MissionExitEvent)
     events.fireEvent(events.LogEvent{text="["..e.id.."] " .. e.name.." returned."})
 end
 function MissionSystem:onUnitNotify(MissionUnitEvent)
-    print("onUnitNotify: ")
     events.fireEvent(events.MenuDisplayEvent{
         type="component",
         choices={"Reserve"},

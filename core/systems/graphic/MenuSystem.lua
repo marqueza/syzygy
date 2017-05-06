@@ -39,7 +39,11 @@ _setupComponentMenu = function (self, MenuDisplayEvent)
       for k, entity in pairs(entities) do
           self.choices[i] = entity.id
           local letter = string.char(96+i)
-          self.text = self.text..letter.." - "..entity.name.."\n"
+          if entity:has("Stack") then
+              self.text = self.text..letter.." - "..entity.Stack.amount.." "..entity.name.."\n"
+          else
+              self.text = self.text..letter.." - "..entity.name.."\n"
+          end
           i = i+1
       end
       self.text = string.upper(self.text)
@@ -50,11 +54,13 @@ _setupStringMenu = function (self, MenuDisplayEvent)
 end
 
 function MenuSystem:onCommmandNotify(MenuCommandEvent)
-    local choiceIndex = string.byte(MenuCommandEvent.key)-96
-    if self.choices[choiceIndex] then
-        self.result = self.choices[choiceIndex]
-        self.resultEventArgs[self.resultKey] = self.result
-        events.fireEvent(self.resultEvent(self.resultEventArgs))
+    if self.resultEvent  then
+        local choiceIndex = string.byte(MenuCommandEvent.key)-96
+        if self.choices[choiceIndex] then
+            self.result = self.choices[choiceIndex]
+            self.resultEventArgs[self.resultKey] = self.result
+            events.fireEvent(self.resultEvent(self.resultEventArgs))
+        end
     end
     events.fireEvent(events.StateEvent{state="command"})
     self.visible = false

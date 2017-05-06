@@ -4,24 +4,24 @@ describe("clean start >", function()
     local events = game.events
     local systems = game.systems
 
-    describe("reserves >", function()
+    describe("stock >", function()
 
         it("enter", function ()
             --pretest
-            events.fireEvent(events.SpawnEvent{name="Ghost", x=1,y=1})
+            events.fireEvent(events.SpawnEvent{ name="Gold", x=1, y=1, amount=100 })
             local unit = systems.getEntityById(1)
             assert.truthy(unit)
-            local beforeCount = #systems.getEntitiesWithComponent("Reserve")
+            local beforeCount = #systems.getEntitiesWithComponent("Stock")
             assert.equals(0, beforeCount)
-            local eventSpy = spy.on(events, "ReservesEnterEvent")
+            local eventSpy = spy.on(events, "StockEnterEvent")
 
             --test
-            events.fireEvent(events.ReservesEnterEvent{entityId=unit.id})
+            events.fireEvent(events.StockEnterEvent{entityId=unit.id})
 
             --posttest
             assert.spy(eventSpy).was_called(1)
-            assert.is_true(unit:has("Reserve"))
-            local afterCount = #systems.getEntitiesWithComponent("Reserve")
+            assert.is_true(unit:has("Stock"))
+            local afterCount = #systems.getEntitiesWithComponent("Stock")
             assert.equals(1, afterCount)
         end)
 
@@ -29,17 +29,17 @@ describe("clean start >", function()
             --pretest
             local unit = systems.getEntityById(1)
             assert.truthy(unit)
-            local beforeCount = #systems.getEntitiesWithComponent("Reserve")
+            local beforeCount = #systems.getEntitiesWithComponent("Stock")
             assert.equals(1, beforeCount)
-            local eventSpy = spy.on(events, "ReservesExitEvent")
+            local eventSpy = spy.on(events, "StockExitEvent")
 
             --test
-            events.fireEvent(events.ReservesExitEvent{entityId=unit.id})
+            events.fireEvent(events.StockExitEvent{entityId=unit.id})
 
             --posttest
             assert.spy(eventSpy).was_called(1)
-            assert.is_false(unit:has("Reserve"))
-            local afterCount = #systems.getEntitiesWithComponent("Reserve")
+            assert.is_false(unit:has("Stock"))
+            local afterCount = #systems.getEntitiesWithComponent("Stock")
             assert.equals(0, afterCount)
         end)
     end)

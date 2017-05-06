@@ -4,7 +4,8 @@ local SpawnEvent = class("SpawnEvent")
 SpawnEvent:include(Serializable)
 
 function SpawnEvent:initialize(args)
-    args = args or {}
+    assert(args)
+    self.args = args or {}
 end
 
 return SpawnEvent

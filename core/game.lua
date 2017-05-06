@@ -12,7 +12,7 @@ function game.load(options)
     game.events.init()
     if not game.options.headless then
         game.events.fireEvent(game.events.LevelEvent{levelName="1-1", options=options, firstLevel=true})
-        --game.events.fireEvent(game.events.SpawnEvent())
+        game.events.fireEvent(game.events.SpawnEvent{ name="Gold", amount=100, stock=true})
     end
 end
 

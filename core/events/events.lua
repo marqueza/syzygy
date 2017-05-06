@@ -30,13 +30,15 @@ function events.init()
     events.eventManager:addListener("MissionUnitEvent", systems.missionSystem, systems.missionSystem.onUnitNotify)
     events.eventManager:addListener("MissionLocationEvent", systems.missionSystem, systems.missionSystem.onLocationNotify)
     events.eventManager:addListener("MissionTaskEvent", systems.missionSystem, systems.missionSystem.onTaskNotify)
+    events.eventManager:addListener("StockEnterEvent", systems.stockSystem, systems.stockSystem.onEnterNotify)
+    events.eventManager:addListener("StockExitEvent", systems.stockSystem, systems.stockSystem.onExitNotify)
+    events.eventManager:addListener("StockDisplayEvent", systems.stockSystem, systems.stockSystem.onDisplayNotify)
 
     if not game.options.headless then
         events.eventManager:addListener("LogEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("FocusEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
         events.eventManager:addListener("MenuCommandEvent", systems.menuSystem, systems.menuSystem.onCommmandNotify)
         events.eventManager:addListener("MenuDisplayEvent", systems.menuSystem, systems.menuSystem.onDisplayNotify)
-    --events.eventManager:addListener("MenuResultEvent", systems.menuSystem, systems.menuSystem.onResultNotify)
     end
 end
 
