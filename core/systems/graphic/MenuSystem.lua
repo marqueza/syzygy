@@ -49,12 +49,17 @@ _setupComponentMenu = function (self, MenuDisplayEvent)
       self.text = string.upper(self.text)
 end
 
-_setupStringMenu = function (self, MenuDisplayEvent)
+_setupStringMenu = function(self, MenuDisplayEvent)
     self.choices = MenuDisplayEvent.choices
+    for i, choice in ipairs(self.choices)  do
+        local letter = string.char(96+i)
+        self.text = self.text..letter.." - "..choice.."\n"
+      self.text = string.upper(self.text)
+    end
 end
 
 function MenuSystem:onCommmandNotify(MenuCommandEvent)
-    if self.resultEvent  then
+    if self.resultEvent then
         local choiceIndex = string.byte(MenuCommandEvent.key)-96
         if self.choices[choiceIndex] then
             self.result = self.choices[choiceIndex]

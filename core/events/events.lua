@@ -11,28 +11,42 @@ function events.init()
     events.eventManager = lovetoys.EventManager()
     events.eventManager:addListener("KeyPressEvent", systems.keyPressSystem, systems.keyPressSystem.onNotify)
     events.eventManager:addListener("MoveEvent", systems.moveSystem, systems.moveSystem.onNotify)
-    events.eventManager:addListener("MoveEvent", systems.replaySystem, systems.replaySystem.pushEvent)
     events.eventManager:addListener("LogEvent", systems.logSystem, systems.logSystem.onNotify)
     events.eventManager:addListener("TurnEvent", systems.turnSystem, systems.turnSystem.onNotify)
-    events.eventManager:addListener("TurnEvent", systems.missionSystem, systems.missionSystem.onTurnNotify)
-    events.eventManager:addListener("SaveEvent", systems.saveSystem, systems.saveSystem.onSaveNotify)
-    events.eventManager:addListener("LoadEvent", systems.saveSystem, systems.saveSystem.onLoadNotify)
     events.eventManager:addListener("LevelEvent", systems.levelSystem, systems.levelSystem.onNotify)
-    events.eventManager:addListener("ReplayEvent", systems.replaySystem, systems.replaySystem.popEvent)
-    events.eventManager:addListener("ToggleRecording", systems.replaySystem, systems.replaySystem.toggleRecording)
     events.eventManager:addListener("FocusEvent", systems.targetSystem, systems.targetSystem.onFocusNotify)
     events.eventManager:addListener("StateEvent", systems.stateSystem, systems.stateSystem.onNotify)
+    events.eventManager:addListener("SpawnEvent", systems.spawnSystem, systems.spawnSystem.onNotify)
+
+    --replay system
+    events.eventManager:addListener("MoveEvent", systems.replaySystem, systems.replaySystem.pushEvent)
+    events.eventManager:addListener("ReplayEvent", systems.replaySystem, systems.replaySystem.popEvent)
+    events.eventManager:addListener("ToggleRecording", systems.replaySystem, systems.replaySystem.toggleRecording)
+
+    --save system
+    events.eventManager:addListener("SaveEvent", systems.saveSystem, systems.saveSystem.onSaveNotify)
+    events.eventManager:addListener("LoadEvent", systems.saveSystem, systems.saveSystem.onLoadNotify)
+
+    --reserves systems
     events.eventManager:addListener("ReservesEnterEvent", systems.reservesSystem, systems.reservesSystem.onEnterNotify)
     events.eventManager:addListener("ReservesExitEvent", systems.reservesSystem, systems.reservesSystem.onExitNotify)
-    events.eventManager:addListener("SpawnEvent", systems.spawnSystem, systems.spawnSystem.onNotify)
+
+    --mission system
+    events.eventManager:addListener("TurnEvent", systems.missionSystem, systems.missionSystem.onTurnNotify)
     events.eventManager:addListener("MissionEmbarkEvent", systems.missionSystem, systems.missionSystem.onEmbarkNotify)
     events.eventManager:addListener("MissionExitEvent", systems.missionSystem, systems.missionSystem.onExitNotify)
     events.eventManager:addListener("MissionUnitEvent", systems.missionSystem, systems.missionSystem.onUnitNotify)
     events.eventManager:addListener("MissionLocationEvent", systems.missionSystem, systems.missionSystem.onLocationNotify)
     events.eventManager:addListener("MissionTaskEvent", systems.missionSystem, systems.missionSystem.onTaskNotify)
+
+    --stock system
     events.eventManager:addListener("StockEnterEvent", systems.stockSystem, systems.stockSystem.onEnterNotify)
     events.eventManager:addListener("StockExitEvent", systems.stockSystem, systems.stockSystem.onExitNotify)
     events.eventManager:addListener("StockDisplayEvent", systems.stockSystem, systems.stockSystem.onDisplayNotify)
+
+    --hire system
+    events.eventManager:addListener("HireBrowseEvent", systems.hireSystem, systems.hireSystem.onBrowseNotify)
+    events.eventManager:addListener("HirePurchaseEvent", systems.hireSystem, systems.hireSystem.onPurchaseNotify)
 
     if not game.options.headless then
         events.eventManager:addListener("LogEvent", systems.promptSystem, systems.promptSystem.flushPrompt)

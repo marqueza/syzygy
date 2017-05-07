@@ -116,6 +116,8 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
       events.fireEvent(events.MissionUnitEvent{})
   elseif KeyPressEvent.key == "p" then
       events.fireEvent(events.StockDisplayEvent{})
+  elseif KeyPressEvent.key == "h" then
+      events.fireEvent(events.HireBrowseEvent{})
   end
 end
 
