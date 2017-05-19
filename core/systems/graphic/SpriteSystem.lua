@@ -4,7 +4,8 @@ local SpriteSystem = class("SpriteSystem", lovetoys.System)
 
 function SpriteSystem:initialize()
     love.window.setMode(1280,720)
-    love.graphics.setNewFont("res/font/Pixeled.ttf", 10)
+    local font = love.graphics.setNewFont("res/font/t.pcf", 16)
+    font:setFilter("nearest", "nearest")
     lovetoys.System.initialize(self)
     self.maxCount = 4
 end
@@ -39,8 +40,8 @@ function SpriteSystem:draw()
             xOffset+Physics.x*Sprite.size-Sprite.size,
             yOffset+Physics.y*Sprite.size-Sprite.size,
             rot,
-            sx*4,
-            sy*4 )
+            sx*Sprite.size/16,
+            sy*Sprite.size/16 )
             love.graphics.setColor(255,255,255)
     end
 end

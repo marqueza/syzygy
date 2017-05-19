@@ -6,18 +6,20 @@ local CursorSystem = class("CursorSystem", lovetoys.System)
 function CursorSystem:initialize()
     lovetoys.System.initialize(self)
     self.image = love.graphics.newImage('res/img/sprites/cursor.png')
-    self.gridSize = 64
+    self.gridSize = game.options.spriteSize
 end
 
 function CursorSystem:draw()
 
     local focus = systems.targetSystem.focus
     if focus then
-        love.graphics.setColor(255, 255, 255, 200)
-        love.graphics.draw(
-            self.image,
-            focus.Physics.x*self.gridSize-self.gridSize-4,
-            focus.Physics.y*self.gridSize-self.gridSize-4)
+        love.graphics.setColor(255, 255, 255, 50)
+        love.graphics.rectangle(
+            "fill",
+            (focus.Physics.x-1)*game.options.spriteSize,
+            (focus.Physics.y-1)*game.options.spriteSize,
+            game.options.spriteSize,
+            game.options.spriteSize)
         love.graphics.setColor(255, 255, 255, 255)
     end
 end

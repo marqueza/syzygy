@@ -3,7 +3,7 @@ local serpent = require 'serpent'
 Serializable = {}
 
 function Serializable:toString()
-    return serpent.line(self:toTable(), {comment=false, valtypeignore = {'table', 'userdata', 'function'}})
+    return serpent.line(self:toTable(), {comment=false, sparse=true,compact=true, valtypeignore = {'table', 'userdata', 'function'}})
 end
 function Serializable:toTable()
     local t = {}

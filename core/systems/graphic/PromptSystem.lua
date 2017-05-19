@@ -21,16 +21,16 @@ function PromptSystem:getLatestLines(lines)
     for i = 1, math.min(#(systems.logSystem.messageLog), lines) do
 
         local formattedMessage = systems.logSystem.messageLog[i] .. "\n"
-        formattedMessage = string.upper(formattedMessage)
+        --formattedMessage = string.upper(formattedMessage)
         formattedMessage = string.gsub(formattedMessage, '{', '[')
         formattedMessage = string.gsub(formattedMessage, '}', ']')
-        formattedMessage = string.gsub(formattedMessage, '\"', ' ')
+        formattedMessage = string.gsub(formattedMessage, '\"', '')
 
         self.text = self.text .. formattedMessage
     end
 end
 function PromptSystem:flushPrompt()--flush on a new turn!
-    self:getLatestLines(20)
+    self:getLatestLines(21)
 end
 function PromptSystem:requires()
     return {}

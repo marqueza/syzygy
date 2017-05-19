@@ -2,7 +2,8 @@ local game = require "core.game"
 function love.load()
     game.load({
         debug = true,
-        headless = false
+        headless = false,
+        spriteSize = 48
     })
 end
 function love.update(dt)

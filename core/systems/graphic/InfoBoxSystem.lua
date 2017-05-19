@@ -9,7 +9,7 @@ function InfoBoxSystem:initialize()
     self.text = nil
 end
 function InfoBoxSystem:draw()
-    love.graphics.print(self.text or "BLANK",
+    love.graphics.print(self.text or "BLANK\n",
     self.pixelX+0,
     self.pixelY+0)
 end

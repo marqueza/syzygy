@@ -3,7 +3,7 @@ local Sprite  = lovetoys.Component.create("Sprite")
 local Serializable = require "data.serializable"
 Sprite:include(Serializable)
 
-Sprite.size = 64
+Sprite.size = game.options.spriteSize
 
 function Sprite:initialize(args)
         self.filename = args.filename

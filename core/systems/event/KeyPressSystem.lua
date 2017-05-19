@@ -108,7 +108,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
         end
       end
   elseif KeyPressEvent.key == "t" then
-      events.fireEvent(events.events.fireEvent(events.SpawnEvent{name="Ghost", x=1,y=1}))
+      events.fireEvent(events.SpawnEvent{name="Ghost", x=1,y=1})
       local unit = systems.getLastEntity()
       events.fireEvent(events.ReservesEnterEvent{entityId=unit.id})
       assert(unit:has("Reserve"))
