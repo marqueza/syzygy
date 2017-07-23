@@ -44,6 +44,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
                 x=Physics.x,
                 y=Physics.y-1
             }))
+            events.fireEvent(events.TurnEvent())
         end
     elseif KeyPressEvent.key == "down" then
         for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
@@ -53,6 +54,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
                 x=Physics.x,
                 y=Physics.y+1
             }))
+            events.fireEvent(events.TurnEvent())
         end
     elseif KeyPressEvent.key == "right" then
         for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
@@ -62,6 +64,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
                 x=Physics.x+1,
                 y=Physics.y
             }))
+            events.fireEvent(events.TurnEvent())
         end
     elseif KeyPressEvent.key == "left" then
         for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
@@ -71,6 +74,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
                 x=Physics.x-1,
                 y=Physics.y
             }))
+            events.fireEvent(events.TurnEvent())
         end
     elseif KeyPressEvent.key == "s" then
         events.fireEvent(events.SaveEvent())
@@ -86,27 +90,35 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
         events.fireEvent(events.StateEvent{state="focus"})
         events.fireEvent(events.FocusEvent{dx=0, dy=0})
     elseif KeyPressEvent.key == "," then
-        for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
-            game.player = entity
-        end
-      for index, entrance in pairs(systems.getEntitiesWithComponent("Entrance")) do
-        if entrance.Physics.x == game.player.Physics.x and
-          entrance.Physics.y == game.player.Physics.y and
-          entrance.Entrance.commandKey == "<" then
-            events.fireEvent(events.LevelEvent{levelName=entrance.Entrance.levelName})
+        --go upstairs
+        if love.keyboard.isDown("rshift") or love.keyboard.isDown("lshift") then
+            for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
+                game.player = entity
+            end
+          for index, entrance in pairs(systems.getEntitiesWithComponent("Entrance")) do
+            if entrance.Physics.x == game.player.Physics.x and
+              entrance.Physics.y == game.player.Physics.y and
+              entrance.Entrance.commandKey == "<" then
+                events.fireEvent(events.LevelEvent{levelName=entrance.Entrance.levelName, options={depthDelta=-1}})
+            end
         end
     end
     elseif KeyPressEvent.key == "." then
-        for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
-            game.player = entity
+        --go downstairs
+        if love.keyboard.isDown("rshift") or love.keyboard.isDown("lshift") then
+            for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
+                game.player = entity
+            end
+            for index, entrance in pairs(systems.getEntitiesWithComponent("Entrance")) do
+                if entrance.Physics.x == game.player.Physics.x and
+                entrance.Physics.y == game.player.Physics.y and
+                entrance.Entrance.commandKey == ">" then
+                    events.fireEvent(events.LevelEvent{levelName=entrance.Entrance.levelName, options={depthDelta=1}})
+                end
+            end
+        else
+            events.fireEvent(events.TurnEvent())
         end
-      for index, entrance in pairs(systems.getEntitiesWithComponent("Entrance")) do
-        if entrance.Physics.x == game.player.Physics.x and
-          entrance.Physics.y == game.player.Physics.y and
-          entrance.Entrance.commandKey == ">" then
-            events.fireEvent(events.LevelEvent{levelName=entrance.Entrance.levelName})
-        end
-      end
   elseif KeyPressEvent.key == "t" then
       events.fireEvent(events.SpawnEvent{name="Ghost", x=1,y=1})
       local unit = systems.getLastEntity()

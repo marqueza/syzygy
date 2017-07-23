@@ -21,19 +21,39 @@ function arena.build(entityCallback, seed, options)
             end
         end
     end
-    entityCallback(Factory.Upstairs{x=arena.getRandX(), y=arena.getRandY(), color=options.color})
+    entityCallback(Factory.Upstairs{
+        levelName = "tower",
+        x=arena.getRandX(),
+        y=arena.getRandY(),
+        color=options.color})
+    entityCallback(Factory.Downstairs{
+        levelName = "tower",
+        x=arena.getRandX(),
+        y=arena.getRandY(),
+        color=options.color})
 
     if not options.empty then
 
-        entityCallback(Factory.Orc{x=arena.getRandX(), y=arena.getRandY()})
-        entityCallback(Factory.Orc{x=arena.getRandX(), y=arena.getRandY()})
-        entityCallback(Factory.Orc{x=arena.getRandX(), y=arena.getRandY()})
-        entityCallback(Factory.Orc{x=arena.getRandX(), y=arena.getRandY()})
+        if (math.random(0,1) == 1) then entityCallback(Factory.Orc{x=arena.getRandX(), y=arena.getRandY()}) end
+        if (math.random(0,1) == 1) then entityCallback(Factory.Orc{x=arena.getRandX(), y=arena.getRandY()}) end
+        if (math.random(0,1) == 1) then entityCallback(Factory.Orc{x=arena.getRandX(), y=arena.getRandY()}) end
+        if (math.random(0,1) == 1) then entityCallback(Factory.Orc{x=arena.getRandX(), y=arena.getRandY()}) end
+        --[[
+        entityCallback(Factory.Goo{x=arena.getRandX(), y=arena.getRandY()})
+        entityCallback(Factory.Fairy{x=arena.getRandX(), y=arena.getRandY()})
+        entityCallback(Factory.Kobold{x=arena.getRandX(), y=arena.getRandY()})
+        entityCallback(Factory.Golem{x=arena.getRandX(), y=arena.getRandY()})
+        entityCallback(Factory.Brownie{x=arena.getRandX(), y=arena.getRandY()})
+        --]]
     end
 
     --set player
-    if options.player then
+    if options.spawnPlayer then
         game.player = Factory.Player{x=3,y=3}
+        entityCallback(game.player)
+    end
+    if options.spawnMinion then
+        game.player = Factory.Brownie{x=3,y=3}
         entityCallback(game.player)
     end
 end

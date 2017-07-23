@@ -7,6 +7,8 @@ function Physics:initialize(args)
     self.x = args.x
     self.y = args.y
     self.blocks = args.blocks
+    self.hp = args.hp or 1
+    self.maxHp = args.maxHp or self.hp
 end
 
 return Physics

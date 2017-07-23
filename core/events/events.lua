@@ -48,6 +48,14 @@ function events.init()
     events.eventManager:addListener("HireBrowseEvent", systems.hireSystem, systems.hireSystem.onBrowseNotify)
     events.eventManager:addListener("HirePurchaseEvent", systems.hireSystem, systems.hireSystem.onPurchaseNotify)
 
+    --combat system
+    events.eventManager:addListener("AttackEvent", systems.combatSystem, systems.combatSystem.onAttackNotify)
+    events.eventManager:addListener("TurnEvent", systems.infoBoxSystem, systems.infoBoxSystem.refreshInfoBox)
+
+    --ai sytem
+    events.eventManager:addListener("TurnEvent", systems.aiSystem, systems.aiSystem.onTurnNotify)
+
+
     if not game.options.headless then
         events.eventManager:addListener("LogEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("FocusEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
@@ -59,6 +67,7 @@ end
 function events.fireEvent(event)
     if event.toString then
         if game.options.debug then
+            --captures all events and places a debug message
             events.eventManager:fireEvent(events.LogEvent{
                 text="[DEBUG] " .. event:toString(),
                 })

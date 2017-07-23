@@ -16,12 +16,11 @@ function MoveSystem:onNotify(moveEvent)
             local Faction = target:get("Faction")
             if (target:has("Faction")) then
                 if mover.Faction.name ~= target.Faction.name then
-                  events.fireEvent(events.LogEvent{text=mover.name .. " smacks ".. target.name})
+                  events.fireEvent(events.AttackEvent{attackerId=mover.id, defenderId=target.id})
                 end
             else
                 events.fireEvent(events.LogEvent{text=mover.name .. " bumps " .. target.name})
             end
-            events.fireEvent(events.TurnEvent())
             return
           end
         end
@@ -31,7 +30,6 @@ function MoveSystem:onNotify(moveEvent)
     local moverPhysics = mover:get("Physics")
     moverPhysics.x = moveEvent.x
     moverPhysics.y = moveEvent.y
-    events.fireEvent(events.TurnEvent())
     return
 end
 

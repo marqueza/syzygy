@@ -44,7 +44,7 @@ end
 
 function SaveSystem:onLoadNotify(loadEvent)
     self.saveSlot = loadEvent.saveSlot
-    _loadEntities(self)
+    self:loadEntities()
     _loadMessageLogs(self)
     _loadTurn(self)
     self.saveSlot = "latest"
@@ -112,7 +112,7 @@ _saveEntities = function (self, prefix)
     f:close()
 end
 
-_loadEntities = function (self, prefix)
+function SaveSystem:loadEntities(prefix)
     prefix = prefix or ""
     local tempEnts = {}
     for k, v in pairs(systems.engine.entities) do

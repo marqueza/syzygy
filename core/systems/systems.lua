@@ -10,7 +10,7 @@ systems = {}
 
 function systems.init()
     systems.engine = lovetoys.Engine()
-    
+
     filer.instantiateDirectoryItems(systems, "systems", "core/systems/event/")
 
     if not game.options.headless then
@@ -19,6 +19,7 @@ function systems.init()
         --order of drawing
         systems.engine:addSystem(systems.spriteSystem, "draw")
         systems.engine:addSystem(systems.promptSystem, "draw")
+        systems.engine:addSystem(systems.statusBoxSystem, "draw")
         systems.engine:addSystem(systems.infoBoxSystem, "draw")
         systems.engine:addSystem(systems.cursorSystem, "draw")
         systems.engine:addSystem(systems.menuSystem, "draw")
@@ -37,8 +38,8 @@ function systems.getEntityById(entityId)
     return systems.engine.entities[entityId]
 end
 
-function systems.removeComponent(entity)
-    return systems.engine.entities[entityId]
+function systems.removeEntity(entity)
+    return systems.engine:removeEntity(entity)
 end
 
 function systems.removeAllEntitiesExcept(entityToSpare)

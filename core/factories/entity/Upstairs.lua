@@ -4,7 +4,7 @@ local function Upstairs(args)
 	entity.name = "upstairs"
 	entity:add(Physics{x=args.x, y=args.y, hp=10, blocks=false})
 	entity:add(Sprite{filename="img/sprites/upstairs.png", color=args.color})
-	entity:add(Entrance{levelName="0-0", commandKey="<"})
+	entity:add(Entrance{levelName=args.levelName, commandKey="<"})
 	return entity
 end
 return Upstairs

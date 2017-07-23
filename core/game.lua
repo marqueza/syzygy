@@ -11,14 +11,15 @@ function game.load(options)
     game.systems.init()
     game.events.init()
     if not game.options.headless then
-        game.events.fireEvent(game.events.LevelEvent{levelName="1-1", options=options, firstLevel=true})
-        game.events.fireEvent(game.events.SpawnEvent{ name="Gold", amount=100, stock=true})
+        game.events.fireEvent(game.events.LevelEvent{levelName="tower", options={levelDepth=1, first=true, spawnPlayer=options.player, spawnMinion=options.auto}})
+        game.events.fireEvent(game.events.SpawnEvent{name="Gold", amount=100, stock=true})
     end
 end
 
 
 function game.update(dt)
     game.time = game.time + dt
+    game.fps = love.timer.getFPS()
     systems.update(dt)
 end
 

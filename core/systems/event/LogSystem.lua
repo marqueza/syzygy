@@ -3,6 +3,7 @@ local class = require "lib.middleclass"
 local systems = require "core.systems.systems"
 local LogSystem = class("LogSystem", System)
 
+--This class maintains the log arrays which in other systems
 function LogSystem:initialize()
     self.name = "LogSystem"
     self.messagelog = {}

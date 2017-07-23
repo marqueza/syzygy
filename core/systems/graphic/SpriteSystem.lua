@@ -4,7 +4,7 @@ local SpriteSystem = class("SpriteSystem", lovetoys.System)
 
 function SpriteSystem:initialize()
     love.window.setMode(1280,720)
-    local font = love.graphics.setNewFont("res/font/t.pcf", 16)
+    local font = love.graphics.setNewFont("res/font/tamsyn_bold.pcf", 16)
     font:setFilter("nearest", "nearest")
     lovetoys.System.initialize(self)
     self.maxCount = 4
@@ -35,14 +35,26 @@ function SpriteSystem:draw()
         if Sprite.color then
                 love.graphics.setColor(240,240,170)
         end
+        --draw the sprite
+        local pixelX = xOffset+Physics.x*Sprite.size-Sprite.size
+        local pixelY = yOffset+Physics.y*Sprite.size-Sprite.size
         love.graphics.draw(Sprite.image,
             Sprite:getFrame(count),
-            xOffset+Physics.x*Sprite.size-Sprite.size,
-            yOffset+Physics.y*Sprite.size-Sprite.size,
+            pixelX,
+            pixelY,
             rot,
             sx*Sprite.size/16,
             sy*Sprite.size/16 )
-            love.graphics.setColor(255,255,255)
+        love.graphics.setColor(255,255,255)
+
+        --draw a rectangle representing health
+        if Physics.hp < Physics.maxHp then
+            love.graphics.setColor(255,0,0,100)
+            local lifeRatio = Physics.hp / Physics.maxHp
+            love.graphics.rectangle( "fill", pixelX, pixelY+Sprite.size, Sprite.size*lifeRatio, 4)
+            love.graphics.setColor(255,255,255,255)
+        end
+
     end
 end
 

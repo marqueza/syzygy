@@ -3,7 +3,9 @@ function love.load()
     game.load({
         debug = true,
         headless = false,
-        spriteSize = 48
+        spriteSize = 48,
+        player = true,
+        auto = false
     })
 end
 function love.update(dt)
