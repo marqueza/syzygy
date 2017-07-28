@@ -22,7 +22,9 @@ function arena.build(seed, levelEvent)
             end
         end
     end
-    if levelEvent.levelDepth < 2 then
+    
+    
+    if levelEvent.levelDepth <= 1 then
        systems.addEntity(Factory.OutsideEntrance{
         levelName = "overWorld",
         x=arena.getRandX(),
@@ -37,11 +39,15 @@ function arena.build(seed, levelEvent)
         color=options.color})
     end
     
-    systems.addEntity(Factory.Downstairs{
-        levelName = levelEvent.levelName,
-        x=arena.getRandX(),
-        y=arena.getRandY(),
-        color=options.color})
+    if levelEvent.levelDepth < 10 then
+        systems.addEntity(Factory.Downstairs{
+            levelName = levelEvent.levelName,
+            x=arena.getRandX(),
+            y=arena.getRandY(),
+            color=options.color})
+    else
+      systems.addEntity(Factory.Medal{x=arena.getRandX(), y=arena.getRandY()})
+      end
 
     if not options.empty then
 
