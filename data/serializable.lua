@@ -1,5 +1,5 @@
 local class = require 'lib.middleclass'
-local serpent = require 'serpent'
+local serpent = require 'lib.serpent'
 Serializable = {}
 
 function Serializable:toString()

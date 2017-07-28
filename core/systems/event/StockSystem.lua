@@ -1,6 +1,7 @@
 local class = require "lib.middleclass"
 local components = require "core.components.components"
 local events = require "core.events.events"
+local systems = require "core.systems.systems"
 local Serializable = require "data.serializable"
 local StockSystem = class("StockSystem", System)
 StockSystem:include(Serializable)

@@ -4,7 +4,7 @@ local function Cave(args)
 	entity.name = "cave"
 	entity:add(Physics{x=args.x, y=args.y, hp=10, blocks=false})
 	entity:add(Sprite{filename="img/sprites/mountain.png"})
-	entity:add(Entrance{levelName="2-1", commandKey=">"})
+	entity:add(Entrance{levelName="cave", commandKey=">"})
 	return entity
 end
 return Cave

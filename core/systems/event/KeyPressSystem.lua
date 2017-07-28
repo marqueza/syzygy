@@ -99,7 +99,12 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
             if entrance.Physics.x == game.player.Physics.x and
               entrance.Physics.y == game.player.Physics.y and
               entrance.Entrance.commandKey == "<" then
-                events.fireEvent(events.LevelEvent{levelName=entrance.Entrance.levelName, options={depthDelta=-1}})
+                events.fireEvent(events.LevelEvent{
+                    levelName=entrance.Entrance.levelName, 
+                    entranceId=entrance.id,
+                    options={depthDelta=-1},
+                    travelerIds={game.player.id}})
+                break
             end
         end
     end
@@ -113,7 +118,12 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
                 if entrance.Physics.x == game.player.Physics.x and
                 entrance.Physics.y == game.player.Physics.y and
                 entrance.Entrance.commandKey == ">" then
-                    events.fireEvent(events.LevelEvent{levelName=entrance.Entrance.levelName, options={depthDelta=1}})
+                    events.fireEvent(events.LevelEvent{
+                        levelName=entrance.Entrance.levelName, 
+                        entranceId=entrance.id,
+                        options={depthDelta=1},
+                        travelerIds={game.player.id}})
+                    break
                 end
             end
         else

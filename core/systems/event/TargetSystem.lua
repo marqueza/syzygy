@@ -1,6 +1,7 @@
 local class = require "lib.middleclass"
 --local Serializable = require "data.serializable"
 local events = require "core.events.events"
+local systems = require "core.systems.systems"
 local TargetSystem = class("TargetSystem", System)
 
 function TargetSystem:initialize()

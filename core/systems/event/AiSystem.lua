@@ -17,7 +17,7 @@ function AiSystem:onTurnNotify(TurnEvent)
         if actorEntity.Ai.combatPreference == "melee" then
             --move closer to the opposing faction
             for j, opposingEntity in pairs(systems.getEntitiesWithComponent("Faction")) do
-                if opposingEntity.Faction.name ~= actorEntity.Faction.name then
+                if opposingEntity.Faction.name ~= actorEntity.Faction.name and opposingEntity.Physics then
                     self:MoveEntityTo(actorEntity, opposingEntity)
                     actionTaken = true
                     break
@@ -36,10 +36,10 @@ function AiSystem:onTurnNotify(TurnEvent)
 
             --try to go downstairs
             for j, entranceEntity in pairs(systems.getEntitiesWithComponent("Entrance")) do
-                if entranceEntity.Entrance.commandKey == "<" then
+                if entranceEntity.Entrance.commandKey == ">" then
                     if actorEntity.Physics.x == entranceEntity.Physics.x and
                         actorEntity.Physics.y == entranceEntity.Physics.y then
-                            events.fireEvent(events.LevelEvent{levelName=entranceEntity.Entrance.levelName})
+                            events.fireEvent(events.LevelEvent{levelName=entranceEntity.Entrance.levelName, entranceId=entranceEntity.id, options={depthDelta=1}, travelerIds={actorEntity.id}})
                     else
                         self:MoveEntityTo(actorEntity, entranceEntity)
                     end

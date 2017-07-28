@@ -1,8 +1,9 @@
 local Factory = require("core/factories/entity/Factory")
+local systems = require "core.systems.systems"
 
 local arena = {}
 
-function arena.build(entityCallback, seed, options)
+function arena.build(seed, levelEvent)
     math.randomseed(seed)
     local options = options or {}
     arena.length = options.length or 10
@@ -13,34 +14,34 @@ function arena.build(entityCallback, seed, options)
         for j=1, arena.width do
             if i == 1 or i == arena.length or j == 1 or j == arena.width then
                 if i == 1 and j ==1 then
-                    entityCallback(Factory.Shore{x=i, y=j, direction="up", isCorner=true})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="up", isCorner=true})
                 elseif i == arena.length and j == 1 then
-                    entityCallback(Factory.Shore{x=i, y=j, direction="right", isCorner=true})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="right", isCorner=true})
                 elseif i == 1 and j == arena.width then
-                    entityCallback(Factory.Shore{x=i, y=j, direction="left", isCorner=true})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="left", isCorner=true})
                 elseif i == arena.length and j == arena.width then
-                    entityCallback(Factory.Shore{x=i, y=j, direction="down", isCorner=true})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="down", isCorner=true})
                 elseif i == 1 then
-                    entityCallback(Factory.Shore{x=i, y=j, direction="left", isCorner=false})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="left", isCorner=false})
                 elseif i == arena.length then
-                    entityCallback(Factory.Shore{x=i, y=j, direction="right", isCorner=false})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="right", isCorner=false})
                 elseif j == 1 then
-                    entityCallback(Factory.Shore{x=i, y=j, direction="up", isCorner=false})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="up", isCorner=false})
                 elseif j == arena.width then
-                    entityCallback(Factory.Shore{x=i, y=j, direction="down", isCorner=false})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="down", isCorner=false})
                 end
             else
-                entityCallback(Factory.Grass{x=i, y=j})
+                systems.addEntity(Factory.Grass{x=i, y=j})
             end
         end
     end
 
-    entityCallback(Factory.Castle{x=2, y=2})
-    entityCallback(Factory.Cave{x=4, y=4})
+    systems.addEntity(Factory.Castle{x=2, y=2})
+    systems.addEntity(Factory.Cave{x=4, y=4})
     --set player
     if options.player then
         game.player = Factory.Player{x=3,y=3}
-        entityCallback(game.player)
+        systems.addEntity(game.player)
     end
 end
 

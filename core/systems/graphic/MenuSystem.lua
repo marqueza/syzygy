@@ -2,6 +2,7 @@ local lovetoys = require "lib.lovetoys.lovetoys"
 local class = require "lib.middleclass"
 local events = require "core.events.events"
 local Serializable = require "data.serializable"
+local systems = require "core.systems.systems"
 local MenuSystem = class("MenuSystem", System)
 MenuSystem:include(Serializable)
 

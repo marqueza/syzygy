@@ -1,5 +1,6 @@
 local lovetoys = require "lib.lovetoys.lovetoys"
 local class = require "lib.middleclass"
+local systems = require "core.systems.systems"
 local StatusBoxSystem = class("StatusBoxSystem", lovetoys.System)
 
 function StatusBoxSystem:initialize()

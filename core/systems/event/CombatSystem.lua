@@ -1,6 +1,7 @@
 local class = require "lib.middleclass"
 local CombatSystem = class("CombatSystem", System)
 local events = require "core.events.events"
+local systems = require "core.systems.systems"
 CombatSystem:include()
 
 --Combat system governs the rules of combat

@@ -1,7 +1,7 @@
 local class = require "lib.middleclass"
 local lovetoys = require "lib.lovetoys.lovetoys"
-local lfs = require "lfs"
-local serpent = require "serpent"
+--local lfs = require "lfs"
+local serpent = require "lib.serpent"
 local events = require "core.events.events"
 local components = require "core.components.components"
 local systems = require "core.systems.systems"
@@ -43,21 +43,28 @@ function SaveSystem:onSaveNotify(saveEvent)
 end
 
 function SaveSystem:onLoadNotify(loadEvent)
+  if loadEvent.loadType == nil or loadEvent.loadType == "full" then
     self.saveSlot = loadEvent.saveSlot
-    self:loadEntities()
+    _loadEntities(self)
     _loadMessageLogs(self)
     _loadTurn(self)
     self.saveSlot = "latest"
+  elseif loadEvent.loadType == "level" then
+    _loadEntities(self, loadEvent.prefix)
+  end
 end
 
 _backupSave = function (self)
+  --[[
     if lfs.attributes("save/") == nil or lfs.attributes(self:getSaveDir()) == nil then
         lfs.mkdir("save/")
         lfs.mkdir("save/" .. self.gameId)
         lfs.mkdir(self:getSaveDir())
-    else
-        os.execute("rm -r save/"..self.gameId .. "/backup")
-        os.execute("cp -r save/"..self.gameId.."/latest".." ".."save/"..self.gameId .. "/backup")
+        --]]
+    if love.filesystem.exists("save/") == nil or love.filesystem.exists(self:getSaveDir()) == nil then
+        love.filesystem.createDirectory("save/")
+        love.filesystem.createDirectory("save/" .. self.gameId)
+        love.filesystem.createDirectory(self:getSaveDir())
     end
 end
 
@@ -112,7 +119,7 @@ _saveEntities = function (self, prefix)
     f:close()
 end
 
-function SaveSystem:loadEntities(prefix)
+_loadEntities = function (self, prefix)
     prefix = prefix or ""
     local tempEnts = {}
     for k, v in pairs(systems.engine.entities) do

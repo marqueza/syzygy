@@ -1,5 +1,5 @@
 local lovetoys = "lib.lovetoys.lovetoys"
-local serpent = require "serpent"
+local serpent = require "lib.serpent"
 local class = require "lib.middleclass"
 local systems = require "core.systems.systems"
 local events = require "core.events.events"
