@@ -47,6 +47,7 @@ function arena.build(seed, levelEvent)
             color=options.color})
     else
       systems.addEntity(Factory.Medal{x=arena.getRandX(), y=arena.getRandY()})
+      systems.addEntity(Factory.DragonEgg{x=arena.getRandX(), y=arena.getRandY()})
       end
 
     if not options.empty then
@@ -55,6 +56,8 @@ function arena.build(seed, levelEvent)
         if (math.random(0,1) == 1) then systems.addEntity(Factory.Orc{x=arena.getRandX(), y=arena.getRandY()}) end
         if (math.random(0,1) == 1) then systems.addEntity(Factory.Orc{x=arena.getRandX(), y=arena.getRandY()}) end
         if (math.random(0,1) == 1) then systems.addEntity(Factory.Orc{x=arena.getRandX(), y=arena.getRandY()}) end
+        if (math.random(0,1) == 1) then systems.addEntity(Factory.Overlord{x=arena.getRandX(), y=arena.getRandY()}) end
+
         --[[
         systems.addEntity(Factory.Goo{x=arena.getRandX(), y=arena.getRandY()})
         systems.addEntity(Factory.Fairy{x=arena.getRandX(), y=arena.getRandY()})
