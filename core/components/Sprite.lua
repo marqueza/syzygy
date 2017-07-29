@@ -13,6 +13,7 @@ function Sprite:initialize(args)
     if not game.options.headless then
         self.image = love.graphics.newImage('res/' .. self.filename)
         self.image:setFilter("nearest", "nearest")
+        self.isVisible = true
         local width = self.image:getWidth()
         local height = self.image:getHeight()
         self.frames = {}

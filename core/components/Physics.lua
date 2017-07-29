@@ -9,6 +9,7 @@ function Physics:initialize(args)
     self.blocks = args.blocks
     self.hp = args.hp or 1
     self.maxHp = args.maxHp or self.hp
+    self.layer = args.layer
 end
 
 return Physics

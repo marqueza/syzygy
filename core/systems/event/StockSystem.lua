@@ -11,7 +11,7 @@ function StockSystem:initialize()
 end
 
 function StockSystem:onEnterNotify(StockEnterEvent)
-    assert(type(StockEnterEvent.entityId)=="number")
+    assert(StockEnterEvent.entityId)
     local e = systems.getEntityById(StockEnterEvent.entityId)
     if e:has("Sprite") then
         e.Sprite.isVisible = false

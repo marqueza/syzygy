@@ -36,7 +36,16 @@ function systems.getEntitiesWithComponent(component)
 end
 
 function systems.addEntity(entity)
+  
+    
+    
+    --add it to the engine
     systems.engine:addEntity(entity)
+    
+    --if we have sprite system, help it by sorting entities by layers
+    if systems.spriteSystem and entity.Sprite then
+      systems.spriteSystem:addToLayer(entity)
+    end
 end
 
 function systems.getEntityById(entityId)
@@ -44,19 +53,27 @@ function systems.getEntityById(entityId)
 end
 
 function systems.removeEntity(entity)
+  --if we have sprite system, help it by removing from its layering
+    if systems.spriteSystem and entity.Sprite then
+      systems.spriteSystem:removeFromLayer(entity)
+    end
     return systems.engine:removeEntity(entity)
+end
+
+function systems.removeEntityById(entityId)
+  return systems.removeEntity(systems.engine.entities[entityId])
 end
 
 function systems.removeAllEntitiesExcept(entityToSpare)
     for k, e in pairs(systems.engine.entities) do
         if e.id ~= entityToSpare.id then
-            systems.engine:removeEntity(e)
+            systems.removeEntity(e)
         end
     end
 end
 function systems.removeAllEntities()
     for k, e in pairs(systems.engine.entities) do
-        systems.engine:removeEntity(e)
+        systems.removeEntity(e)
     end
 end
 function systems.getLastEntity()

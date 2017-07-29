@@ -128,6 +128,9 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
             end
         else
             events.fireEvent(events.TurnEvent())
+            if game.player then
+              game.player.Physics.hp = game.player.Physics.hp+5
+            end
         end
   elseif KeyPressEvent.key == "t" then
       events.fireEvent(events.SpawnEvent{name="Ghost", x=1,y=1})
@@ -140,7 +143,29 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
       events.fireEvent(events.StockDisplayEvent{})
   elseif KeyPressEvent.key == "h" then
       events.fireEvent(events.HireBrowseEvent{})
+  elseif KeyPressEvent.key == "g" then
+      
+            for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
+                game.player = entity
+            end
+            for index, item in pairs(systems.getEntitiesWithComponent("Physics")) do
+                if 
+                not item.Faction and
+                item.Physics.x == game.player.Physics.x and
+                item.Physics.y == game.player.Physics.y then
+                    events.fireEvent(events.InventoryEnterEvent{
+                        itemId=item.id,
+                        holderId=game.player.id
+                    })
+                    break
+                end
+            end
+   elseif KeyPressEvent.key == "d" then
+     events.fireEvent(events.InventoryDisplayEvent{
+         holderId=game.player.id
+         })
   end
+  
 end
 
 return KeyPressSystem

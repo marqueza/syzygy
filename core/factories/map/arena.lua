@@ -39,7 +39,7 @@ function arena.build(seed, levelEvent)
         color=options.color})
     end
     
-    if levelEvent.levelDepth < 10 then
+    if levelEvent.levelDepth < 3 then
         systems.addEntity(Factory.Downstairs{
             levelName = levelEvent.levelName,
             x=arena.getRandX(),

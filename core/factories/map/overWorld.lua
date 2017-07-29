@@ -38,6 +38,10 @@ function arena.build(seed, levelEvent)
 
     systems.addEntity(Factory.Castle{x=2, y=2})
     systems.addEntity(Factory.Cave{x=4, y=4})
+    systems.addEntity(Factory.Cave{x=3, y=4})
+    systems.addEntity(Factory.Cave{x=2, y=4})
+    systems.addEntity(Factory.Cave{x=4, y=3})
+    systems.addEntity(Factory.Cave{x=4, y=2})
     --set player
     if options.player then
         game.player = Factory.Player{x=3,y=3}

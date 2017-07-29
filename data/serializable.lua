@@ -3,7 +3,7 @@ local serpent = require 'lib.serpent'
 Serializable = {}
 
 function Serializable:toString()
-    return serpent.line(self:toTable(), {comment=false, sparse=true,compact=true, valtypeignore = {'table', 'userdata', 'function'}})
+    return serpent.line(self:toTable(), {comment=false, sparse=true,compact=true, valtypeignore = {'userdata', 'function'}})
 end
 function Serializable:toTable()
     local t = {}
@@ -11,7 +11,7 @@ function Serializable:toTable()
         if k == 'class' then
             t[k] = string.gsub(v.name, "class", "")
         end
-        if type(v) ~= 'table' and type(v) ~= 'userdata' then
+        if type(v) ~= 'userdata' then
             t[k] = v
         end
     end

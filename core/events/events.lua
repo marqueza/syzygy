@@ -55,7 +55,11 @@ function events.init()
     --ai sytem
     events.eventManager:addListener("TurnEvent", systems.aiSystem, systems.aiSystem.onTurnNotify)
 
-
+    --inventory system
+    events.eventManager:addListener("InventoryEnterEvent", systems.inventorySystem, systems.inventorySystem.onEnterNotify)
+    events.eventManager:addListener("InventoryExitEvent", systems.inventorySystem, systems.inventorySystem.onExitNotify)
+    events.eventManager:addListener("InventoryDisplayEvent", systems.inventorySystem, systems.inventorySystem.onDisplayNotify)
+    
     if not game.options.headless then
         events.eventManager:addListener("LogEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("FocusEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)

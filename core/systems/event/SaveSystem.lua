@@ -111,7 +111,7 @@ _saveEntities = function (self, prefix)
     local f = io.open(self:getSaveDir() .. "/" .. prefix .. self.gameId ..".save.txt", "w")
     --for index, entity in pairs(systems.getEntitiesWithComponent("Physics")) do
     for index, entity in pairs(systems.engine.entities) do
-        f:write("entity ".."{id = "..entity.id..", name = \""..entity.name.."\"}\n")
+        f:write("entity ".."{id = \""..entity.id.."\", name = \""..entity.name.."\"}\n")
         for k, v in pairs(entity.components) do
             f:write(v:toString() .. "\n")
         end
@@ -126,15 +126,17 @@ _loadEntities = function (self, prefix)
         tempEnts[k] = v
     end
     for k, v in pairs(tempEnts) do
-      systems.engine:removeEntity(v)
+      systems.removeEntity(v)
     end
 
     local e = nil
     local f = io.open(self:getSaveDir() .. "/" .. prefix .. self.gameId ..".save.txt", "r")
     for line in f:lines() do
+      
+      --creating an entity
         if string.find(line, 'entity') then
             if e ~= nil then
-                systems.engine:addEntity(e)
+                systems.addEntity(e)
                 e = nil
             end
             e = lovetoys.Entity()
@@ -144,14 +146,20 @@ _loadEntities = function (self, prefix)
             for k, v in pairs(eLineTable) do
                 e[k] = v
             end
+            
+        --adding a component to an entity
         else
             local ok, t = serpent.load(line)
             if ok then
+                assert(t)
                 assert(t.class)
+                if components[t.class] == nil then
+                  t.class = string.gsub(t.class, "class ", "")
+                end
                 e:add(components[t.class](t))
             end
         end
     end
-    systems.engine:addEntity(e)
+    systems.addEntity(e)
 end
 return SaveSystem

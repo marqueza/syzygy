@@ -4,8 +4,8 @@ function love.load()
         debug = true,
         headless = false,
         spriteSize = 48,
-        player = false,
-        auto = true
+        player = true,
+        auto = false
     })
 end
 function love.update(dt)

@@ -90,15 +90,20 @@ function LevelSystem:reloadLevel(levelName, levelDepth, travelerIds, previousEnt
   assert(levelName)
   assert(levelDepth)
 
-  --save the travelers
+  --store and remove travelers and their inventories
   local travelers = {}
+  local travelersItems = {}
   for k, id in pairs(travelerIds) do
-    table.insert(travelers, systems.getEntityById(id))
-  end
-
-  --remove the travelers
-  for k, travelerEntity in pairs(travelers) do
+    local travelerEntity = systems.getEntityById(id)
+    table.insert(travelers, travelerEntity)
     systems.removeEntity(travelerEntity)
+    if travelerEntity.Inventory then
+      for k, itemId in pairs(travelerEntity.Inventory.itemIds) do
+        local itemEntity = systems.getEntityById(itemId)
+        table.insert(travelersItems, itemEntity)
+        systems.removeEntity(itemEntity)
+      end
+    end
   end
 
   --save level that is being left
@@ -160,20 +165,31 @@ function LevelSystem:reloadLevel(levelName, levelDepth, travelerIds, previousEnt
     end
     systems.addEntity(travelerEntity)
   end
+  --place traveler items
+  for k, itemEntity in pairs(travelersItems) do
+    systems.addEntity(itemEntity)
+  end
 end
 
 function LevelSystem:enterNewLevel(levelEvent)
   local previousEntranceEntity = systems.getEntityById(levelEvent.entranceId)
-  --store travelers
+  
+  --store and remove travelers and their inventories
   local travelers = {}
+  local travelersItems = {}
   for k, id in pairs(levelEvent.travelerIds) do
-    table.insert(travelers, systems.getEntityById(id))
+    local travelerEntity = systems.getEntityById(id)
+    table.insert(travelers, travelerEntity)
+    systems.removeEntity(travelerEntity)
+    if travelerEntity.Inventory then
+      for k, itemId in pairs(travelerEntity.Inventory.itemIds) do
+        local itemEntity = systems.getEntityById(itemId)
+        table.insert(travelersItems, itemEntity)
+        systems.removeEntity(itemEntity)
+      end
+    end
   end
 
-  --remove travelers from level
-  for k, travelerEntity in pairs(travelers) do
-    systems.removeEntity(travelerEntity)
-  end
 
   --save level
   events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="level", prefix=self.currentLevelName .."-"..self.currentLevelDepth.."_"})
@@ -228,5 +244,12 @@ function LevelSystem:enterNewLevel(levelEvent)
     end
     systems.addEntity(travelerEntity)
   end
+  
+  --place traveler items
+  for k, itemEntity in pairs(travelersItems) do
+    systems.addEntity(itemEntity)
+  end
+  
 end
+
 return LevelSystem
