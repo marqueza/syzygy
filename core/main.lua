@@ -1,7 +1,7 @@
 local game = require "core.game"
 function love.load()
     game.load({
-        debug = true,
+        debug = false,
         headless = false,
         spriteSize = 48,
         player = true,
