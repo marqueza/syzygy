@@ -15,10 +15,9 @@ function game.load(options)
         game.events.fireEvent(game.events.SpawnEvent{name="Gold", amount=100, stock=true})
     end
     
-    game.systems.infoBoxSystem.examinee = game.player
     
-    --This initializes the TargetSystem target
-    game.systems.cameraSystem:recenterCamera(game.player)
+    game.events.fireEvent(game.events.FocusEvent{dx=0,dy=0, unfocus=false})
+    game.events.fireEvent(game.events.FocusEvent{dx=0,dy=0, unfocus=true})
 end
 
 

@@ -15,8 +15,7 @@ function CombatSystem:onAttackNotify(attackEvent)
     events.fireEvent(events.LogEvent{text=attacker.name .. " smashes the ".. defender.name})
     defender.Physics.hp = defender.Physics.hp - 1
     if defender.Physics.hp <= 0 then
-        events.fireEvent(events.LogEvent{text=defender.name .. " dies."})
-        systems.removeEntity(defender)
+        events.fireEvent(events.DeathEvent{entityId=defender.id})
     end
 end
 

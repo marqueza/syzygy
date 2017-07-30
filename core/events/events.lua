@@ -60,11 +60,17 @@ function events.init()
     events.eventManager:addListener("InventoryExitEvent", systems.inventorySystem, systems.inventorySystem.onExitNotify)
     events.eventManager:addListener("InventoryDisplayEvent", systems.inventorySystem, systems.inventorySystem.onDisplayNotify)
     
+    --death system
+    events.eventManager:addListener("DeathEvent", systems.deathSystem, systems.deathSystem.onNotify)
+    
     if not game.options.headless then
         events.eventManager:addListener("LogEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("FocusEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
         events.eventManager:addListener("MenuCommandEvent", systems.menuSystem, systems.menuSystem.onCommmandNotify)
         events.eventManager:addListener("MenuDisplayEvent", systems.menuSystem, systems.menuSystem.onDisplayNotify)
+        events.eventManager:addListener("LevelEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
+        events.eventManager:addListener("TurnEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
+        events.eventManager:addListener("FocusEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
     end
 end
 

@@ -13,7 +13,7 @@ end
 
 
 function CameraSystem:recenterCamera(entity)
-    if entity then 
+    if entity and entity.Physics then 
       self.cameraX = entity.Physics.x-math.floor(systems.spriteSystem.horizontalTileMax/2)--game.options.spriteSize/2
       self.cameraY = entity.Physics.y-math.floor(systems.spriteSystem.verticalTileMax/2)--game.options.spriteSize/2
     elseif systems.infoBoxSystem.examinee then

@@ -21,8 +21,7 @@ function TurnSystem:onNotify(TurnEvent)
         end
     end
     
-    --center camera to the current target
-    systems.cameraSystem:recenterCamera()
+    
 end
 
 function TurnSystem:passTurns(turnAmount)

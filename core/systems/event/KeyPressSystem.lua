@@ -149,15 +149,27 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
                 game.player = entity
             end
             for index, item in pairs(systems.getEntitiesWithComponent("Physics")) do
-                if 
-                not item.Faction and
+                if not item.Faction and
+                item.Physics.x == game.player.Physics.x and
+                item.Physics.y == game.player.Physics.y then
+                  if item.Physics.layer == "display" then
+                    events.fireEvent(events.InventoryEnterEvent{
+                        itemId=item.id,
+                        holderId=game.player.id
+                    })
+                    return
+                  end
+                end
+            end
+            for index, item in pairs(systems.getEntitiesWithComponent("Physics")) do
+                if not item.Faction and
                 item.Physics.x == game.player.Physics.x and
                 item.Physics.y == game.player.Physics.y then
                     events.fireEvent(events.InventoryEnterEvent{
                         itemId=item.id,
                         holderId=game.player.id
                     })
-                    break
+                    return
                 end
             end
    elseif KeyPressEvent.key == "d" then
