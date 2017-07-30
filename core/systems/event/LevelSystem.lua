@@ -3,6 +3,7 @@ local class = require "lib.middleclass"
 local systems = require "core.systems.systems"
 local events = require "core.events.events"
 local arena = require "core.factories.map.arena"
+local lair = require "core.factories.map.lair"
 local overWorld = require "core.factories.map.overWorld"
 
 local LevelSystem = class("LevelSystem", System)
@@ -39,7 +40,7 @@ function LevelSystem:onNotify(levelEvent)
   --first level in the game
   if self.currentLevelName == nil then
     self.currentLevelName = levelEvent.levelName
-    arena.build(self.seed, levelEvent)
+    lair.build(self.seed, levelEvent)
     events.eventManager:fireEvent(events.LogEvent{
         text="You begin your journey in an unknown land. "
       })

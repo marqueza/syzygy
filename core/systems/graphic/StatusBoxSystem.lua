@@ -5,15 +5,16 @@ local StatusBoxSystem = class("StatusBoxSystem", lovetoys.System)
 
 function StatusBoxSystem:initialize()
     lovetoys.System.initialize(self)
-    self.pixelX = 500
+    self.pixelX = game.options.viewportWidth
     self.pixelY = 0
+    self.marginWidth = 35
     self.text = nil
     self.examinee = nil
 end
 function StatusBoxSystem:draw()
-    love.graphics.print(game.fps, self.pixelX, self.pixelY)
+    love.graphics.print(game.fps, self.pixelX+self.marginWidth, self.pixelY)
     love.graphics.print("Level: "..systems.levelSystem.currentLevelName.."-"..
-        systems.levelSystem.currentLevelDepth, self.pixelX, self.pixelY+12)
+        systems.levelSystem.currentLevelDepth, self.pixelX+self.marginWidth, self.pixelY+12)
 end
 
 --listen to focus events to update self.text

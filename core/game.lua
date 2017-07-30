@@ -14,6 +14,11 @@ function game.load(options)
         game.events.fireEvent(game.events.LevelEvent{levelName="tower", levelDepth=1, options={first=true, spawnPlayer=options.player, spawnMinion=options.auto}})
         game.events.fireEvent(game.events.SpawnEvent{name="Gold", amount=100, stock=true})
     end
+    
+    game.systems.infoBoxSystem.examinee = game.player
+    
+    --This initializes the TargetSystem target
+    game.systems.cameraSystem:recenterCamera(game.player)
 end
 
 

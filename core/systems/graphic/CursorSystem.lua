@@ -16,8 +16,8 @@ function CursorSystem:draw()
         love.graphics.setColor(255, 255, 255, 50)
         love.graphics.rectangle(
             "fill",
-            (focus.Physics.x-1)*game.options.spriteSize,
-            (focus.Physics.y-1)*game.options.spriteSize,
+            (focus.Physics.x-systems.cameraSystem.cameraX-1)*game.options.spriteSize,
+            (focus.Physics.y-systems.cameraSystem.cameraY-1)*game.options.spriteSize,
             game.options.spriteSize,
             game.options.spriteSize)
         love.graphics.setColor(255, 255, 255, 255)

@@ -32,12 +32,14 @@ function TargetSystem:onFocusNotify(focusEvent)
     for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
         if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y and e.Physics.blocks then
             self.focus = e
+            systems.cameraSystem:recenterCamera(self.focus)
             return
         end
     end
     for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
         if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y then
             self.focus = e
+            systems.cameraSystem:recenterCamera(self.focus)
             return
         end
     end

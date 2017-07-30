@@ -5,15 +5,16 @@ local InfoBoxSystem = class("InfoBoxSystem", lovetoys.System)
 
 function InfoBoxSystem:initialize()
     lovetoys.System.initialize(self)
-    self.pixelX = 700
-    self.pixelY = 15
+    self.pixelX = game.options.viewportWidth
+    self.pixelY = game.options.viewportHeight/5
+    self.marginWidth = 35
     self.text = nil
     self.examinee = nil
 end
 function InfoBoxSystem:draw()
     love.graphics.print(self.text or "BLANK\n",
-    self.pixelX+0,
-    self.pixelY+0)
+    self.pixelX+self.marginWidth,
+    self.pixelY)
 end
 
 --listen to focus events to update self.text

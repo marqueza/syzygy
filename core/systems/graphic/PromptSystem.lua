@@ -7,11 +7,13 @@ function PromptSystem:initialize()
     lovetoys.System.initialize(self)
     self.margin = 10
     self.text = nil
+    self.pixelX = 0
+    self.pixelY = game.options.viewportHeight
 end
 function PromptSystem:draw()
     love.graphics.print(self.text or "BLANK",
-    self.margin+0,
-    self.margin+444)
+    self.margin+self.pixelX,
+    self.margin+self.pixelY)
 end
 function PromptSystem:getLatestLines(lines)
     self.text = ""

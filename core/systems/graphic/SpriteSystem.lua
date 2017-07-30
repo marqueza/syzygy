@@ -1,5 +1,6 @@
 local lovetoys = require "lib.lovetoys.lovetoys"
 local class = require "lib.middleclass"
+local systems = require "core.systems.systems"
 local SpriteSystem = class("SpriteSystem", lovetoys.System)
 
 function SpriteSystem:initialize()
@@ -9,6 +10,10 @@ function SpriteSystem:initialize()
   lovetoys.System.initialize(self)
   self.maxCount = 4
   self.layers = {}
+  self.pixelWidth = game.options.viewportWidth
+  self.pixelHeight = game.options.viewportHeight
+  self.horizontalTileMax = self.pixelWidth/game.options.spriteSize
+  self.verticalTileMax = self.pixelHeight/game.options.spriteSize
 end
 
 --function declaration
@@ -18,26 +23,26 @@ function SpriteSystem:draw()
   local count = (math.floor(game.time) % self.maxCount) + 1
   --for layerName, entities in pairs(self.layers) do
 
-
+    
   local entities = self.layers["floor"]
 
   if entities then
     for key, spriteEntity in pairs(entities) do
-      _drawSprite(spriteEntity, count)
+      _drawSprite(self, spriteEntity, count)
     end
   end
 
   entities = self.layers["backdrop"]
   if entities then
     for key, spriteEntity in pairs(entities) do
-      _drawSprite(spriteEntity, count)
+      _drawSprite(self, spriteEntity, count)
     end
   end
 
   entities = self.layers["display"]
   if entities then
     for key, spriteEntity in pairs(entities) do
-      _drawSprite(spriteEntity, count)
+      _drawSprite(self, spriteEntity, count)
     end
   end
 
@@ -45,9 +50,15 @@ function SpriteSystem:draw()
   entities = self.layers["character"]
   if entities then
     for key, spriteEntity in pairs(entities) do
-      _drawSprite(spriteEntity, count)
+      _drawSprite(self, spriteEntity, count)
     end
   end
+  
+  --This rectangle is to defind the area of the viewfinder
+  love.graphics.setColor(150,250,0)
+  love.graphics.rectangle( "line", 0, 0, self.pixelWidth, self.pixelHeight )
+  love.graphics.setColor(255,255,255)
+  
 end
 
 function SpriteSystem:update()
@@ -57,12 +68,21 @@ function SpriteSystem:requires()
   return {"Physics", "Sprite"}
 end
 
-_drawSprite = function(spriteEntity, count)
+_drawSprite = function(self, spriteEntity, count)
   local Physics = spriteEntity:get("Physics")
   local Sprite = spriteEntity:get("Sprite")
   if not Sprite.isVisible then
     return
   end
+  
+  --Check draw boundaries
+  if Physics.x < 1+systems.cameraSystem.cameraX or
+     Physics.x > self.horizontalTileMax+systems.cameraSystem.cameraX or 
+     Physics.y < 1+systems.cameraSystem.cameraY or
+     Physics.y > self.verticalTileMax+systems.cameraSystem.cameraY then 
+     return
+  end
+  
   local xOffset, yOffset = 0, 0
   local rot = 0
   local sx, sy = 1, 1
@@ -84,8 +104,8 @@ _drawSprite = function(spriteEntity, count)
     love.graphics.setColor(240,240,170)
   end
   --draw the sprite
-  local pixelX = xOffset+Physics.x*Sprite.size-Sprite.size
-  local pixelY = yOffset+Physics.y*Sprite.size-Sprite.size
+  local pixelX = xOffset+(Physics.x-systems.cameraSystem.cameraX)*Sprite.size-Sprite.size
+  local pixelY = yOffset+(Physics.y-systems.cameraSystem.cameraY)*Sprite.size-Sprite.size
   love.graphics.draw(Sprite.image,
     Sprite:getFrame(count),
     pixelX,
@@ -115,6 +135,5 @@ end
 function SpriteSystem:removeFromLayer(entity)
   self.layers[entity.Physics.layer][entity.id] = nil
 end
-
 
 return SpriteSystem

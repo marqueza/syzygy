@@ -16,6 +16,8 @@ function MenuSystem:initialize()
     self.text = ""
     self.choices = {}
     self.margin = 10
+    self.pixelX = game.options.viewportWidth
+    self.pixelY = 44
 end
 
 function MenuSystem:onDisplayNotify(MenuDisplayEvent)
@@ -74,8 +76,8 @@ end
 function MenuSystem:draw()
     if self.visible then
         love.graphics.print(self.text,
-        self.margin+700,
-        self.margin+44)
+        self.margin+self.pixelX,
+        self.margin+self.pixelY)
     end
 end
 function MenuSystem:requires()
