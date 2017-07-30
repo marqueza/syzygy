@@ -15,9 +15,12 @@ function MenuSystem:initialize()
     self.turn = 1
     self.text = ""
     self.choices = {}
-    self.margin = 10
+    self.marginWidth = game.options.sideBarMarginWidth
+    self.marginHeight = 15
     self.pixelX = game.options.viewportWidth
-    self.pixelY = 44
+    self.pixelY = game.options.viewportHeight/5
+    self.pixelWidth = game.options.sideBarWidth 
+    self.pixelHeight = game.options.sideBarHeight
 end
 
 function MenuSystem:onDisplayNotify(MenuDisplayEvent)
@@ -75,9 +78,18 @@ function MenuSystem:onCommmandNotify(MenuCommandEvent)
 end
 function MenuSystem:draw()
     if self.visible then
+      --[[
+        love.graphics.setColor(0,0,0, 100)
+        love.graphics.rectangle("fill", 
+          self.pixelX,
+          self.pixelY,
+          self.pixelWidth,
+          self.pixelHeight)
+        love.graphics.setColor(255,255,255)
+        --]]
         love.graphics.print(self.text,
-        self.margin+self.pixelX,
-        self.margin+self.pixelY)
+        self.marginWidth+self.pixelX,
+        self.marginHeight+self.pixelY)
     end
 end
 function MenuSystem:requires()

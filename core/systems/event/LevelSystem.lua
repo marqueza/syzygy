@@ -4,6 +4,7 @@ local systems = require "core.systems.systems"
 local events = require "core.events.events"
 local arena = require "core.factories.map.arena"
 local lair = require "core.factories.map.lair"
+local cavern = require "core.factories.map.cavern"
 local overWorld = require "core.factories.map.overWorld"
 
 local LevelSystem = class("LevelSystem", System)
@@ -40,20 +41,15 @@ function LevelSystem:onNotify(levelEvent)
   --first level in the game
   if self.currentLevelName == nil then
     self.currentLevelName = levelEvent.levelName
-    lair.build(self.seed, levelEvent)
+    arena.build(self.seed, levelEvent)
     events.eventManager:fireEvent(events.LogEvent{
         text="You begin your journey in an unknown land. "
       })
-    
-    --do a full save
-    events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="full", prefix=nil})
-    
   --entering an existing level
   elseif self:levelVisited(levelEvent.levelName,levelEvent.levelDepth) then
     events.eventManager:fireEvent(events.LogEvent{
         text="You've been here before." 
       })
-
     self:reloadLevel(levelEvent.levelName, levelEvent.levelDepth, levelEvent.travelerIds, levelEvent.entranceId)
 
     --new level replacing old
@@ -62,15 +58,17 @@ function LevelSystem:onNotify(levelEvent)
         text="This place is brand new."
       })
     self:enterNewLevel(levelEvent)
-
-
-
-
   end
   --change levelName
   self.currentLevelName = levelEvent.levelName
   --change depth
   self.currentLevelDepth = levelEvent.levelDepth
+  --refocus back on player
+  events.fireEvent(events.FocusEvent{dx=0,dy=0, unfocus=false})
+  events.fireEvent(events.FocusEvent{dx=0,dy=0, unfocus=true})
+  --do a full save
+  events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="full", prefix=nil})
+
 
 end
 function LevelSystem:levelVisited(levelName, levelDepth)
@@ -211,7 +209,7 @@ function LevelSystem:enterNewLevel(levelEvent)
     arena.build(self.seed, levelEvent)
   else
     levelEvent.options.color = "brown"
-    arena.build(self.seed, levelEvent)
+    cavern.build(self.seed, levelEvent)
   end
 
   --when provided an entranceId this will determine where to enter in the new level
@@ -228,11 +226,21 @@ function LevelSystem:enterNewLevel(levelEvent)
 
     --now attempt to find this desired entrance
     local entrances = systems.getEntitiesWithComponent("Entrance")
+    if self.currentLevelName ~= levelEvent.levelName then
+      for key, entranceEntity in pairs(entrances) do
+        if entranceEntity.Entrance.levelName == self.currentLevelName then
+          travelX = entranceEntity.Physics.x
+          travelY = entranceEntity.Physics.y
+        end
+      end
+    end
+    if not travelX and travelY then
     for key, entranceEntity in pairs(entrances) do
       if entranceEntity.Entrance.commandKey == desiredEntranceKey then
         travelX = entranceEntity.Physics.x
         travelY = entranceEntity.Physics.y
       end
+    end
     end
   end  
 

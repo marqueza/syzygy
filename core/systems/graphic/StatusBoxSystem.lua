@@ -7,7 +7,7 @@ function StatusBoxSystem:initialize()
     lovetoys.System.initialize(self)
     self.pixelX = game.options.viewportWidth
     self.pixelY = 0
-    self.marginWidth = 35
+    self.marginWidth = game.options.sideBarMarginWidth
     self.text = nil
     self.examinee = nil
 end

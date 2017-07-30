@@ -16,8 +16,6 @@ function game.load(options)
     end
     
     
-    game.events.fireEvent(game.events.FocusEvent{dx=0,dy=0, unfocus=false})
-    game.events.fireEvent(game.events.FocusEvent{dx=0,dy=0, unfocus=true})
 end
 
 

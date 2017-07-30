@@ -37,7 +37,7 @@ end
 
 function systems.addEntity(entity)
   
-    
+    assert(systems.engine.entities[entity.id] == nil)
     
     --add it to the engine
     systems.engine:addEntity(entity)

@@ -55,10 +55,11 @@ function SpriteSystem:draw()
   end
   
   --This rectangle is to defind the area of the viewfinder
+  --[[
   love.graphics.setColor(150,250,0)
   love.graphics.rectangle( "line", 0, 0, self.pixelWidth, self.pixelHeight )
   love.graphics.setColor(255,255,255)
-  
+  --]]
 end
 
 function SpriteSystem:update()
@@ -125,7 +126,7 @@ _drawSprite = function(self, spriteEntity, count)
 end
 
 function SpriteSystem:addToLayer(entity)
-  assert(entity.Physics.layer, "This entity needs a layer ->"..entity.id)
+  assert(entity.Physics.layer, "This entity needs a layer variable in Physics ->"..entity.id)
   if not self.layers[entity.Physics.layer] then
     self.layers[entity.Physics.layer] = {}
   end

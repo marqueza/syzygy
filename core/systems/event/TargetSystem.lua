@@ -41,6 +41,12 @@ function TargetSystem:onFocusNotify(focusEvent)
             return
         end
     end
+     for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
+        if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y and e.Physics.layer=="backdrop" then
+            self.focus = e
+            return
+        end
+    end
     for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
         if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y then
             self.focus = e
