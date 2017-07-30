@@ -28,8 +28,10 @@ function MoveSystem:onNotify(moveEvent)
 
     --successful move
     local moverPhysics = mover:get("Physics")
-    moverPhysics.x = moveEvent.x
-    moverPhysics.y = moveEvent.y
+    
+    --reposition on the plane
+    systems.planeSystem:reposition(mover, moveEvent.x, moveEvent.y)
+    
     return
 end
 

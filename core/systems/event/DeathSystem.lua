@@ -15,7 +15,7 @@ function DeathSystem:onNotify(DeathEvent)
   --one in 3 chance of dropping gold
   events.fireEvent(events.SpawnEvent{
       name="Gold", 
-      amount=100, 
+      amount=3, 
       stock=false, 
       x=deadEntity.Physics.x, 
       y=deadEntity.Physics.y

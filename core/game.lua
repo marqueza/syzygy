@@ -12,7 +12,6 @@ function game.load(options)
     game.events.init()
     if not game.options.headless then
         game.events.fireEvent(game.events.LevelEvent{levelName="tower", levelDepth=1, options={first=true, spawnPlayer=options.player, spawnMinion=options.auto}})
-        game.events.fireEvent(game.events.SpawnEvent{name="Gold", amount=100, stock=true})
     end
     
     

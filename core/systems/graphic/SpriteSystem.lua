@@ -20,46 +20,10 @@ end
 local _drawSprite
 
 function SpriteSystem:draw()
-  local count = (math.floor(game.time) % self.maxCount) + 1
-  --for layerName, entities in pairs(self.layers) do
-
-    
-  local entities = self.layers["floor"]
-
-  if entities then
-    for key, spriteEntity in pairs(entities) do
-      _drawSprite(self, spriteEntity, count)
-    end
-  end
-
-  entities = self.layers["backdrop"]
-  if entities then
-    for key, spriteEntity in pairs(entities) do
-      _drawSprite(self, spriteEntity, count)
-    end
-  end
-
-  entities = self.layers["display"]
-  if entities then
-    for key, spriteEntity in pairs(entities) do
-      _drawSprite(self, spriteEntity, count)
-    end
-  end
-
-
-  entities = self.layers["character"]
-  if entities then
-    for key, spriteEntity in pairs(entities) do
-      _drawSprite(self, spriteEntity, count)
-    end
-  end
-  
-  --This rectangle is to defind the area of the viewfinder
-  --[[
-  love.graphics.setColor(150,250,0)
-  love.graphics.rectangle( "line", 0, 0, self.pixelWidth, self.pixelHeight )
-  love.graphics.setColor(255,255,255)
-  --]]
+  self:drawLayer("floor")
+  self:drawLayer("backdrop")
+  self:drawLayer("item")
+  self:drawLayer("creature")
 end
 
 function SpriteSystem:update()
@@ -125,16 +89,16 @@ _drawSprite = function(self, spriteEntity, count)
   end
 end
 
-function SpriteSystem:addToLayer(entity)
-  assert(entity.Physics.layer, "This entity needs a layer variable in Physics ->"..entity.id)
-  if not self.layers[entity.Physics.layer] then
-    self.layers[entity.Physics.layer] = {}
+function SpriteSystem:drawLayer(layerName)
+ local count = (math.floor(game.time) % self.maxCount) + 1
+ local layer = systems.planeSystem.layers[layerName]
+  if layer then
+    for key, entityList  in pairs(layer) do
+      for k, spriteEntity in pairs(entityList) do
+        _drawSprite(self, spriteEntity, count)
+      end
+    end
   end
-  self.layers[entity.Physics.layer][entity.id] = entity
-end
-
-function SpriteSystem:removeFromLayer(entity)
-  self.layers[entity.Physics.layer][entity.id] = nil
 end
 
 return SpriteSystem

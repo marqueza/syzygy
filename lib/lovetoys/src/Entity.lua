@@ -87,4 +87,12 @@ function Entity:getComponents()
     return self.components
 end
 
+function Entity:toString()
+  local result = "entity ".."{id = \""..self.id.."\", name = \""..self.name.."\"}\n"
+  for k, v in pairs(self.components) do
+    result = result .. v:toString() .. "\n"
+  end
+  return result
+end
+
 return Entity

@@ -30,13 +30,13 @@ function TargetSystem:onFocusNotify(focusEvent)
 
 
     for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
-        if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y and e.Physics.layer=="character" then
+        if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y and e.Physics.layer=="creature" then
             self.focus = e
             return
         end
     end
     for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
-        if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y and e.Physics.layer=="display" then
+        if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y and e.Physics.layer=="item" then
             self.focus = e
             return
         end

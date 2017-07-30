@@ -159,8 +159,7 @@ function LevelSystem:reloadLevel(levelName, levelDepth, travelerIds, previousEnt
   --bring in all the travelers
   for k, travelerEntity in pairs(travelers) do
     if travelX and travelY then 
-      travelerEntity.Physics.x = travelX
-      travelerEntity.Physics.y = travelY
+      systems.planeSystem:reposition(travelerEntity, travelX, travelY)
     end
     systems.addEntity(travelerEntity)
   end
@@ -248,8 +247,7 @@ function LevelSystem:enterNewLevel(levelEvent)
   --place travelers
   for k, travelerEntity in pairs(travelers) do
     if travelX and travelY then
-      travelerEntity.Physics.x = travelX
-      travelerEntity.Physics.y = travelY
+      systems.planeSystem:reposition(travelerEntity, travelX, travelY)
     end
     systems.addEntity(travelerEntity)
   end

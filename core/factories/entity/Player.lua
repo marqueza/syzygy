@@ -2,7 +2,7 @@ local lovetoys = require "lib.lovetoys.lovetoys"
 local function Player(args)
 	entity = lovetoys.Entity()
 	entity.name = "player"
-	entity:add(Physics{x=args.x, y=args.y, hp=100, blocks=true, layer="character"})
+	entity:add(Physics{x=args.x, y=args.y, hp=100, blocks=true, layer="creature"})
 	entity:add(Sprite{filename="img/sprites/kobold.png"})
 	entity:add(Faction{name="ally"})
 	entity:add(Control())

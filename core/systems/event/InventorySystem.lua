@@ -22,8 +22,7 @@ function InventorySystem:onEnterNotify(InventoryEnterEvent)
         itemEntity.Sprite.isVisible = false
     end
     if itemEntity.Physics then
-      itemEntity.Physics.x = -1
-      itemEntity.Physics.y = -1
+      systems.planeSystem:reposition(itemEntity, -1, -1)
     end
     table.insert(holderEntity.Inventory.itemIds, itemEntity.id)
 end
@@ -35,8 +34,7 @@ function InventorySystem:onExitNotify(InventoryExitEvent)
         itemEntity.Sprite.isVisible = true
     end
     if itemEntity.Physics then
-      itemEntity.Physics.x = holderEntity.Physics.x
-      itemEntity.Physics.y = holderEntity.Physics.y
+      systems.planeSystem:reposition(itemEntity, holderEntity.Physics.x, holderEntity.Physics.y)
     end
     
     --now remove the item from the holder inventory

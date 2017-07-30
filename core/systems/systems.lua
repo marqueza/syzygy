@@ -10,9 +10,8 @@ local systems = {}
 
 function systems.init()
     systems.engine = lovetoys.Engine()
-
     filer.instantiateDirectoryItems(systems, "systems", "core/systems/event/")
-
+    
     if not game.options.headless then
         filer.instantiateDirectoryItems(systems, "systems", "core/systems/graphic/" )
 
@@ -42,9 +41,9 @@ function systems.addEntity(entity)
     --add it to the engine
     systems.engine:addEntity(entity)
     
-    --if we have sprite system, help it by sorting entities by layers
-    if systems.spriteSystem and entity.Sprite then
-      systems.spriteSystem:addToLayer(entity)
+    --sorting entities by layers
+    if systems.planeSystem and entity.Physics then
+      systems.planeSystem:addToLayer(entity)
     end
 end
 
@@ -53,9 +52,9 @@ function systems.getEntityById(entityId)
 end
 
 function systems.removeEntity(entity)
-  --if we have sprite system, help it by removing from its layering
-    if systems.spriteSystem and entity.Sprite then
-      systems.spriteSystem:removeFromLayer(entity)
+  --remove from layering
+    if systems.planeSystem and entity.Physics then
+      systems.planeSystem:removeFromLayer(entity)
     end
     return systems.engine:removeEntity(entity)
 end

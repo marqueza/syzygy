@@ -1,6 +1,6 @@
 local class = require 'lib.middleclass'
 local serpent = require 'lib.serpent'
-Serializable = {}
+local Serializable = {}
 
 function Serializable:toString()
     return serpent.line(self:toTable(), {comment=false, sparse=true,compact=true, valtypeignore = {'userdata', 'function'}})
@@ -8,10 +8,11 @@ end
 function Serializable:toTable()
     local t = {}
     for k, v in pairs(self) do
-        if k == 'class' then
-            t[k] = string.gsub(v.name, "class", "")
+        if k == "class" then
+            t[k] = string.gsub(v.name, "class ", "")
+            
         end
-        if type(v) ~= 'userdata' then
+        if type(v) ~= 'userdata' and k~="class" then
             t[k] = v
         end
     end
