@@ -63,6 +63,10 @@ function events.init()
     --death system
     events.eventManager:addListener("DeathEvent", systems.deathSystem, systems.deathSystem.onNotify)
     
+    --fov system
+    events.eventManager:addListener("TurnEvent", systems.fovSystem, systems.fovSystem.onNotify)
+    events.eventManager:addListener("LevelEvent", systems.fovSystem, systems.fovSystem.onNotify)
+    
     if not game.options.headless then
         events.eventManager:addListener("LogEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("FocusEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
