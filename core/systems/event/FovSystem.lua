@@ -14,25 +14,36 @@ end
 --returning true: light passes through
 --returning false: sight is blocked
 function FovSystem.isTranslucent(fov, x, y)
-    local entityList = systems.planeSystem:getEntityList(x, y, "backdrop")
-    for k, entity in pairs(entityList) do
-        if entity.Physics.blocks then
-            return false
+  local planeName = game.player.Physics.plane
+      local entityList = systems.planeSystem:getEntityList(x, y, "backdrop", planeName)
+      if not systems.planeSystem:isEmptySpace(x, y, planeName) then
+        return false
+      end
+      if entityList then
+        for k, entity in pairs(entityList) do
+            if entity.Physics.blocks then
+                return false
+            end
         end
-    end
+      end
     return true
 end
 
 function FovSystem.markFov(x, y, r, v)
     if not x or not y then return end
-    local entityList = systems.planeSystem:getEntityList(x, y)
-    for k, entity in pairs(entityList) do
-        entity.Sprite.isVisible = true
+    for planeName, planeTable in pairs(systems.planeSystem.planes) do
+      local entityList = systems.planeSystem:getEntityList(x, y, nil, planeName)
+      for k, entity in pairs(entityList) do
+          entity.Sprite.isVisible = true
+      end
+      systems.planeSystem:setVisibleSpace(x, y, planeName)
+      systems.planeSystem:setKnownSpace(x, y, planeName)
     end
 end
 
 function FovSystem:onNotify(TurnEvent)
-    self.fov:compute(game.player.Physics.x, game.player.Physics.y, 10, self.markFov)
+    systems.planeSystem:clearVisible(x, y, game.player.Physics.plane)
+    self.fov:compute(game.player.Physics.x, game.player.Physics.y, 6, self.markFov)
 end
 
 return FovSystem

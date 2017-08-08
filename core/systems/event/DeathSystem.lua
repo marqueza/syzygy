@@ -18,7 +18,8 @@ function DeathSystem:onNotify(DeathEvent)
       amount=3, 
       stock=false, 
       x=deadEntity.Physics.x, 
-      y=deadEntity.Physics.y
+      y=deadEntity.Physics.y,
+      plane=deadEntity.Physics.plane
     })
 
   

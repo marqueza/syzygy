@@ -14,7 +14,7 @@ describe("clean start >", function()
             local reserveSpy = spy.on(events, "ReservesEnterEvent")
 
             --test
-            events.fireEvent(events.SpawnEvent{name="Gold", amount=100, stock=true})
+            events.fireEvent(events.SpawnEvent{name="Gold", amount=100, stock=true, plane=game.player.Physics.plane})
             events.fireEvent(events.HirePurchaseEvent{unitName="Apprentice"})
 
             --posttest

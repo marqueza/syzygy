@@ -26,7 +26,6 @@ end
 function StockSystem:onExitNotify(StockExitEvent)
     local e = systems.getEntityById(StockExitEvent.entityId)
     if not e:has("Stock") then
-        print("StockSystem: this entity does not have the stock component")
         return
     end
     if e:has("Sprite") then

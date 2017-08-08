@@ -8,6 +8,18 @@ function TargetSystem:initialize()
     self.name = "TargetSystem"
     self.target = nil
     self.focus = nil
+    self.focusX = 0
+    self.focusY = 0
+end
+
+function TargetSystem:refreshFocus()
+  events.fireEvent(events.FocusEvent{dx=0, dy=0})
+  events.fireEvent(events.FocusEvent{unfocus=true})
+end
+
+function TargetSystem:onLoadNotify(loadEvent)
+  --target on player
+  self.target = game.player
 end
 
 function TargetSystem:onFocusNotify(focusEvent)
@@ -18,40 +30,27 @@ function TargetSystem:onFocusNotify(focusEvent)
 
     if self.focus then
         if focusEvent.dx and focusEvent.dy then
+            self.focusX = self.focusX + focusEvent.dx
+            self.focusY = self.focusY + focusEvent.dy
             focusEvent.x = self.focus.Physics.x + focusEvent.dx
             focusEvent.y = self.focus.Physics.y + focusEvent.dy
         end
     else
         if focusEvent.dx and focusEvent.dy then
+            --local key
+            --key, game.player = next(systems.getEntitiesWithComponent("Control"))
+            self.focusX = game.player.Physics.x + focusEvent.dx
+            self.focusY = game.player.Physics.y + focusEvent.dy
             focusEvent.x = game.player.Physics.x + focusEvent.dx
             focusEvent.y = game.player.Physics.y + focusEvent.dy
         end
     end
 
-
-    for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
-        if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y and e.Physics.layer=="creature" then
-            self.focus = e
-            return
-        end
-    end
-    for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
-        if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y and e.Physics.layer=="item" then
-            self.focus = e
-            return
-        end
-    end
-     for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
-        if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y and e.Physics.layer=="backdrop" then
-            self.focus = e
-            return
-        end
-    end
-    for i, e in pairs(systems.getEntitiesWithComponent("Physics")) do
-        if focusEvent.x == e.Physics.x and focusEvent.y == e.Physics.y then
-            self.focus = e
-            return
-        end
+    if systems.planeSystem:isVisibleSpace(self.focusX, self.focusY, game.player.Physics.plane) then
+      local focus = systems.planeSystem:getTopEntity(self.focusX, self.focusY, nil, game.player.Physics.plane)
+      if focus then
+        self.focus = focus
+      end
     end
 end
 

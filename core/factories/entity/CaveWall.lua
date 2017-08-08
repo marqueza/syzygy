@@ -2,7 +2,7 @@ local lovetoys = require "lib.lovetoys.lovetoys"
 local function CaveWall(args)
 	entity = lovetoys.Entity()
 	entity.name = "wall"
-	entity:add(Physics{x=args.x, y=args.y, hp=1, blocks=true, layer="backdrop"})
+	entity:add(Physics{x=args.x, y=args.y, hp=1, blocks=true, layer="backdrop", plane=args.plane})
   if args.variant=="A" then
     entity:add(Sprite{filename="img/sprites/cave_wall_A.png", color=args.color})
   else

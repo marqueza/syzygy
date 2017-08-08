@@ -34,7 +34,7 @@ function InventorySystem:onExitNotify(InventoryExitEvent)
         itemEntity.Sprite.isVisible = true
     end
     if itemEntity.Physics then
-      systems.planeSystem:reposition(itemEntity, holderEntity.Physics.x, holderEntity.Physics.y)
+      systems.planeSystem:reposition(itemEntity, holderEntity.Physics.x, holderEntity.Physics.y, holderEntity.Physics.plane)
     end
     
     --now remove the item from the holder inventory

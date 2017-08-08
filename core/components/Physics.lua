@@ -10,6 +10,8 @@ function Physics:initialize(args)
     self.hp = args.hp or 1
     self.maxHp = args.maxHp or self.hp
     self.layer = args.layer
+    assert(args.plane)
+    self.plane = args.plane
 end
 
 return Physics

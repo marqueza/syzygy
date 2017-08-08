@@ -6,7 +6,7 @@ local InfoBoxSystem = class("InfoBoxSystem", lovetoys.System)
 function InfoBoxSystem:initialize()
     lovetoys.System.initialize(self)
     self.pixelX = game.options.viewportWidth-300
-    self.pixelY = game.options.viewportHeight
+    self.pixelY = game.options.viewportHeight-300
     self.marginWidth = game.options.sideBarMarginWidth
     self.marginHeight = 10
     self.text = nil

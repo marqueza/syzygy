@@ -12,12 +12,14 @@ end
 function CursorSystem:draw()
 
     local focus = systems.targetSystem.focus
+    local focusX = systems.targetSystem.focusX
+    local focusY = systems.targetSystem.focusY
     if focus then
         love.graphics.setColor(255, 255, 255, 50)
         love.graphics.rectangle(
             "fill",
-            (focus.Physics.x-systems.cameraSystem.cameraX-1)*game.options.spriteSize,
-            (focus.Physics.y-systems.cameraSystem.cameraY-1)*game.options.spriteSize,
+            (focusX-systems.cameraSystem.cameraX-1)*game.options.spriteSize,
+            (focusY-systems.cameraSystem.cameraY-1)*game.options.spriteSize,
             game.options.spriteSize,
             game.options.spriteSize)
         love.graphics.setColor(255, 255, 255, 255)

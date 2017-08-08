@@ -44,11 +44,6 @@ function filer.instantiateDirectoryItems(table, tableName, path)
         tokens = _split(file, ".")
         file = tokens[1]
         if (file ~= tableName) then
-          if type(table)=="boolean" then
-              print("WAT")
-          end
-          print(file)
-          print(path)
             table[_firstToLower(file)] = require(path .. file)()
         end
     end

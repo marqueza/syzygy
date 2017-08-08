@@ -173,7 +173,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
       end
     end
   elseif KeyPressEvent.key == "t" then
-    events.fireEvent(events.SpawnEvent{name="Ghost", x=1,y=1})
+    events.fireEvent(events.SpawnEvent{name="Ghost", x=1,y=1, game.player.Physics.plane})
     local unit = systems.getLastEntity()
     events.fireEvent(events.ReservesEnterEvent{entityId=unit.id})
     assert(unit:has("Reserve"))
@@ -184,7 +184,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
   elseif KeyPressEvent.key == "h" then
     events.fireEvent(events.HireBrowseEvent{})
   elseif KeyPressEvent.key == "g" then
-    local item = systems.planeSystem:getTopEntity(game.player.Physics.x, game.player.Physics.y, "item")
+    local item = systems.planeSystem:getTopEntity(game.player.Physics.x, game.player.Physics.y, "item", game.player.Physics.plane)
     if item then
       events.fireEvent(events.InventoryEnterEvent{
           itemId=item.id,

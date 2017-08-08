@@ -26,7 +26,6 @@ end
 function ReservesSystem:onExitNotify(ExitReservesEvent)
     local e = systems.getEntityById(ExitReservesEvent.entityId)
     if not e:has("Reserve") then
-        print("ReserveSystem: this entity does not have the Reserve component")
         return
     end
     if e:has("Sprite") then

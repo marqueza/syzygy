@@ -6,6 +6,7 @@ local arena = require "core.factories.map.arena"
 local lair = require "core.factories.map.lair"
 local cavern = require "core.factories.map.cavern"
 local overWorld = require "core.factories.map.overWorld"
+local dungeon = require "core.factories.map.dungeon"
 
 local LevelSystem = class("LevelSystem", System)
 
@@ -41,11 +42,11 @@ function LevelSystem:onNotify(levelEvent)
   --first level in the game
   if self.currentLevelName == nil then
     self.currentLevelName = levelEvent.levelName
-    arena.build(self.seed, levelEvent)
+    dungeon.build(self.seed, levelEvent)
     events.eventManager:fireEvent(events.LogEvent{
         text="You begin your journey in an unknown land. "
       })
-  --entering an existing level
+    --entering an existing level
   elseif self:levelVisited(levelEvent.levelName,levelEvent.levelDepth) then
     events.eventManager:fireEvent(events.LogEvent{
         text="You've been here before." 
@@ -63,11 +64,8 @@ function LevelSystem:onNotify(levelEvent)
   self.currentLevelName = levelEvent.levelName
   --change depth
   self.currentLevelDepth = levelEvent.levelDepth
-  --refocus back on player
-  events.fireEvent(events.FocusEvent{dx=0,dy=0, unfocus=false})
-  events.fireEvent(events.FocusEvent{dx=0,dy=0, unfocus=true})
   --do a full save
-  events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="full", prefix=nil})
+  --events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="full", prefix=nil})
 
 
 end
@@ -84,7 +82,7 @@ function LevelSystem:levelVisited(levelName, levelDepth)
   return love.filesystem.exists(filePath)
 end
 function LevelSystem:reloadLevel(levelName, levelDepth, travelerIds, previousEntranceId)
-  
+
   local previousEntranceEntity = systems.getEntityById(previousEntranceId)
   assert(levelName)
   assert(levelDepth)
@@ -106,10 +104,10 @@ function LevelSystem:reloadLevel(levelName, levelDepth, travelerIds, previousEnt
   end
 
   --save level that is being left
-  events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="level", prefix=self.currentLevelName .."-"..self.currentLevelDepth.."_"})
+  events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="level", prefix=self.currentLevelName .."-"..self.currentLevelDepth})
 
   --recreate the former level
-  events.fireEvent(events.LoadEvent{saveSlot="latest", loadType="level", prefix=levelName .."-"..levelDepth.."_"})
+  events.fireEvent(events.LoadEvent{saveSlot="latest", loadType="level", prefix=levelName .."-"..levelDepth})
 
   --[[
     --determine the entrances that are opened
@@ -126,22 +124,22 @@ function LevelSystem:reloadLevel(levelName, levelDepth, travelerIds, previousEnt
 
   --when provided an entranceId this will determine where to enter in the new level
   local desiredEntranceKey = nil
-  local travelX, travelY = nil,nil
+  local travelX, travelY, travelPlane = nil,nil,nil
   if previousEntranceId then
 
     local entrances = systems.getEntitiesWithComponent("Entrance")
 
     --check if we are entering a new levelName
     if self.currentLevelName ~= levelName then
+      --determine where the travelers are going
       for key, entranceEntity in pairs(entrances) do
         if entranceEntity.Entrance.levelName == self.currentLevelName then
           travelX = entranceEntity.Physics.x
           travelY = entranceEntity.Physics.y
+          travelPlane = levelName .. "-" .. levelDepth
         end
       end
-    end
-    --determine desired entrance type
-    if not (travelX and travelY) then
+    else
       if previousEntranceEntity.Entrance.commandKey == "<" then
         desiredEntranceKey = ">"
       elseif previousEntranceEntity.Entrance.commandKey == ">" then
@@ -151,6 +149,7 @@ function LevelSystem:reloadLevel(levelName, levelDepth, travelerIds, previousEnt
         if entranceEntity.Entrance.commandKey == desiredEntranceKey then
           travelX = entranceEntity.Physics.x
           travelY = entranceEntity.Physics.y
+          travelPlane = levelName .. "-" .. levelDepth
         end
       end
     end
@@ -159,7 +158,7 @@ function LevelSystem:reloadLevel(levelName, levelDepth, travelerIds, previousEnt
   --bring in all the travelers
   for k, travelerEntity in pairs(travelers) do
     if travelX and travelY then 
-      systems.planeSystem:reposition(travelerEntity, travelX, travelY)
+      systems.planeSystem:reposition(travelerEntity, travelX, travelY, travelPlane)
     end
     systems.addEntity(travelerEntity)
   end
@@ -171,7 +170,7 @@ end
 
 function LevelSystem:enterNewLevel(levelEvent)
   local previousEntranceEntity = systems.getEntityById(levelEvent.entranceId)
-  
+
   --store and remove travelers and their inventories
   local travelers = {}
   local travelersItems = {}
@@ -190,7 +189,7 @@ function LevelSystem:enterNewLevel(levelEvent)
 
 
   --save level
-  events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="level", prefix=self.currentLevelName .."-"..self.currentLevelDepth.."_"})
+  events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="level", prefix=self.currentLevelName .."-"..self.currentLevelDepth})
 
   --delete entities
   systems.removeAllEntities()
@@ -205,7 +204,7 @@ function LevelSystem:enterNewLevel(levelEvent)
     end
     overWorld.build(self.seed, levelEvent)
   elseif levelEvent.levelName == "tower" then
-    arena.build(self.seed, levelEvent)
+    dungeon.build(self.seed, levelEvent)
   else
     levelEvent.options.color = "brown"
     cavern.build(self.seed, levelEvent)
@@ -213,10 +212,10 @@ function LevelSystem:enterNewLevel(levelEvent)
 
   --when provided an entranceId this will determine where to enter in the new level
   local desiredEntranceKey = nil
-  local travelX, travelY = nil,nil
+  local travelX, travelY, travelPlane = nil,nil,nil
   if levelEvent.entranceId then
     --determine desired entrance type
-    
+
     if previousEntranceEntity.Entrance.commandKey == "<" then
       desiredEntranceKey = ">"
     elseif previousEntranceEntity.Entrance.commandKey == ">" then
@@ -230,16 +229,18 @@ function LevelSystem:enterNewLevel(levelEvent)
         if entranceEntity.Entrance.levelName == self.currentLevelName then
           travelX = entranceEntity.Physics.x
           travelY = entranceEntity.Physics.y
+          travelPlane = levelEvent.levelName .. "-" .. levelEvent.levelDepth
         end
       end
-    end
-    if not travelX and travelY then
-    for key, entranceEntity in pairs(entrances) do
-      if entranceEntity.Entrance.commandKey == desiredEntranceKey then
-        travelX = entranceEntity.Physics.x
-        travelY = entranceEntity.Physics.y
+    else
+      entrances = systems.getEntitiesWithComponent("Entrance")
+      for key, entranceEntity in pairs(entrances) do
+        if entranceEntity.Entrance.commandKey == desiredEntranceKey then
+          travelX = entranceEntity.Physics.x
+          travelY = entranceEntity.Physics.y
+          travelPlane = levelEvent.levelName .. "-" .. levelEvent.levelDepth
+        end
       end
-    end
     end
   end  
 
@@ -247,16 +248,16 @@ function LevelSystem:enterNewLevel(levelEvent)
   --place travelers
   for k, travelerEntity in pairs(travelers) do
     if travelX and travelY then
-      systems.planeSystem:reposition(travelerEntity, travelX, travelY)
+      systems.planeSystem:reposition(travelerEntity, travelX, travelY, travelPlane)
     end
     systems.addEntity(travelerEntity)
   end
-  
+
   --place traveler items
   for k, itemEntity in pairs(travelersItems) do
     systems.addEntity(itemEntity)
   end
-  
+
 end
 
 return LevelSystem

@@ -22,7 +22,7 @@ function HireSystem:onPurchaseNotify(HirePurchaseEvent)
     if HirePurchaseEvent.unitName == "Apprentice" then
         --if there is 100 gold, perform a check, make the deal and subtract the gold
         --for now just generate the unit
-        events.fireEvent(events.SpawnEvent{name="Apprentice", reserve=true})
+        events.fireEvent(events.SpawnEvent{name="Apprentice", reserve=true, game.player.Physics.plane})
     end
 end
 

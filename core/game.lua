@@ -13,7 +13,7 @@ function game.load(options)
     if not game.options.headless then
         game.events.fireEvent(game.events.LevelEvent{levelName="tower", levelDepth=1, options={first=true, spawnPlayer=options.player, spawnMinion=options.auto}})
     end
-    
+    game.systems.targetSystem:refreshFocus()
     
 end
 

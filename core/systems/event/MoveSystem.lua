@@ -9,6 +9,10 @@ end
 
 function MoveSystem:onNotify(moveEvent)
     local mover = systems.getEntityById(moveEvent.moverId)
+    if not systems.planeSystem:isEmptySpace(moveEvent.x, moveEvent.y, mover.Physics.plane) then
+      events.fireEvent(events.LogEvent{text=mover.name .. " bumps wall."})
+      return
+    end
     for index, target in pairs(systems.getEntitiesWithComponent("Physics")) do
         local Physics = target:get("Physics")
         if moveEvent.x == Physics.x and moveEvent.y == Physics.y then

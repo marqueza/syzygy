@@ -4,21 +4,22 @@ local rot = require "lib.rotLove.src.rot"
 local cavern = {}
 
 cavern.emptyCoords = {}
-
+local planeName
 function cavern.buildStructure(x, y, value)
   if value == 1 or 
     (x == 1 or x == cavern.length or
      y == 1 or y == cavern.width) then
-      systems.addEntity(Factory.CaveWall{x=x, y=y, variant="B"})
+      systems.addEntity(Factory.CaveWall{x=x, y=y, variant="B", plane=planeName})
   else
-    systems.addEntity(Factory.CaveFloor{x=x, y=y})
+    --systems.addEntity(Factory.CaveFloor{x=x, y=y, plane=planeName})
     table.insert(cavern.emptyCoords, x..','..y)
   end
 end
 
 function cavern.build(seed, levelEvent)
+  local startTime = love.timer.getTime()
   cavern.emptyCoords = {}
-  
+  planeName = levelEvent.levelName..'-'..levelEvent.levelDepth
   math.randomseed(seed)
   local options = levelEvent.options
   cavern.length = 20
@@ -36,26 +37,31 @@ function cavern.build(seed, levelEvent)
   systems.addEntity(Factory.OutsideEntrance{
       levelName = "overWorld",
       x=randX,
-      y=randY}) 
+      y=randY,
+      plane=planeName}) 
   randX, randY = cavern.getEmptyCoord()
-  systems.addEntity(Factory.Goo{x=randX, y=randY})
+  systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
 
   
 
   --set player
   if options.spawnPlayer then
-    game.player = Factory.Player{x=exitX,y=exitY}
+    game.player = Factory.Player{x=exitX,y=exitY, plane=planeName}
     systems.addEntity(game.player)
   end
   if options.spawnMinion then
-    game.player = Factory.Brownie{x=exitX,y=exitY}
+    game.player = Factory.Brownie{x=exitX,y=exitY, plane=planeName}
     systems.addEntity(game.player)
   end
   
-  for i=1, math.floor(math.random(0, (#cavern.emptyCoords)/2)) do
+  for i=1, 10 do
     randX, randY = cavern.getEmptyCoord()
-    systems.addEntity(Factory.Rock{x=randX, y=randY})        
+    systems.addEntity(Factory.Rock{x=randX, y=randY, plane=planeName})        
   end
+  
+  
+  
+  print (math.floor((love.timer.getTime() - startTime)*1000))
 end
 
 function cavern.getEmptyCoord()

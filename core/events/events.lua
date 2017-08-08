@@ -14,9 +14,9 @@ function events.init()
     events.eventManager:addListener("LogEvent", systems.logSystem, systems.logSystem.onNotify)
     events.eventManager:addListener("TurnEvent", systems.turnSystem, systems.turnSystem.onNotify)
     events.eventManager:addListener("LevelEvent", systems.levelSystem, systems.levelSystem.onNotify)
-    events.eventManager:addListener("FocusEvent", systems.targetSystem, systems.targetSystem.onFocusNotify)
     events.eventManager:addListener("StateEvent", systems.stateSystem, systems.stateSystem.onNotify)
     events.eventManager:addListener("SpawnEvent", systems.spawnSystem, systems.spawnSystem.onNotify)
+
 
     --replay system
     events.eventManager:addListener("MoveEvent", systems.replaySystem, systems.replaySystem.pushEvent)
@@ -27,6 +27,13 @@ function events.init()
     events.eventManager:addListener("SaveEvent", systems.saveSystem, systems.saveSystem.onSaveNotify)
     events.eventManager:addListener("LoadEvent", systems.saveSystem, systems.saveSystem.onLoadNotify)
 
+    
+    --target system
+    events.eventManager:addListener("FocusEvent", systems.targetSystem, systems.targetSystem.onFocusNotify)
+    events.eventManager:addListener("LoadEvent", systems.targetSystem, systems.targetSystem.refreshFocus)
+    events.eventManager:addListener("LevelEvent", systems.targetSystem, systems.targetSystem.refreshFocus)
+    
+    
     --reserves systems
     events.eventManager:addListener("ReservesEnterEvent", systems.reservesSystem, systems.reservesSystem.onEnterNotify)
     events.eventManager:addListener("ReservesExitEvent", systems.reservesSystem, systems.reservesSystem.onExitNotify)
@@ -70,26 +77,33 @@ function events.init()
     if not game.options.headless then
         events.eventManager:addListener("LogEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("FocusEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
+        events.eventManager:addListener("LoadEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
         events.eventManager:addListener("MenuCommandEvent", systems.menuSystem, systems.menuSystem.onCommmandNotify)
         events.eventManager:addListener("MenuDisplayEvent", systems.menuSystem, systems.menuSystem.onDisplayNotify)
         events.eventManager:addListener("LevelEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
         events.eventManager:addListener("TurnEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
         events.eventManager:addListener("FocusEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
+        events.eventManager:addListener("LoadEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
+
     end
 end
 
 function events.fireEvent(event)
+    local start = love.timer.getTime()
+    events.eventManager:fireEvent(event)
+    local result = love.timer.getTime() - start
+    result = math.floor(result*1000)
+    
     if event.toString then
         if game.options.debug then
             --captures all events and places a debug message
             events.eventManager:fireEvent(events.LogEvent{
-                text="[DEBUG] " .. event:toString(),
+                text="["..result.."] " .. event:toString(),
                 })
         end
         events.eventManager:fireEvent(events.LogEvent{
             text=event:toString(),
             type="event"})
     end
-    events.eventManager:fireEvent(event)
 end
 return events

@@ -8,43 +8,44 @@ function arena.build(seed, levelEvent)
     local options = options or {}
     arena.length = options.length or 10
     arena.width = options.width or 7
+    local planeName = levelEvent.levelName..'-'..levelEvent.levelDepth
 
     --build basic map
     for i=1, arena.length do
         for j=1, arena.width do
             if i == 1 or i == arena.length or j == 1 or j == arena.width then
                 if i == 1 and j ==1 then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="up", isCorner=true})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="up", isCorner=true, plane=planeName})
                 elseif i == arena.length and j == 1 then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="right", isCorner=true})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="right", isCorner=true, plane=planeName})
                 elseif i == 1 and j == arena.width then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="left", isCorner=true})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="left", isCorner=true, plane=planeName})
                 elseif i == arena.length and j == arena.width then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="down", isCorner=true})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="down", isCorner=true, plane=planeName})
                 elseif i == 1 then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="left", isCorner=false})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="left", isCorner=false, plane=planeName})
                 elseif i == arena.length then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="right", isCorner=false})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="right", isCorner=false, plane=planeName})
                 elseif j == 1 then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="up", isCorner=false})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="up", isCorner=false, plane=planeName})
                 elseif j == arena.width then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="down", isCorner=false})
+                    systems.addEntity(Factory.Shore{x=i, y=j, direction="down", isCorner=false, plane=planeName})
                 end
             else
-                systems.addEntity(Factory.Grass{x=i, y=j})
+                systems.addEntity(Factory.Grass{x=i, y=j, plane=planeName})
             end
         end
     end
 
-    systems.addEntity(Factory.Castle{x=2, y=2})
-    systems.addEntity(Factory.Cave{x=4, y=4})
-    systems.addEntity(Factory.Cave{x=3, y=4})
-    systems.addEntity(Factory.Cave{x=2, y=4})
-    systems.addEntity(Factory.Cave{x=4, y=3})
-    systems.addEntity(Factory.Cave{x=4, y=2})
+    systems.addEntity(Factory.Castle{x=2, y=2, plane=planeName})
+    systems.addEntity(Factory.Cave{x=4, y=4, plane=planeName})
+    systems.addEntity(Factory.Cave{x=3, y=4, plane=planeName})
+    systems.addEntity(Factory.Cave{x=2, y=4, plane=planeName})
+    systems.addEntity(Factory.Cave{x=4, y=3, plane=planeName})
+    systems.addEntity(Factory.Cave{x=4, y=2, plane=planeName})
     --set player
     if options.player then
-        game.player = Factory.Player{x=3,y=3}
+        game.player = Factory.Player{x=3,y=3, plane=planeName}
         systems.addEntity(game.player)
     end
 end

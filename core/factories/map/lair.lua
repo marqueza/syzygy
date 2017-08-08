@@ -15,7 +15,7 @@ function lair.build(seed, levelEvent)
             if i == 1 or i == lair.length or j == 1 or j == lair.width then
                 systems.addEntity(Factory.Wall{x=i, y=j, color=options.color})
             else
-                systems.addEntity(Factory.Floor{x=i, y=j, color=options.color})
+                --systems.addEntity(Factory.Floor{x=i, y=j, color=options.color})
             end
         end
     end
