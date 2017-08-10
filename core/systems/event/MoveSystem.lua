@@ -6,10 +6,10 @@ local MoveSystem = class("MoveSystem", System)
 function MoveSystem:initialize()
     self.name = "Move System"
 end
-
+-- This is when we know we want to move here.
 function MoveSystem:onNotify(moveEvent)
     local mover = systems.getEntityById(moveEvent.moverId)
-    if not systems.planeSystem:isEmptySpace(moveEvent.x, moveEvent.y, mover.Physics.plane) then
+    if not systems.planeSystem:isFloorSpace(moveEvent.x, moveEvent.y, mover.Physics.plane) then
       events.fireEvent(events.LogEvent{text=mover.name .. " bumps wall."})
       return
     end

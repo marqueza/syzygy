@@ -16,7 +16,7 @@ end
 function FovSystem.isTranslucent(fov, x, y)
   local planeName = game.player.Physics.plane
       local entityList = systems.planeSystem:getEntityList(x, y, "backdrop", planeName)
-      if not systems.planeSystem:isEmptySpace(x, y, planeName) then
+      if not systems.planeSystem:isFloorSpace(x, y, planeName) then
         return false
       end
       if entityList then

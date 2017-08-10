@@ -26,7 +26,7 @@ function PlaneSystem:addToLayer(entity)
   self.planes[entity.Physics.plane][entity.Physics.layer][entity.Physics.x..','..entity.Physics.y][entity.id] = entity
 end
 
-function PlaneSystem:setEmptySpace(x, y, planeName)
+function PlaneSystem:setFloorSpace(x, y, planeName)
   if not self.planes[planeName] then 
     self.planes[planeName] = {}
   end
@@ -36,7 +36,7 @@ function PlaneSystem:setEmptySpace(x, y, planeName)
   self.planes[planeName]["structure"][x .. ',' .. y] = true
 end
 
-function PlaneSystem:isEmptySpace(x, y, planeName)
+function PlaneSystem:isFloorSpace(x, y, planeName)
   if not self.planes[planeName] then 
     self.planes[planeName] = {}
   end

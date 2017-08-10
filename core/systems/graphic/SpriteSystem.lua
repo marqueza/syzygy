@@ -52,13 +52,13 @@ _drawStructures = function(self)
           y > self.verticalTileMax+systems.cameraSystem.cameraY )then 
           
           if systems.planeSystem:isVisibleSpace(x, y, game.player.Physics.plane) then
-            if systems.planeSystem:isEmptySpace(x, y, game.player.Physics.plane) then
+            if systems.planeSystem:isFloorSpace(x, y, game.player.Physics.plane) then
               love.graphics.setColor(150,150,150,255)
             else
               love.graphics.setColor(100,100,100,255)
             end
           else
-            if systems.planeSystem:isEmptySpace(x, y, game.player.Physics.plane) then
+            if systems.planeSystem:isFloorSpace(x, y, game.player.Physics.plane) then
               love.graphics.setColor(90,90,90,255)
             else
               love.graphics.setColor(40,40,40,255)

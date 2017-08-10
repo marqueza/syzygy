@@ -12,7 +12,7 @@ end
 
 function AiSystem:onTurnNotify(TurnEvent)
     --go through all the entities with Ai and have them act
-    for i, actorEntity in pairs(systems.getEntitiesWithComponent("Ai")) do
+    for actorEntityId, actorEntity in pairs(systems.getEntitiesWithComponent("Ai")) do
         local actionTaken = false
         if actorEntity.Ai.combatPreference == "melee" then
             --move closer to the opposing faction

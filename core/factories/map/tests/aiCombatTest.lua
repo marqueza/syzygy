@@ -4,16 +4,21 @@ local rot = require "lib.rotLove.src.rot"
 local dungeon = {}
 
 dungeon.emptyCoords = {}
+
 local planeName
-function dungeon.buildStructure(x, y, value)
-  if value == 1 or 
-    (x == 1 or x == dungeon.length or
-     y == 1 or y == dungeon.width) then
-  else
-      systems.planeSystem:setFloorSpace(x, y, planeName)
-    table.insert(dungeon.emptyCoords, x..','..y)
-  end
-end
+local roomA ={}
+roomA.width = 10
+roomA.length = 10
+roomA.anchorX = 1
+roomA.anchorY = 1
+
+local roomB = {}
+roomB.width = 10
+roomB.length = 10
+roomB.anchorX = 15
+roomB.anchorY = 1
+
+
 
 function dungeon.build(seed, levelEvent)
   local startTime = love.timer.getTime()
@@ -23,16 +28,11 @@ function dungeon.build(seed, levelEvent)
   local options = levelEvent.options
   dungeon.length = 20
   dungeon.width = 20
-
-  local rotCellBuilder = rot.Map.Digger(dungeon.length, dungeon.width, {connected=true})
-  local rotRng = rot.RNG
-  rotRng:setSeed(seed)
-  rotCellBuilder:setRNG(rotRng)
-  --rotCellBuilder:randomize(.5)
-  rotCellBuilder:create(dungeon.buildStructure)
+  
+  dungeon.carveFloor()
   
   local randX, randY = dungeon.getEmptyCoord()
-  local exitX, exitY = randX, randY
+  local exitX, exitY = 2, 2
   
   if levelDepth == 1 then
   systems.addEntity(Factory.OutsideEntrance{
@@ -45,8 +45,8 @@ function dungeon.build(seed, levelEvent)
 else
   systems.addEntity(Factory.Upstairs{
       levelName = "tower",
-      x=randX,
-      y=randY,
+      x=exitX,
+      y=exitY,
       plane=planeName}) 
   randX, randY = dungeon.getEmptyCoord()
   systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
@@ -75,6 +75,35 @@ else
   
   
   print (math.floor((love.timer.getTime() - startTime)*1000))
+end
+
+function dungeon.carveFloor()
+  --build room A
+    for i=roomA.anchorX, roomA.length+roomA.anchorX do
+        for j=roomA.anchorY, roomA.width+roomA.anchorY do
+            if not (i == 1 or i == roomA.length+roomA.anchorX or j == 1 or j == roomA.width+roomA.anchorY) then
+                systems.planeSystem:setFloorSpace(i, j, planeName)
+                table.insert(dungeon.emptyCoords, i..','..j)
+            end
+        end
+    end
+    
+    --build hallway
+    for i=roomA.anchorX+roomA.length-1, roomB.anchorX do
+      local j = roomA.width/2+roomA.anchorY
+      systems.planeSystem:setFloorSpace(i, j, planeName)
+      table.insert(dungeon.emptyCoords, i..','..j)
+    end
+    
+    --build room B
+    for i=roomB.anchorX, roomB.length+roomB.anchorX do
+        for j=roomB.anchorY, roomB.width+roomB.anchorY do
+            if not (i == 1 or i == roomB.length+roomB.anchorX or j == 1 or j == roomB.width+roomB.anchorY) then
+                systems.planeSystem:setFloorSpace(i, j, planeName)
+                table.insert(dungeon.emptyCoords, i..','..j)
+            end
+        end
+    end
 end
 
 function dungeon.getEmptyCoord()

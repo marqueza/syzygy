@@ -6,6 +6,7 @@ Ai:include(Serializable)
 function Ai:initialize(args)
     self.combatPreference = args.combatPreference
     self.idle = args.idle
+    self.objective = args.objective
 end
 
 return Ai

@@ -10,6 +10,7 @@ local systems = {}
 
 function systems.init()
     systems.engine = lovetoys.Engine()
+    systems.aiSystem = require "core.systems.ai.AiSystem"
     filer.instantiateDirectoryItems(systems, "systems", "core/systems/event/")
     
     if not game.options.headless then

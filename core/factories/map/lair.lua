@@ -13,7 +13,11 @@ function lair.build(seed, levelEvent)
     for i=1, lair.length do
         for j=1, lair.width do
             if i == 1 or i == lair.length or j == 1 or j == lair.width then
-                systems.addEntity(Factory.Wall{x=i, y=j, color=options.color})
+                systems.addEntity(Factory.Wall{
+                    x=i, 
+                    y=j, 
+                    color=options.color, 
+                    plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth})
             else
                 --systems.addEntity(Factory.Floor{x=i, y=j, color=options.color})
             end
@@ -26,14 +30,16 @@ function lair.build(seed, levelEvent)
         levelName = "overWorld",
         x=lair.getRandX(),
         y=lair.getRandY(),
-        color=options.color})
+        color=options.color,
+        plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth})
     else
       
     systems.addEntity(Factory.Upstairs{
         levelName = levelEvent.levelName,
         x=lair.getRandX(),
         y=lair.getRandY(),
-        color=options.color})
+        color=options.color,
+        plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth})
     end
     
     if levelEvent.levelDepth < 3 then
@@ -41,19 +47,14 @@ function lair.build(seed, levelEvent)
             levelName = levelEvent.levelName,
             x=lair.getRandX(),
             y=lair.getRandY(),
-            color=options.color})
+            color=options.color,
+            plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth})
     else
       systems.addEntity(Factory.Medal{x=lair.getRandX(), y=lair.getRandY()})
       systems.addEntity(Factory.DragonEgg{x=lair.getRandX(), y=lair.getRandY()})
       end
 
     if not options.empty then
-
-        if (math.random(0,1) == 1) then systems.addEntity(Factory.Orc{x=lair.getRandX(), y=lair.getRandY()}) end
-        if (math.random(0,1) == 1) then systems.addEntity(Factory.Orc{x=lair.getRandX(), y=lair.getRandY()}) end
-        if (math.random(0,1) == 1) then systems.addEntity(Factory.Orc{x=lair.getRandX(), y=lair.getRandY()}) end
-        if (math.random(0,1) == 1) then systems.addEntity(Factory.Orc{x=lair.getRandX(), y=lair.getRandY()}) end
-        if (math.random(0,1) == 1) then systems.addEntity(Factory.Overlord{x=lair.getRandX(), y=lair.getRandY()}) end
 
         --[[
         systems.addEntity(Factory.Goo{x=lair.getRandX(), y=lair.getRandY()})
@@ -66,11 +67,11 @@ function lair.build(seed, levelEvent)
 
     --set player
     if options.spawnPlayer then
-        game.player = Factory.Player{x=3,y=3}
+        game.player = Factory.Player{x=3,y=3,plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth}
         systems.addEntity(game.player)
     end
     if options.spawnMinion then
-        game.player = Factory.Brownie{x=3,y=3}
+        game.player = Factory.Brownie{x=3,y=3,plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth}
         systems.addEntity(game.player)
     end
 end

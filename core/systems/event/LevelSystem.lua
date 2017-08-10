@@ -7,6 +7,7 @@ local lair = require "core.factories.map.lair"
 local cavern = require "core.factories.map.cavern"
 local overWorld = require "core.factories.map.overWorld"
 local dungeon = require "core.factories.map.dungeon"
+local aiCombatTest = require "core.factories.map.tests.aiCombatTest"
 
 local LevelSystem = class("LevelSystem", System)
 
@@ -42,7 +43,7 @@ function LevelSystem:onNotify(levelEvent)
   --first level in the game
   if self.currentLevelName == nil then
     self.currentLevelName = levelEvent.levelName
-    dungeon.build(self.seed, levelEvent)
+    aiCombatTest.build(self.seed, levelEvent)
     events.eventManager:fireEvent(events.LogEvent{
         text="You begin your journey in an unknown land. "
       })
