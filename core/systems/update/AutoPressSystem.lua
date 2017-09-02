@@ -13,7 +13,7 @@ function AutoPressSystem:update(dt)
   self.dtotal = self.dtotal + dt
    if self.dtotal >= .25 then
       self.dtotal = self.dtotal - .25
-      events.fireEvent(events.KeyPressEvent{key="."})
+     events.fireEvent(events.TurnEvent{})
    end
 
 end

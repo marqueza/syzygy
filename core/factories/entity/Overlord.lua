@@ -5,7 +5,7 @@ local function Overlord(args)
 	entity:add(Physics{x=args.x, y=args.y, hp=35, blocks=true, layer="creature", plane=args.plane})
 	entity:add(Sprite{filename="img/sprites/overlord.png"})
 	entity:add(Faction{name="hostile"})
-	entity:add(Ai{combatPreference="melee", idle="still"})
+	entity:add(Ai{combatPreference="melee", idle="still", objective="kill"})
 	return entity
 end
 return Overlord

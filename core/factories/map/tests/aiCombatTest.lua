@@ -30,7 +30,7 @@ function dungeon.build(seed, levelEvent)
   dungeon.width = 20
   
   dungeon.carveFloor()
-  
+  dungeon.getEmptyCoord() -- this is just to make the goo appear in the second room
   local randX, randY = dungeon.getEmptyCoord()
   local exitX, exitY = 2, 2
   
@@ -41,7 +41,7 @@ function dungeon.build(seed, levelEvent)
       y=randY,
       plane=planeName}) 
   randX, randY = dungeon.getEmptyCoord()
-  systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
+  --systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
 else
   systems.addEntity(Factory.Upstairs{
       levelName = "tower",

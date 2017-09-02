@@ -40,8 +40,6 @@ function dungeon.build(seed, levelEvent)
       x=randX,
       y=randY,
       plane=planeName}) 
-  randX, randY = dungeon.getEmptyCoord()
-  systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
 else
   systems.addEntity(Factory.Upstairs{
       levelName = "tower",
@@ -52,6 +50,10 @@ else
   systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
   end
 
+  randX, randY = dungeon.getEmptyCoord()
+  systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
+  randX, randY = dungeon.getEmptyCoord()
+  systems.addEntity(Factory.Orc{x=randX, y=randY, plane=planeName})
   
 
   --set player
@@ -65,15 +67,13 @@ else
   end
   
     randX, randY = dungeon.getEmptyCoord()
+    
     systems.addEntity(Factory.Downstairs{
             levelName = levelEvent.levelName,
             x=randX,
             y=randY,
             color=options.color,
             plane=planeName})
-  
-  
-  
   print (math.floor((love.timer.getTime() - startTime)*1000))
 end
 

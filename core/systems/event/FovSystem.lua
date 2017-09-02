@@ -9,6 +9,7 @@ local systems = require "core.systems.systems"
 function FovSystem:initialize()
     self.name = "FovSystem"
     self.fov=rot.FOV.Precise:new(FovSystem.isTranslucent)
+    self.radius = 6
 end
 
 --returning true: light passes through
@@ -43,7 +44,7 @@ end
 
 function FovSystem:onNotify(TurnEvent)
     systems.planeSystem:clearVisible(x, y, game.player.Physics.plane)
-    self.fov:compute(game.player.Physics.x, game.player.Physics.y, 6, self.markFov)
+    self.fov:compute(game.player.Physics.x, game.player.Physics.y, self.radius, self.markFov)
 end
 
 return FovSystem

@@ -1,8 +1,8 @@
 return {
   debug = true,
         headless = false,
-        player = true,
-        auto = false,
+        player = false,
+        auto = true,
         
         --graphic settings
         spriteSize = 48,

@@ -43,7 +43,7 @@ function LevelSystem:onNotify(levelEvent)
   --first level in the game
   if self.currentLevelName == nil then
     self.currentLevelName = levelEvent.levelName
-    aiCombatTest.build(self.seed, levelEvent)
+    arena.build(self.seed, levelEvent)
     events.eventManager:fireEvent(events.LogEvent{
         text="You begin your journey in an unknown land. "
       })
@@ -205,7 +205,13 @@ function LevelSystem:enterNewLevel(levelEvent)
     end
     overWorld.build(self.seed, levelEvent)
   elseif levelEvent.levelName == "tower" then
-    dungeon.build(self.seed, levelEvent)
+    local roll = math.ceil(math.random(1, 2))
+    if roll == 1 then
+      dungeon.build(self.seed, levelEvent)
+    else 
+      arena.build(self.seed, levelEvent)
+    end
+    
   else
     levelEvent.options.color = "brown"
     cavern.build(self.seed, levelEvent)

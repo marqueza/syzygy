@@ -169,7 +169,12 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
     else
       events.fireEvent(events.TurnEvent())
       if game.player then
-        game.player.Physics.hp = game.player.Physics.hp+5
+        if game.player.Physics.hp < game.player.Physics.maxHp then
+          game.player.Physics.hp = game.player.Physics.hp+5
+          if game.player.Physics.hp > game.player.Physics.maxHp then
+            game.player.Physics.hp = game.player.Physics.maxHp
+          end
+        end
       end
     end
   elseif KeyPressEvent.key == "t" then
