@@ -18,8 +18,10 @@ function MenuSystem:initialize()
     self.choices = {}
     self.marginWidth = game.options.sideBarMarginWidth
     self.marginHeight = 15
-    self.pixelX = game.options.viewportWidth
-    self.pixelY = game.options.viewportHeight/5
+    self.defaultPixelX = 0
+    self.defaultPixelY = game.options.topBarHeight
+    self.pixelX = self.defaultPixelX
+    self.pixelY = self.defaultPixelY
     self.pixelWidth = game.options.sideBarWidth 
     self.pixelHeight = game.options.sideBarHeight
 end
@@ -28,6 +30,7 @@ function MenuSystem:onDisplayNotify(MenuDisplayEvent)
     events.fireEvent(events.StateEvent{state="menu"})
     self.text = ""
     self.choices = {}
+    self.prettyChoices = {}
     if MenuDisplayEvent.type == "component" then
         _setupComponentMenu(self, MenuDisplayEvent)
     else
@@ -39,8 +42,8 @@ function MenuSystem:onDisplayNotify(MenuDisplayEvent)
     self.resultEvent = MenuDisplayEvent.resultEvent
     self.resultEventArgs = MenuDisplayEvent.resultEventArgs or {}
     self.persistant = MenuDisplayEvent.persistant
-    self.pixelX = MenuDisplayEvent.pixelX or self.pixelX
-    self.pixelY = MenuDisplayEvent.pixelY or self.pixelY
+    self.pixelX = MenuDisplayEvent.pixelX or self.defaultPixelX
+    self.pixelY = MenuDisplayEvent.pixelY or self.defaultPixelY
 end
 
 _setupComponentMenu = function (self, MenuDisplayEvent)
@@ -61,7 +64,8 @@ end
 
 _setupStringMenu = function(self, MenuDisplayEvent)
     self.choices = MenuDisplayEvent.choices
-    for i, choice in ipairs(self.choices)  do
+    self.prettyChoices = MenuDisplayEvent.prettyChoices or self.choices
+    for i, choice in ipairs(self.prettyChoices)  do
         local letter = string.char(96+i)
         self.text = self.text..letter.." - "..choice.."\n"
       self.text = string.upper(self.text)

@@ -9,6 +9,7 @@ InventorySystem:include(Serializable)
 function InventorySystem:initialize()
     self.name = "InventorySystem"
 end
+local _stackInsert
 
 function InventorySystem:onEnterNotify(InventoryEnterEvent)
     local itemEntity = systems.getEntityById(InventoryEnterEvent.itemId)
@@ -19,12 +20,30 @@ function InventorySystem:onEnterNotify(InventoryEnterEvent)
     end
     
     if itemEntity.Sprite then
-        itemEntity.Sprite.isVisible = false
+      itemEntity.Sprite.isVisible = false
     end
     if itemEntity.Physics then
       systems.planeSystem:reposition(itemEntity, -1, -1)
     end
+    if itemEntity.Stack then
+      local success = _stackInsert(itemEntity, holderEntity)
+      if success then return end
+    end
     table.insert(holderEntity.Inventory.itemIds, itemEntity.id)
+end
+
+--returns true on success, false on fail
+_stackInsert = function(itemEntity, holderEntity)
+  for index, id in ipairs(holderEntity.Inventory.itemIds) do
+    local storedEntity = systems.getEntityById(id)
+    if itemEntity.name == storedEntity.name then
+      if storedEntity.Stack then
+        storedEntity.Stack.amount = storedEntity.Stack.amount + itemEntity.Stack.amount
+        return true
+      end
+    end
+  end
+  return false
 end
 
 function InventorySystem:onExitNotify(InventoryExitEvent)
@@ -53,12 +72,26 @@ function InventorySystem:onDisplayNotify(InventoryDisplayEvent)
     end
     events.fireEvent(events.MenuDisplayEvent{
         type="list",
+        prettyChoices=self:getInventoryNames(holderEntity),
         choices=holderEntity.Inventory.itemIds,
-        title="Current items in inventory:",
+        title="Inventory",
         resultKey="itemId",
         resultEvent=events.InventoryExitEvent,
         resultEventArgs={holderId=holderEntity.id},
     })
+end
+
+function InventorySystem:getInventoryNames(holderEntity) 
+  local nameList = {}
+  for index, id in ipairs(holderEntity.Inventory.itemIds) do
+    local itemEntity = systems.getEntityById(id)
+    if itemEntity.Stack then
+      table.insert(nameList, itemEntity.name .. " (" .. itemEntity.Stack.amount .. ")")
+    else
+      table.insert(nameList, itemEntity.name)
+    end
+  end
+  return nameList
 end
 
 return InventorySystem

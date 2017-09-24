@@ -6,6 +6,7 @@ MenuDisplayEvent:include(Serializable)
 function MenuDisplayEvent:initialize(args)
     args = args or {}
     self.type = args.type
+    self.prettyChoices = args.prettyChoices
     self.choices = args.choices
     self.title = args.title
     self.resultKey = args.resultKey

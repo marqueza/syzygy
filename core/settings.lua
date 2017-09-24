@@ -1,5 +1,5 @@
 local options = {
-  debug = true,
+  debug = false,
   headless = false,
   player = true,
   auto = false}
