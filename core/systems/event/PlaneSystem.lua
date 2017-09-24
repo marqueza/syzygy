@@ -109,6 +109,8 @@ function PlaneSystem:removeFromLayer(entity)
 end
 
 function PlaneSystem:reposition(entity, newX, newY, newPlane)
+  print("name: "..entity.name)
+  print(newPlane)
   if self.planes[entity.Physics.plane] and  self.planes[entity.Physics.plane][entity.Physics.layer] and self.planes[entity.Physics.plane][entity.Physics.layer][entity.Physics.x..','..entity.Physics.y] then
     self:removeFromLayer(entity)
   end

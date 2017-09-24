@@ -20,7 +20,7 @@ function StatusBoxSystem:draw()
   end
   if game.player then
     
-    love.graphics.print(string.upper(game.player.name) .. ":".. "\nHP",
+    love.graphics.print(string.upper(game.player.name).."\nHP",
       self.pixelX+self.marginWidth, self.pixelY+12)
       local lifeRatio = game.player.Physics.hp / game.player.Physics.maxHp
       love.graphics.setColor(100,0,100,255)

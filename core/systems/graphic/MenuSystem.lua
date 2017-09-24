@@ -16,14 +16,15 @@ function MenuSystem:initialize()
     self.turn = 1
     self.text = ""
     self.choices = {}
-    self.marginWidth = game.options.sideBarMarginWidth
-    self.marginHeight = 15
-    self.defaultPixelX = 0
-    self.defaultPixelY = game.options.topBarHeight
+    self.marginWidth = 10
+    self.marginHeight = 10
+    self.defaultPixelX = game.options.viewportWidth/2+game.options.topBarHeight+5
+    self.defaultPixelY = game.options.topBarHeight+5
     self.pixelX = self.defaultPixelX
     self.pixelY = self.defaultPixelY
-    self.pixelWidth = game.options.sideBarWidth 
+    self.pixelWidth = 300
     self.pixelHeight = game.options.sideBarHeight
+    self.backgroundImage = love.graphics.newImage('res/img/sprites/menu.png')
 end
 
 function MenuSystem:onDisplayNotify(MenuDisplayEvent)
@@ -65,9 +66,12 @@ end
 _setupStringMenu = function(self, MenuDisplayEvent)
     self.choices = MenuDisplayEvent.choices
     self.prettyChoices = MenuDisplayEvent.prettyChoices or self.choices
+    if MenuDisplayEvent.title then
+      self.text = string.upper(MenuDisplayEvent.title) .. "\n"
+    end
     for i, choice in ipairs(self.prettyChoices)  do
         local letter = string.char(96+i)
-        self.text = self.text..letter.." - "..choice.."\n"
+        self.text = self.text..letter.." "..choice.."\n"
       self.text = string.upper(self.text)
     end
 end
@@ -92,15 +96,17 @@ _closeMenu = function(self)
 end
 function MenuSystem:draw()
     if self.visible then
-      --[[
-        love.graphics.setColor(0,0,0, 100)
+        love.graphics.setColor(0,0,0, 255)
         love.graphics.rectangle("fill", 
-          self.pixelX,
-          self.pixelY,
-          self.pixelWidth,
-          self.pixelHeight)
+          self.pixelX-2,
+          self.pixelY-2,
+          self.backgroundImage:getWidth()+4,
+          self.backgroundImage:getHeight()+4)
         love.graphics.setColor(255,255,255)
-        --]]
+        love.graphics.draw(self.backgroundImage,
+          self.pixelX,
+          self.pixelY)
+        love.graphics.setColor(255,255,255)
         love.graphics.print(self.text,
         self.marginWidth+self.pixelX,
         self.marginHeight+self.pixelY)

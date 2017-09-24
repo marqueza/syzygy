@@ -16,6 +16,7 @@ function dungeon.buildStructure(x, y, value)
 end
 
 function dungeon.build(seed, levelEvent)
+  assert(levelEvent.levelName)
   local startTime = love.timer.getTime()
   dungeon.emptyCoords = {}
   planeName = levelEvent.levelName..'-'..levelEvent.levelDepth
@@ -34,7 +35,7 @@ function dungeon.build(seed, levelEvent)
   local randX, randY = dungeon.getEmptyCoord()
   local exitX, exitY = randX, randY
   
-  if levelDepth == 1 then
+  if levelEvent.levelDepth == 1 then
   systems.addEntity(Factory.OutsideEntrance{
       levelName = "overWorld",
       x=randX,
@@ -42,7 +43,7 @@ function dungeon.build(seed, levelEvent)
       plane=planeName}) 
 else
   systems.addEntity(Factory.Upstairs{
-      levelName = "tower",
+      levelName = levelEvent.levelName,
       x=randX,
       y=randY,
       plane=planeName}) 
@@ -50,10 +51,14 @@ else
   systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
   end
 
-  randX, randY = dungeon.getEmptyCoord()
-  systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
-  randX, randY = dungeon.getEmptyCoord()
-  systems.addEntity(Factory.Orc{x=randX, y=randY, plane=planeName})
+  for i=0, math.floor(math.random(1,2)) do
+    randX, randY = dungeon.getEmptyCoord()
+    systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
+  end
+  for i=0, math.floor(math.random(1,4)) do
+    randX, randY = dungeon.getEmptyCoord()
+    systems.addEntity(Factory.Orc{x=randX, y=randY, plane=planeName})
+  end
   
 
   --set player

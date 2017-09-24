@@ -5,6 +5,7 @@ local events = require "core.events.events"
 local arena = require "core.factories.map.arena"
 local lair = require "core.factories.map.lair"
 local cavern = require "core.factories.map.cavern"
+local forest = require "core.factories.map.forest"
 local overWorld = require "core.factories.map.overWorld"
 local dungeon = require "core.factories.map.dungeon"
 local aiCombatTest = require "core.factories.map.tests.aiCombatTest"
@@ -43,7 +44,8 @@ function LevelSystem:onNotify(levelEvent)
   --first level in the game
   if self.currentLevelName == nil then
     self.currentLevelName = levelEvent.levelName
-    arena.build(self.seed, levelEvent)
+    overWorld.build(self.seed, levelEvent, {spawnPlayer=true})
+    assert(game.player)
     events.eventManager:fireEvent(events.LogEvent{
         text="You begin your journey in an unknown land. "
       })
@@ -197,23 +199,13 @@ function LevelSystem:enterNewLevel(levelEvent)
 
   --build the next level
   self.seed=self.seed+1
-  if levelEvent.levelName == "overWorld" then
-    if self.currentLevelName == "tower" then
-      game.player.Physics.x, game.player.Physics.y = 2,2
-    elseif self.currentLevelName == "cave" then
-      game.player.Physics.x, game.player.Physics.y = 4,4
-    end
+  if string.match(levelEvent.levelName,"overWorld") ~= nil then
     overWorld.build(self.seed, levelEvent)
-  elseif levelEvent.levelName == "tower" then
-    local roll = math.ceil(math.random(1, 2))
-    if roll == 1 then
+  elseif string.match(levelEvent.levelName, "tower") or string.match(levelEvent.levelName, "castle") then
       dungeon.build(self.seed, levelEvent)
-    else 
-      arena.build(self.seed, levelEvent)
-    end
-    
-  else
-    levelEvent.options.color = "brown"
+  elseif string.match(levelEvent.levelName, "forest") ~=nil then
+    forest.build(self.seed, levelEvent)
+  elseif string.match(levelEvent.levelName, "cave") then
     cavern.build(self.seed, levelEvent)
   end
 
@@ -232,14 +224,17 @@ function LevelSystem:enterNewLevel(levelEvent)
     --now attempt to find this desired entrance
     local entrances = systems.getEntitiesWithComponent("Entrance")
     assert(next(entrances))
+    local foundMatch = false
     if self.currentLevelName ~= levelEvent.levelName then
       for key, entranceEntity in pairs(entrances) do
         if entranceEntity.Entrance.levelName == self.currentLevelName then
           travelX = entranceEntity.Physics.x
           travelY = entranceEntity.Physics.y
           travelPlane = levelEvent.levelName .. "-" .. levelEvent.levelDepth
+          foundMatch = true
         end
       end
+      assert(foundMatch, "Could not link up previous level to an entrance")
     else
       entrances = systems.getEntitiesWithComponent("Entrance")
       for key, entranceEntity in pairs(entrances) do

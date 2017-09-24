@@ -42,7 +42,7 @@ function TitleSystem:onSelectNotify(TitleSelectEvent)
     --delete the saved data
     systems.saveSystem:deleteSaves()
     --start game for reals
-    events.fireEvent(events.LevelEvent{levelName="tower", levelDepth=1, options={first=true, spawnPlayer=game.options.player, spawnMinion=game.options.auto}})
+    events.fireEvent(events.LevelEvent{levelName="overWorld", levelDepth=0, options={first=true, spawnPlayer=game.options.player, spawnMinion=game.options.auto}})
     
     game.systems.targetSystem:refreshFocus()
   else

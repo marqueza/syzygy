@@ -1,40 +1,39 @@
 local Factory = require("core/factories/entity/Factory")
 local systems = require "core.systems.systems"
 local rot = require "lib.rotLove.src.rot"
-local cavern = {}
+local forest = {}
 
-cavern.emptyCoords = {}
+forest.emptyCoords = {}
 local planeName
-function cavern.buildStructure(x, y, value)
+function forest.buildStructure(x, y, value)
   if value == 1 or 
-    (x == 1 or x == cavern.length or
-     y == 1 or y == cavern.width) then
+    (x == 1 or x == forest.length or
+     y == 1 or y == forest.width) then
      -- systems.addEntity(Factory.CaveWall{x=x, y=y, variant="B", plane=planeName})
   else
     --systems.addEntity(Factory.CaveFloor{x=x, y=y, plane=planeName})
     systems.planeSystem:setFloorSpace(x, y, planeName)
-
-    table.insert(cavern.emptyCoords, x..','..y)
+    table.insert(forest.emptyCoords, x..','..y)
   end
 end
 
-function cavern.build(seed, levelEvent)
+function forest.build(seed, levelEvent)
   local startTime = love.timer.getTime()
-  cavern.emptyCoords = {}
+  forest.emptyCoords = {}
   planeName = levelEvent.levelName..'-'..levelEvent.levelDepth
   math.randomseed(seed)
   local options = levelEvent.options
-  cavern.length = 20
-  cavern.width = 20
+  forest.length = 20
+  forest.width = 20
 
-  local rotCellBuilder = rot.Map.Cellular(cavern.length, cavern.width, {connected=true})
+  local rotCellBuilder = rot.Map.Cellular(forest.length, forest.width, {connected=true})
   local rotRng = rot.RNG
   rotRng:setSeed(seed)
   rotCellBuilder:setRNG(rotRng)
   rotCellBuilder:randomize(.5)
-  rotCellBuilder:create(cavern.buildStructure)
+  rotCellBuilder:create(forest.buildStructure)
   
-  local randX, randY = cavern.getEmptyCoord()
+  local randX, randY = forest.getEmptyCoord()
   local exitX, exitY = randX, randY
   if levelEvent.levelDepth == 1 then
     systems.addEntity(Factory.OutsideEntrance{
@@ -53,26 +52,26 @@ function cavern.build(seed, levelEvent)
   
   --monsters
   for i=0, math.floor(math.random(1,2)) do
-    randX, randY = cavern.getEmptyCoord()
-    systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
+    randX, randY = forest.getEmptyCoord()
+    systems.addEntity(Factory.Brownie{x=randX, y=randY, plane=planeName})
   end
   for i=0, math.floor(math.random(1,4)) do
-    randX, randY = cavern.getEmptyCoord()
-    systems.addEntity(Factory.Skeleton{x=randX, y=randY, plane=planeName})
+    randX, randY = forest.getEmptyCoord()
+    systems.addEntity(Factory.Fairy{x=randX, y=randY, plane=planeName})
   end
   
   --downstairs
   if levelEvent.levelDepth > 2 then
-    randX, randY = cavern.getEmptyCoord()
+    randX, randY = forest.getEmptyCoord()
     systems.addEntity(Factory.Medal{x=randX, y=randY, plane=planeName})
   else
-    randX, randY = cavern.getEmptyCoord()
+    randX, randY = forest.getEmptyCoord()
     systems.addEntity(Factory.Downstairs{
           levelName = levelEvent.levelName,
           x=randX,
           y=randY,
           plane=planeName}) 
-      randX, randY = cavern.getEmptyCoord()
+      randX, randY = forest.getEmptyCoord()
   end
   
   --set player
@@ -86,7 +85,7 @@ function cavern.build(seed, levelEvent)
   end
   
   for i=1, 10 do
-    randX, randY = cavern.getEmptyCoord()
+    randX, randY = forest.getEmptyCoord()
     if levelEvent.levelName == "forest" then
       systems.addEntity(Factory.Tree{x=randX, y=randY, plane=planeName})       
     else
@@ -97,14 +96,14 @@ function cavern.build(seed, levelEvent)
   print (math.floor((love.timer.getTime() - startTime)*1000))
 end
 
-function cavern.getEmptyCoord()
-  local randomIndex = math.ceil(math.random(1, #cavern.emptyCoords))
-  local coordinateString = cavern.emptyCoords[randomIndex]
-  table.remove(cavern.emptyCoords, randomIndex)
+function forest.getEmptyCoord()
+  local randomIndex = math.ceil(math.random(1, #forest.emptyCoords))
+  local coordinateString = forest.emptyCoords[randomIndex]
+  table.remove(forest.emptyCoords, randomIndex)
   local strings = string.gmatch(coordinateString, "%d+")
   local x = tonumber(strings())
   local y = tonumber(strings())
   return x, y
 end
 
-return cavern
+return forest

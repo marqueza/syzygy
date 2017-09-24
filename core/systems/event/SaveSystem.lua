@@ -33,6 +33,7 @@ function SaveSystem:deleteSaves()
     end
 end
 function SaveSystem:onSaveNotify(saveEvent)
+  if not game.player then return end
   self.saveSlot = saveEvent.saveSlot
   _backupSave(self)
 

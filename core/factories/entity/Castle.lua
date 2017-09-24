@@ -4,7 +4,7 @@ local function Castle(args)
 	entity.name = "castle"
 	entity:add(Physics{x=args.x, y=args.y, hp=10, blocks=false, layer="backdrop", plane=args.plane})
 	entity:add(Sprite{filename="img/sprites/castle.png"})
-	entity:add(Entrance{levelName="tower", commandKey=">"})
+	entity:add(Entrance{levelName="tower"..math.floor(math.random()*10000), commandKey=">"})
 	return entity
 end
 return Castle
