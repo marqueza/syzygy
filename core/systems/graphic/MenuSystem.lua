@@ -8,6 +8,7 @@ MenuSystem:include(Serializable)
 
 local _setupComponentMenu
 local _setupStringMenu
+local _closeMenu
 
 function MenuSystem:initialize()
     lovetoys.System.initialize(self)
@@ -37,6 +38,9 @@ function MenuSystem:onDisplayNotify(MenuDisplayEvent)
     self.resultKey = MenuDisplayEvent.resultKey
     self.resultEvent = MenuDisplayEvent.resultEvent
     self.resultEventArgs = MenuDisplayEvent.resultEventArgs or {}
+    self.persistant = MenuDisplayEvent.persistant
+    self.pixelX = MenuDisplayEvent.pixelX or self.pixelX
+    self.pixelY = MenuDisplayEvent.pixelY or self.pixelY
 end
 
 _setupComponentMenu = function (self, MenuDisplayEvent)
@@ -71,10 +75,16 @@ function MenuSystem:onCommmandNotify(MenuCommandEvent)
             self.result = self.choices[choiceIndex]
             self.resultEventArgs[self.resultKey] = self.result
             events.fireEvent(self.resultEvent(self.resultEventArgs))
+           _closeMenu(self)
         end
     end
-    events.fireEvent(events.StateEvent{state="command"})
-    self.visible = false
+    if not self.persistant then
+      _closeMenu(self)
+    end
+end
+_closeMenu = function(self)
+  events.fireEvent(events.StateEvent{state="command"})
+  self.visible = false
 end
 function MenuSystem:draw()
     if self.visible then

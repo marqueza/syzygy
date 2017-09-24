@@ -231,6 +231,7 @@ function LevelSystem:enterNewLevel(levelEvent)
 
     --now attempt to find this desired entrance
     local entrances = systems.getEntitiesWithComponent("Entrance")
+    assert(next(entrances))
     if self.currentLevelName ~= levelEvent.levelName then
       for key, entranceEntity in pairs(entrances) do
         if entranceEntity.Entrance.levelName == self.currentLevelName then

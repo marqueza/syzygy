@@ -32,8 +32,9 @@ function arena.build(seed, levelEvent)
                     systems.addEntity(Factory.Shore{x=i, y=j, direction="down", isCorner=false, plane=planeName})
                 end
             else
-                systems.addEntity(Factory.Grass{x=i, y=j, plane=planeName})
+                --systems.addEntity(Factory.Grass{x=i, y=j, plane=planeName})
             end
+            systems.planeSystem:setFloorSpace(i, j, planeName)
         end
     end
 
@@ -43,6 +44,7 @@ function arena.build(seed, levelEvent)
     systems.addEntity(Factory.Cave{x=2, y=4, plane=planeName})
     systems.addEntity(Factory.Cave{x=4, y=3, plane=planeName})
     systems.addEntity(Factory.Cave{x=4, y=2, plane=planeName})
+    systems.addEntity(Factory.Forest{x=5, y=5, plane=planeName})
     --set player
     if options.player then
         game.player = Factory.Player{x=3,y=3, plane=planeName}

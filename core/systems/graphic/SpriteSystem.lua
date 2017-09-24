@@ -5,15 +5,18 @@ local SpriteSystem = class("SpriteSystem", lovetoys.System)
 
 function SpriteSystem:initialize()
   love.window.setMode(1280,720)
-  local font = love.graphics.setNewFont("res/font/tamsyn_bold.pcf", 16)
-  font:setFilter("nearest", "nearest")
+  --local font = love.graphics.setNewFont("res/font/tamsyn_bold.pcf", 16)
+  --local font = love.graphics.setNewFont("res/font/pixelEmulator/Pixel Emulator.otf", 24)
+  local font = love.graphics.setNewFont("res/font/PressStart/PressStart2p.ttf", game.options.fontSize)
+  love.graphics.setFont(font)
   lovetoys.System.initialize(self)
   self.maxCount = 4
   self.layers = {}
+  self.pixelY = game.options.topBarHeight
   self.pixelWidth = game.options.viewportWidth
   self.pixelHeight = game.options.viewportHeight
   self.horizontalTileMax = self.pixelWidth/game.options.spriteSize
-  self.verticalTileMax = self.pixelHeight/game.options.spriteSize
+  self.verticalTileMax = (self.pixelHeight-self.pixelY)/game.options.spriteSize
 end
 
 --function declaration
@@ -21,10 +24,13 @@ local _drawSprite
 local _drawStructures
 
 function SpriteSystem:draw()
-  self:drawLayer("structure")
-  self:drawLayer("backdrop")
-  self:drawLayer("item")
-  self:drawLayer("creature")
+  if game.player then
+    self:drawLayer("structure")
+    self:drawLayer("floor")
+    self:drawLayer("backdrop")
+    self:drawLayer("item")
+    self:drawLayer("creature")
+  end
 end
 
 function SpriteSystem:update()
@@ -53,22 +59,22 @@ _drawStructures = function(self)
           
           if systems.planeSystem:isVisibleSpace(x, y, game.player.Physics.plane) then
             if systems.planeSystem:isFloorSpace(x, y, game.player.Physics.plane) then
-              love.graphics.setColor(150,150,150,255)
+              love.graphics.setColor(self:getColor("visibleFloor"))
             else
-              love.graphics.setColor(100,100,100,255)
+              love.graphics.setColor(self:getColor("visibleWall"))
             end
           else
             if systems.planeSystem:isFloorSpace(x, y, game.player.Physics.plane) then
-              love.graphics.setColor(90,90,90,255)
+              love.graphics.setColor(self:getColor("knownFloor"))
             else
-              love.graphics.setColor(40,40,40,255)
+              love.graphics.setColor(self:getColor("knownWall"))
             end
           end
             
           
           love.graphics.rectangle( "fill", 
             (x-1-systems.cameraSystem.cameraX)*game.options.spriteSize, 
-            (y-1-systems.cameraSystem.cameraY)*game.options.spriteSize, 
+            (y-1-systems.cameraSystem.cameraY)*game.options.spriteSize+self.pixelY, 
             game.options.spriteSize, 
             game.options.spriteSize)
           love.graphics.setColor(255,255,255,255)
@@ -121,7 +127,7 @@ _drawStructures = function(self)
     love.graphics.draw(Sprite.image,
       Sprite:getFrame(count),
       pixelX,
-      pixelY,
+      pixelY+self.pixelY,
       rot,
       sx*Sprite.size/16,
       sy*Sprite.size/16 )
@@ -131,7 +137,7 @@ _drawStructures = function(self)
     if Physics.hp < Physics.maxHp then
       love.graphics.setColor(255,0,0,100)
       local lifeRatio = Physics.hp / Physics.maxHp
-      love.graphics.rectangle( "fill", pixelX, pixelY+Sprite.size, Sprite.size*lifeRatio, 4)
+      love.graphics.rectangle( "fill", pixelX, pixelY+Sprite.size+self.pixelY, Sprite.size*lifeRatio, 4)
       love.graphics.setColor(255,255,255,255)
     end
      love.graphics.setColor(255,255,255,255)
@@ -150,5 +156,47 @@ _drawStructures = function(self)
       end
     end
   end
-
+  function SpriteSystem:getColor(spaceType)
+    if systems.levelSystem.currentLevelName == "overWorld" then
+      if spaceType == "visibleWall" then
+        return {94,145,255,255}
+      elseif spaceType == "visibleFloor" then
+        return {79,145,33,255}
+      elseif spaceType == "knownWall" then
+        return {55,85,150,255}
+      elseif spaceType == "knownFloor" then
+        return {46,85,19,255}
+      end
+    elseif string.find(systems.levelSystem.currentLevelName, "cave") then
+      if spaceType == "visibleWall" then
+        return {157,126,97,255}
+      elseif spaceType == "visibleFloor" then
+        return {180,144,111,255}
+      elseif spaceType == "knownWall" then
+        return {92,74,57,255}
+      elseif spaceType == "knownFloor" then
+        return {106,85,65,255}    
+      end
+    elseif string.find(systems.levelSystem.currentLevelName, "forest") then
+      if spaceType == "visibleWall" then
+        return {75,105,47,255}
+      elseif spaceType == "visibleFloor" then
+        return {104,135,73,255}
+      elseif spaceType == "knownWall" then
+        return {48, 68, 30,255}
+      elseif spaceType == "knownFloor" then
+        return {90,117,62,255}    
+      end
+    else
+      if spaceType == "visibleWall" then
+        return {80,80,80,255}
+      elseif spaceType == "visibleFloor" then
+        return {120,120,120,255}
+      elseif spaceType == "knownWall" then
+        return {40,40,40,255}
+      elseif spaceType == "knownFloor" then
+        return {90,90,90,255}
+      end
+    end
+  end
   return SpriteSystem

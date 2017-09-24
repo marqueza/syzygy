@@ -74,8 +74,13 @@ function events.init()
     events.eventManager:addListener("TurnEvent", systems.fovSystem, systems.fovSystem.onNotify)
     events.eventManager:addListener("LevelEvent", systems.fovSystem, systems.fovSystem.onNotify)
     
+    --harvest system
+    events.eventManager:addListener("HarvestEvent", systems.harvestSystem, systems.harvestSystem.onNotify)
+
+    
     if not game.options.headless then
-        events.eventManager:addListener("LogEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
+        events.eventManager:addListener("TurnEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
+        events.eventManager:addListener("LevelEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("FocusEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
         events.eventManager:addListener("LoadEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
         events.eventManager:addListener("MenuCommandEvent", systems.menuSystem, systems.menuSystem.onCommmandNotify)
@@ -84,7 +89,8 @@ function events.init()
         events.eventManager:addListener("TurnEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
         events.eventManager:addListener("FocusEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
         events.eventManager:addListener("LoadEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
-
+        events.eventManager:addListener("TitleEnterEvent", systems.titleSystem, systems.titleSystem.onEnterNotify)
+        events.eventManager:addListener("TitleSelectEvent", systems.titleSystem, systems.titleSystem.onSelectNotify)
     end
 end
 

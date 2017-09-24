@@ -1,10 +1,10 @@
 local lovetoys = require "lib.lovetoys.lovetoys"
-local function Rock(args)
+local function Tree(args)
 	local entity = lovetoys.Entity()
-	entity.name = "rock"
+	entity.name = "Tree"
 	entity:add(Physics{x=args.x, y=args.y, hp=1, blocks=false, layer="backdrop", plane=args.plane})
-	entity:add(Sprite{filename="img/sprites/rock.png"})
-  entity:add(Harvest{loot="Stone"})
+	entity:add(Sprite{filename="img/sprites/tree.png"})
+  entity:add(Harvest{loot="Wood"})
 	return entity
 end
-return Rock
+return Tree

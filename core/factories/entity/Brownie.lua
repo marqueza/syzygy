@@ -6,6 +6,7 @@ local function Brownie(args)
 	entity:add(Sprite{filename="img/sprites/brownie.png"})
 	entity:add(Faction{name="ally"})
 	entity:add(Ai{objective="dungeon", combatPreference="melee", idle="explore"})
+  entity:add(Adventurer{})
 	return entity
 end
 return Brownie

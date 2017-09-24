@@ -11,9 +11,8 @@ function game.load(options)
     game.systems.init()
     game.events.init()
     if not game.options.headless then
-        game.events.fireEvent(game.events.LevelEvent{levelName="tower", levelDepth=1, options={first=true, spawnPlayer=options.player, spawnMinion=options.auto}})
+        game.events.fireEvent(game.events.TitleEnterEvent{})
     end
-    game.systems.targetSystem:refreshFocus()
     
 end
 
@@ -30,5 +29,9 @@ end
 
 function game.keypressed(key)
     game.events.fireEvent(game.events.KeyPressEvent({key=key}))
+end
+
+function game.quit()
+  game.events.fireEvent(game.events.SaveEvent{})
 end
 return game

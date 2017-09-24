@@ -11,3 +11,6 @@ end
 function love.keypressed(key)
     game.keypressed(key)
 end
+function love.quit()
+    game.quit()
+end

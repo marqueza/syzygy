@@ -200,6 +200,16 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
     events.fireEvent(events.InventoryDisplayEvent{
         holderId=game.player.id
       })
+  elseif KeyPressEvent.key == "v" then
+    for index, resourceEntity in pairs(systems.getEntitiesWithComponent("Harvest")) do
+        if resourceEntity.Physics.x == game.player.Physics.x and
+        resourceEntity.Physics.y == game.player.Physics.y then
+        events.fireEvent(events.HarvestEvent{
+            entityId=resourceEntity.id
+          })
+          break
+        end
+      end
   end
 
 end

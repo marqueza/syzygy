@@ -11,6 +11,9 @@ function MenuDisplayEvent:initialize(args)
     self.resultKey = args.resultKey
     self.resultEvent = args.resultEvent
     self.resultEventArgs = args.resultEventArgs
+    self.persistant = args.persistant
+    self.pixelX = args.pixelX
+    self.pixelY = args.pixelY
 end
 
 return MenuDisplayEvent

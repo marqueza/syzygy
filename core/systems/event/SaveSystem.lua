@@ -27,7 +27,11 @@ end
 function SaveSystem:getLatestDir()
   return "save/" .. self.gameId .. "/".. "latest"
 end
-
+function SaveSystem:deleteSaves()
+   for key, item in pairs(love.filesystem.getDirectoryItems(self:getSaveDir())) do
+     os.remove(self:getSaveDir() .. "/" .. item)
+    end
+end
 function SaveSystem:onSaveNotify(saveEvent)
   self.saveSlot = saveEvent.saveSlot
   _backupSave(self)
@@ -118,19 +122,19 @@ _saveEntities = function (self, prefix)
   end
   if prefix == "" then prefix = game.player.Physics.plane end
   --now save the plane information
-  f:write("planes.structure " .. serpent.line(systems.planeSystem.planes[prefix]["structure"], 
+  f:write("planes."..prefix..".structure " .. serpent.line(systems.planeSystem.planes[prefix]["structure"], 
       {comment=false, 
         sparse=true,
         compact=true,
         nohuge=true}))
   f:write("\n")
-  f:write("planes.visible " .. serpent.line(systems.planeSystem.planes[prefix]["visible"], 
+  f:write("planes."..prefix..".visible " .. serpent.line(systems.planeSystem.planes[prefix]["visible"], 
       {comment=false, 
         sparse=true,
         compact=true,
         nohuge=true}))
   f:write("\n")
-  f:write("planes.known " .. serpent.line(systems.planeSystem.planes[prefix]["known"], 
+  f:write("planes."..prefix..".known " .. serpent.line(systems.planeSystem.planes[prefix]["known"], 
       {comment=false, 
         sparse=true,
         compact=true,
@@ -152,7 +156,7 @@ _loadEntities = function (self, prefix)
 
   local e = nil
   local f = io.open(self:getSaveDir() .. "/" .. prefix .. "_" .. self.gameId ..".save.txt", "r")
-  if prefix == "" then prefix = game.player.Physics.plane end
+
   for line in f:lines() do
 
     --creating an entity
@@ -169,10 +173,9 @@ _loadEntities = function (self, prefix)
         e[k] = v
       end
     elseif string.find(line, 'planes%.') then
-      local layerName = string.gsub(string.match(line, "%.%a+"), "%.", "")
-      local tableString = string.match(line, "%{.*")
+      local planeName, layerName, tableString = string.match(line, "planes.(%g+)%.(%g+) (%g+)")
       local ok, layerTable = serpent.load(tableString)
-      systems.planeSystem.planes[prefix][layerName] = layerTable
+      systems.planeSystem.planes[planeName][layerName] = layerTable
 
       --adding a component to an entity
     else
@@ -184,6 +187,9 @@ _loadEntities = function (self, prefix)
           t.class = string.gsub(t.class, "class ", "")
         end
         e:add(components[t.class](t))
+        if t.class == "Player" then
+          game.player = e
+        end
       end
     end
   end
@@ -192,6 +198,12 @@ _loadEntities = function (self, prefix)
   local key
   if fullSave then
     key, game.player = next(systems.getEntitiesWithComponent("Control"))
+    if game.player == nil then
+      key, game.player = next(systems.getEntitiesWithComponent("Adventurer"))
+    end
+    assert(game.player)
+    systems.levelSystem.currentLevelName, systems.levelSystem.currentLevelDepth = string.match(game.player.Physics.plane, "(%g+)-(%g+)")
   end
+  
 end
 return SaveSystem
