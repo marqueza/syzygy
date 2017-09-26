@@ -20,7 +20,7 @@ local _storeLevel
 function LevelSystem:initialize()
   self.name = "LevelSystem"
   --self.seed = 8
-  self.seed = 9
+  self.seed = os.time()*1000000
   self.currentLevelName = nil
   self.currentLevelDepth = 1
 end

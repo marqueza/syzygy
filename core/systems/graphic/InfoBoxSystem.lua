@@ -11,7 +11,7 @@ function InfoBoxSystem:initialize()
     self.marginHeight = 10
     self.text = nil
     self.examinee = nil
-    self.visible = true
+    self.visible = false
 end
 
 _refreshText = function(self)
