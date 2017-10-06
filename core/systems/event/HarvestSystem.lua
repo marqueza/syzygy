@@ -18,6 +18,7 @@ function HarvestSystem:onNotify(harvestEvent)
         x=resourceEntity.Physics.x,
         y=resourceEntity.Physics.y, 
         plane=resourceEntity.Physics.plane})
+    systems.removeEntity(resourceEntity)
     
 end
 return HarvestSystem

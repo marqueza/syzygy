@@ -174,7 +174,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
               levelName=entrance.Entrance.levelName, 
               entranceId=entrance.id,
               options={depthDelta=-1},
-              travelerIds=game.player.Party.memberIds})
+              travelerIds=systems.partySystem.getMemberIds(game.player)})
           break
         end
       end
@@ -193,7 +193,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
               levelName=entrance.Entrance.levelName, 
               entranceId=entrance.id,
               options={depthDelta=1},
-              travelerIds=game.player.Party.memberIds})
+              travelerIds=systems.partySystem.getMemberIds(game.player)})
           break
         end
       end

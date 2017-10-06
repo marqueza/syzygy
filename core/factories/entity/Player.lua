@@ -6,7 +6,9 @@ local function Player(args)
 	entity:add(Sprite{filename="img/sprites/pilot.png"})
   entity:add(Inventory{items={}})
 	entity:add(Faction{name="ally"})
-  entity:add(Party{memberIds={entity.id}})
+  local members = {}
+  members[entity.id] = true
+  entity:add(Party{members=members})
 	entity:add(Control())
 	return entity
 end

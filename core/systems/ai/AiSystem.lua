@@ -32,6 +32,8 @@ _determineState = function(self, aiEntity)
     if self:combatAction(aiEntity) then return end
   elseif aiEntity.Ai.objective == "go" then
     if self:goAction(aiEntity) then return end
+  else
+    self:idleAction(aiEntity)
   end
 end
 function AiSystem:exploreAction(aiEntity)
@@ -53,6 +55,14 @@ function AiSystem:goAction(aiEntity)
   if #(self.path) > 1 then 
       self:followPath(aiEntity) return
     end
+end
+
+function AiSystem:idleAction(aiEntity)
+  AiSystem.MoveEntityToCoord(
+    aiEntity, 
+    aiEntity.Physics.x+math.floor(math.random(-1,1)), 
+    aiEntity.Physics.y+math.floor(math.random(-1,1))
+    )
 end
 
 function AiSystem:followPath(aiEntity)
@@ -88,7 +98,7 @@ function AiSystem:buildPath(aiEntity, endX, endY)
     
     for k, entity in pairs(eList) do
       if entity.Faction.name == aiEntity.Faction.name and 
-          not (aiEntity.Recruit and entity.id == aiEntity.Recruit.leaderId) then
+          not (aiEntity.Follower and entity.id == aiEntity.Follower.leaderId) then
         return false
         end
     end
@@ -125,7 +135,7 @@ function AiSystem:pathToExit(aiEntity)
               levelName=entrance.Entrance.levelName, 
               entranceId=entrance.id,
               options={depthDelta=1},
-              travelerIds={table.unpack(aiEntity.party.memberIds) or aiEntity.id}})
+              travelerIds={systems.partySystem.getMemberIds(aiEntity) or aiEntity.id}})
         end
         AiSystem:buildPath(aiEntity, entrance.Physics.x, entrance.Physics.y)
         return true

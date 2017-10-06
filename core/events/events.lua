@@ -81,6 +81,10 @@ function events.init()
     events.eventManager:addListener("InteractEnterEvent", systems.interactSystem, systems.interactSystem.onEnterNotify)
     events.eventManager:addListener("InteractSelectEvent", systems.interactSystem, systems.interactSystem.onSelectNotify)
     
+        --interact system
+    events.eventManager:addListener("PartyEnterEvent", systems.partySystem, systems.partySystem.onEnterNotify)
+    events.eventManager:addListener("PartyExitEvent", systems.partySystem, systems.partySystem.onExitNotify)
+    
     if not game.options.headless then
         events.eventManager:addListener("TurnEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("LevelEvent", systems.promptSystem, systems.promptSystem.flushPrompt)

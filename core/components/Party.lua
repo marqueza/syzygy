@@ -5,7 +5,7 @@ Party:include(Serializable)
 
 --Adventuers require a chunk to be loaded
 function Party:initialize(args)
-  self.memberIds = args.memberIds or {}
+  self.members = args.members or {}
 end
 
 return Party

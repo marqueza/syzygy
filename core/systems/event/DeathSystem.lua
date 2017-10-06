@@ -12,12 +12,10 @@ end
 function DeathSystem:onNotify(DeathEvent)
   local deadEntity = systems.getEntityById(DeathEvent.entityId)
   
-  if deadEntity.Recruit and deadEntity.Recruit.leaderId then
-    local leader = systems.getEntityById(deadEntity.Recruit.leaderId)
-    for i, id in ipairs(leader.Party.memberIds) do
-      if deadEntity.id == id then
-        table.remove(leader.Party.memberIds, i)
-      end
+  if deadEntity.Follower and deadEntity.Follower.leaderId then
+    local leader = systems.getEntityById(deadEntity.Follower.leaderId)
+    if leader.Party.members[deadEntity.id] then
+      leader.Party.members[deadEntity.id] = nil
     end
   end
   --one in 3 chance of dropping gold

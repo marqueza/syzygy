@@ -246,7 +246,7 @@ function LevelSystem:enterNewLevel(levelEvent)
 end
 
 _getLevelSeed = function(self, levelEvent)
-  return self.seed+(string.match(levelEvent.levelName, "%d+") or 0) + levelEvent.levelDepth
+  return (string.match(levelEvent.levelName, "%d+") or 0) + levelEvent.levelDepth
 end
 
 return LevelSystem
