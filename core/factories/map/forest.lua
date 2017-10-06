@@ -86,14 +86,8 @@ function forest.build(seed, levelEvent)
   
   for i=1, 10 do
     randX, randY = forest.getEmptyCoord()
-    if levelEvent.levelName == "forest" then
-      systems.addEntity(Factory.Tree{x=randX, y=randY, plane=planeName})       
-    else
-      systems.addEntity(Factory.Rock{x=randX, y=randY, plane=planeName})        
-    end
+    systems.addEntity(Factory.Tree{x=randX, y=randY, plane=planeName})
   end
-  
-  print (math.floor((love.timer.getTime() - startTime)*1000))
 end
 
 function forest.getEmptyCoord()

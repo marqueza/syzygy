@@ -21,6 +21,9 @@ function MoveSystem:onNotify(moveEvent)
             if (target:has("Faction")) then
                 if mover.Faction.name ~= target.Faction.name then
                   events.fireEvent(events.AttackEvent{attackerId=mover.id, defenderId=target.id})
+                elseif game.player.id == mover.id and mover.Faction.name == target.Faction.name then
+                  systems.planeSystem:reposition(target, mover.Physics.x,  mover.Physics.y)
+                  systems.planeSystem:reposition(mover, moveEvent.x, moveEvent.y)
                 end
             else
                 events.fireEvent(events.LogEvent{text=mover.name .. " bumps " .. target.name})

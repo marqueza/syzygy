@@ -7,7 +7,7 @@ local function Brownie(args)
 	entity:add(Faction{name="hostile"})
 	--entity:add(Ai{objective="dungeon", combatPreference="melee", idle="explore"})
   entity:add(Ai{combatPreference="melee", idle="still", objective="kill"})
-  entity:add(Adventurer{})
+  entity:add(Recruit{desire="Wood", amount=20})
 	return entity
 end
 return Brownie

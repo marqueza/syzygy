@@ -74,7 +74,6 @@ else
   
   
   
-  print (math.floor((love.timer.getTime() - startTime)*1000))
 end
 
 function dungeon.carveFloor()

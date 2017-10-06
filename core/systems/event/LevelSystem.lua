@@ -16,6 +16,7 @@ local LevelSystem = class("LevelSystem", System)
 local _restoreLevel
 local _createLevel
 local _storeLevel
+local _getLevelSeed
 
 function LevelSystem:initialize()
   self.name = "LevelSystem"
@@ -44,7 +45,10 @@ function LevelSystem:onNotify(levelEvent)
   --first level in the game
   if self.currentLevelName == nil then
     self.currentLevelName = levelEvent.levelName
-    overWorld.build(self.seed, levelEvent, {spawnPlayer=true})
+    overWorld.build(
+      _getLevelSeed(self, levelEvent), 
+      levelEvent, 
+      {spawnPlayer=true})
     assert(game.player)
     events.eventManager:fireEvent(events.LogEvent{
         text="You begin your journey in an unknown land. "
@@ -73,13 +77,6 @@ function LevelSystem:onNotify(levelEvent)
 
 end
 function LevelSystem:levelVisited(levelName, levelDepth)
-
-  --THIS IS THE NON LOVE WAY. DOES NOT WORK
-  --[[local filePath = systems.saveSystem:getSaveDir() .."/".. levelName.."-"..levelDepth.."_"
-    ..systems.saveSystem.gameId..".save.txt"
-    --local f = io.open(filePath, "r")
-    
-    if f~=nil then io.close(f) return true else return false end-]]
   local filePath = systems.saveSystem:getSaveDir() .."/".. levelName.."-"..levelDepth.."_"
   ..systems.saveSystem.gameId..".save.txt"
   return love.filesystem.exists(filePath)
@@ -111,19 +108,6 @@ function LevelSystem:reloadLevel(levelName, levelDepth, travelerIds, previousEnt
 
   --recreate the former level
   events.fireEvent(events.LoadEvent{saveSlot="latest", loadType="level", prefix=levelName .."-"..levelDepth})
-
-  --[[
-    --determine the entrances that are opened
-    local entrances = systems.getEntitiesWithComponent("Entrance")
-    local enterEntranceEntity = nil
-    for key, entranceEntity in pairs(entrances) do
-      if entranceEntity.Entrance.isOpened then
-        assert(enterEntranceEntity == nil, "Multiple enterances have been left opened.")
-        entranceEntity.Entrance.isOpened = false
-        enterEntranceEntity = entranceEntity
-      end
-    end
-    --]]
 
   --when provided an entranceId this will determine where to enter in the new level
   local desiredEntranceKey = nil
@@ -197,16 +181,14 @@ function LevelSystem:enterNewLevel(levelEvent)
   --delete entities
   systems.removeAllEntities()
 
-  --build the next level
-  self.seed=self.seed+1
   if string.match(levelEvent.levelName,"overWorld") ~= nil then
-    overWorld.build(self.seed, levelEvent)
+    overWorld.build(_getLevelSeed(self, levelEvent), levelEvent)
   elseif string.match(levelEvent.levelName, "tower") or string.match(levelEvent.levelName, "castle") then
-      dungeon.build(self.seed, levelEvent)
-  elseif string.match(levelEvent.levelName, "forest") ~=nil then
-    forest.build(self.seed, levelEvent)
+      dungeon.build(_getLevelSeed(self, levelEvent), levelEvent)
+  elseif string.match(levelEvent.levelName, "forest") then
+    forest.build(_getLevelSeed(self, levelEvent), levelEvent)
   elseif string.match(levelEvent.levelName, "cave") then
-    cavern.build(self.seed, levelEvent)
+    cavern.build(_getLevelSeed(self, levelEvent), levelEvent)
   end
 
   --when provided an entranceId this will determine where to enter in the new level
@@ -261,6 +243,10 @@ function LevelSystem:enterNewLevel(levelEvent)
     systems.addEntity(itemEntity)
   end
 
+end
+
+_getLevelSeed = function(self, levelEvent)
+  return self.seed+(string.match(levelEvent.levelName, "%d+") or 0) + levelEvent.levelDepth
 end
 
 return LevelSystem

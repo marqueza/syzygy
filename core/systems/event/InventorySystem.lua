@@ -94,4 +94,36 @@ function InventorySystem:getInventoryNames(holderEntity)
   return nameList
 end
 
+function InventorySystem:getItem(holderEntity, itemName) 
+  if holderEntity.Inventory == nil then
+      holderEntity:add(components.Inventory({}))
+  end
+  
+  for index, id in ipairs(holderEntity.Inventory.itemIds) do
+    local itemEntity = systems.getEntityById(id)
+    if itemEntity.name == itemName then
+      return itemEntity
+    end
+  end
+  return nil
+end
+
+function InventorySystem:getItemAmount(holderEntity, itemName) 
+  if holderEntity.Inventory == nil then
+      holderEntity:add(components.Inventory({}))
+  end
+  
+  for index, id in ipairs(holderEntity.Inventory.itemIds) do
+    local itemEntity = systems.getEntityById(id)
+    if itemEntity.name == itemName then
+      if itemEntity.Stack then
+        return itemEntity.Stack.amount
+      else
+        return 1
+      end
+    end
+  end
+  return 0
+end
+
 return InventorySystem

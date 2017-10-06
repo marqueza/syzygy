@@ -14,8 +14,37 @@ function KeyPressSystem:onNotify(KeyPressEvent)
     self:doCommandKey(KeyPressEvent)
   elseif state == "focus" then
     self:doFocusKey(KeyPressEvent)
+  elseif state == "interact" then
+    self:doInteractKey(KeyPressEvent)
   elseif state == "menu" then
     events.fireEvent(events.MenuCommandEvent{key=KeyPressEvent.key})
+  end
+end
+
+function KeyPressSystem:doInteractKey(KeyPressEvent)
+  local dx, dy = 0, 0
+  if KeyPressEvent.key == "up" or KeyPressEvent.key == "kp8" then
+    dy = -1
+  elseif KeyPressEvent.key == "down" or KeyPressEvent.key == "kp2" then
+    dy = 1
+  elseif KeyPressEvent.key == "left" or KeyPressEvent.key == "kp4" then
+    dx = -1
+  elseif KeyPressEvent.key == "right" or KeyPressEvent.key == "kp6"then
+    dx = 1
+  end
+  if dx == 0 and dy == 0 then
+    events.fireEvent(events.StateEvent{state="command"})
+  else
+    local subjectId, subject = next(systems.planeSystem:getEntityList(
+      game.player.Physics.x+dx,
+      game.player.Physics.y+dy,
+      game.player.Physics.layer,
+      game.player.Physics.plane))
+    if subject then
+      events.fireEvent(events.InteractEnterEvent{interactorId=game.player.id, subjectId=subjectId})
+    else
+      events.fireEvent(events.StateEvent{state="command"})
+    end
   end
 end
 
@@ -129,6 +158,8 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
   elseif KeyPressEvent.key == "l" then
     events.fireEvent(events.StateEvent{state="focus"})
     events.fireEvent(events.FocusEvent{dx=0, dy=0})
+  elseif KeyPressEvent.key == "z" then
+    events.fireEvent(events.StateEvent{state="interact"})
   elseif KeyPressEvent.key == "," then
     --go upstairs
     if love.keyboard.isDown("rshift") or love.keyboard.isDown("lshift") then
@@ -143,7 +174,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
               levelName=entrance.Entrance.levelName, 
               entranceId=entrance.id,
               options={depthDelta=-1},
-              travelerIds={game.player.id}})
+              travelerIds=game.player.Party.memberIds})
           break
         end
       end
@@ -162,7 +193,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
               levelName=entrance.Entrance.levelName, 
               entranceId=entrance.id,
               options={depthDelta=1},
-              travelerIds={game.player.id}})
+              travelerIds=game.player.Party.memberIds})
           break
         end
       end

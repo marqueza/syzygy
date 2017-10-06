@@ -17,6 +17,9 @@ function Entity:initialize(parent, name)
     end
     self.name = name
     self.children = {}
+    local newId = math.random()*1000000
+    newId = math.floor(newId)
+    self.id = name or "" .. newId
 end
 
 -- Sets the entities component of this type to the given component.

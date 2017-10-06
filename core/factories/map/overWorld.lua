@@ -55,8 +55,9 @@ function arena.build(seed, levelEvent, options)
   end
   
     --set player
+  randX, randY = arena.getEmptyCoord()
   if options.spawnPlayer then
-    game.player = Factory.Player{x=randX,y=randX, plane=planeName}
+    game.player = Factory.Player{x=randX,y=randY, plane=planeName}
     systems.addEntity(game.player)
     assert(game.player)
   end

@@ -24,13 +24,7 @@ end
 function Engine:addEntity(entity)
     -- Setting engine eventManager as eventManager for entity
     entity.eventManager = self.eventManager
-    -- Getting the next free ID or insert into table
-    if entity.id == nil then
-      local newId = love.math.random()*1000000
-      newId = math.floor(newId)
-      entity.id = entity.name..newId
-    end
-    
+    -- Getting the next free ID or insert into table    
     self.entities[entity.id] = entity
 
     -- If a rootEntity entity is defined and the entity doesn't have a parent yet, the rootEntity entity becomes the entity's parent

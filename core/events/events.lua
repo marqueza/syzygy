@@ -77,6 +77,9 @@ function events.init()
     --harvest system
     events.eventManager:addListener("HarvestEvent", systems.harvestSystem, systems.harvestSystem.onNotify)
 
+    --interact system
+    events.eventManager:addListener("InteractEnterEvent", systems.interactSystem, systems.interactSystem.onEnterNotify)
+    events.eventManager:addListener("InteractSelectEvent", systems.interactSystem, systems.interactSystem.onSelectNotify)
     
     if not game.options.headless then
         events.eventManager:addListener("TurnEvent", systems.promptSystem, systems.promptSystem.flushPrompt)

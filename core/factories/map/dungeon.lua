@@ -79,7 +79,6 @@ else
             y=randY,
             color=options.color,
             plane=planeName})
-  print (math.floor((love.timer.getTime() - startTime)*1000))
 end
 
 function dungeon.getEmptyCoord()
