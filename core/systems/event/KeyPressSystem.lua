@@ -169,9 +169,14 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
       for index, entrance in pairs(systems.getEntitiesWithComponent("Entrance")) do
         if entrance.Physics.x == game.player.Physics.x and
         entrance.Physics.y == game.player.Physics.y and
+        entrance.Physics.plane == game.player.Physics.plane and
         entrance.Entrance.commandKey == "<" then
           events.fireEvent(events.LevelEvent{
-              levelName=entrance.Entrance.levelName, 
+              levelName=entrance.Entrance.levelName,
+              levelSeed=entrance.Entrance.levelSeed,
+              levelDepth=entrance.Entrance.levelDepth,
+              newX=entrance.Entrance.newX,
+              newY=entrance.Entrance.newY,
               entranceId=entrance.id,
               options={depthDelta=-1},
               travelerIds=systems.partySystem.getMemberIds(game.player)})
@@ -188,9 +193,14 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
       for index, entrance in pairs(systems.getEntitiesWithComponent("Entrance")) do
         if entrance.Physics.x == game.player.Physics.x and
         entrance.Physics.y == game.player.Physics.y and
+        entrance.Physics.plane == game.player.Physics.plane and
         entrance.Entrance.commandKey == ">" then
           events.fireEvent(events.LevelEvent{
               levelName=entrance.Entrance.levelName, 
+              levelSeed=entrance.Entrance.levelSeed,
+              levelDepth=entrance.Entrance.levelDepth,
+              newX=entrance.Entrance.newX,
+              newY=entrance.Entrance.newY,
               entranceId=entrance.id,
               options={depthDelta=1},
               travelerIds=systems.partySystem.getMemberIds(game.player)})

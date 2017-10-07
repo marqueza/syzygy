@@ -37,16 +37,24 @@ function dungeon.build(seed, levelEvent)
   
   if levelEvent.levelDepth == 1 then
   systems.addEntity(Factory.OutsideEntrance{
-      levelName = "overWorld",
-      x=randX,
-      y=randY,
-      plane=planeName}) 
+        levelName = "overWorld",
+        levelSeed = levelEvent.levelSeed-1,
+        levelDepth = levelEvent.levelDepth,
+        newX = levelEvent.oldX,
+        newY = levelEvent.oldY,
+        x=randX,
+        y=randY,
+        plane=planeName}) 
 else
   systems.addEntity(Factory.Upstairs{
-      levelName = levelEvent.levelName,
-      x=randX,
-      y=randY,
-      plane=planeName}) 
+        levelName = levelEvent.levelName,
+        levelSeed = levelEvent.levelSeed-1,
+        levelDepth = levelEvent.levelDepth,
+        newX = levelEvent.oldX,
+        newY = levelEvent.oldY,
+        x=randX,
+        y=randY,
+        plane=planeName})
   randX, randY = dungeon.getEmptyCoord()
   systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
   end
@@ -74,11 +82,12 @@ else
     randX, randY = dungeon.getEmptyCoord()
     
     systems.addEntity(Factory.Downstairs{
-            levelName = levelEvent.levelName,
-            x=randX,
-            y=randY,
-            color=options.color,
-            plane=planeName})
+          levelName = levelEvent.levelName,
+          levelSeed = levelEvent.levelSeed+1,
+          levelDepth = levelEvent.levelDepth,
+          x=randX,
+          y=randY,
+          plane=planeName})
 end
 
 function dungeon.getEmptyCoord()

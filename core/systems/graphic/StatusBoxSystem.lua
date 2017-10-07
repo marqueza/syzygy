@@ -14,6 +14,7 @@ end
 function StatusBoxSystem:draw()
   --love.graphics.rectangle("fill", 0, 0, game.options.topBarWidth, game.options.topBarHeight)
   if systems.levelSystem.currentLevelName then
+    
     love.graphics.print(string.upper(systems.levelSystem.currentLevelName).."-"..
         systems.levelSystem.currentLevelDepth, 
         self.pixelX+self.marginWidth+500, self.pixelY+12)

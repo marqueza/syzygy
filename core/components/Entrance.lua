@@ -8,6 +8,10 @@ function Entrance:initialize(args)
     self.levelName = args.levelName
     self.commandKey = args.commandKey or ">"
     self.isOpened = args.isOpened
+    self.newX = args.newX
+    self.newY = args.newY
+    self.levelDepth = args.levelDepth
+    self.levelSeed = args.levelSeed
 end
 
 return Entrance

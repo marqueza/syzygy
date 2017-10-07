@@ -15,7 +15,7 @@ function MoveSystem:onNotify(moveEvent)
     end
     for index, target in pairs(systems.getEntitiesWithComponent("Physics")) do
         local Physics = target:get("Physics")
-        if moveEvent.x == Physics.x and moveEvent.y == Physics.y then
+        if moveEvent.x == target.Physics.x and moveEvent.y == target.Physics.y and mover.Physics.plane == target.Physics.plane then
           if (Physics.blocks == true) then
             local Faction = target:get("Faction")
             if (target:has("Faction")) then

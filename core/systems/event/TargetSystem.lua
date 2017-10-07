@@ -47,7 +47,7 @@ function TargetSystem:onFocusNotify(focusEvent)
     end
 
     if systems.planeSystem:isVisibleSpace(self.focusX, self.focusY, game.player.Physics.plane) then
-      local eList = systems.planeSystem:getEntityList(self.focusX, self.focusY, "creature", game.player.Physics.plane)
+      local eList = systems.planeSystem:getEntityList(self.focusX, self.focusY, nil, game.player.Physics.plane)
       local focus = nil
       if eList then 
         for key, entity in pairs(eList) do
@@ -57,7 +57,7 @@ function TargetSystem:onFocusNotify(focusEvent)
         end
       end
       if focus == nil then
-        focus = systems.planeSystem:getTopEntity(self.focusX, self.focusY, "creature", game.player.Physics.plane)
+        focus = systems.planeSystem:getTopEntity(self.focusX, self.focusY, nil, game.player.Physics.plane)
       end
       if focus then
         self.focus = focus

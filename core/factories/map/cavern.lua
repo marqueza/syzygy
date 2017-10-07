@@ -39,12 +39,20 @@ function cavern.build(seed, levelEvent)
   if levelEvent.levelDepth == 1 then
     systems.addEntity(Factory.OutsideEntrance{
         levelName = "overWorld",
+        levelSeed = levelEvent.levelSeed-1,
+        levelDepth = levelEvent.levelDepth,
+        newX = levelEvent.oldX,
+        newY = levelEvent.oldY,
         x=randX,
         y=randY,
         plane=planeName}) 
   else
     systems.addEntity(Factory.Upstairs{
         levelName = levelEvent.levelName,
+        levelSeed = levelEvent.levelSeed-1,
+        levelDepth = levelEvent.levelDepth,
+        newX = levelEvent.oldX,
+        newY = levelEvent.oldY,
         x=randX,
         y=randY,
         plane=planeName})
@@ -69,6 +77,8 @@ function cavern.build(seed, levelEvent)
     randX, randY = cavern.getEmptyCoord()
     systems.addEntity(Factory.Downstairs{
           levelName = levelEvent.levelName,
+          levelSeed = levelEvent.levelSeed+1,
+          levelDepth = levelEvent.levelDepth,
           x=randX,
           y=randY,
           plane=planeName}) 

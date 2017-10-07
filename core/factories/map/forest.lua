@@ -38,15 +38,23 @@ function forest.build(seed, levelEvent)
   if levelEvent.levelDepth == 1 then
     systems.addEntity(Factory.OutsideEntrance{
         levelName = "overWorld",
+        levelSeed = levelEvent.levelSeed-1,
+        levelDepth = 0,
+        newX = levelEvent.oldX,
+        newY = levelEvent.oldY,
         x=randX,
         y=randY,
         plane=planeName}) 
   else
     systems.addEntity(Factory.Upstairs{
         levelName = levelEvent.levelName,
+        levelSeed = levelEvent.levelSeed-1,
+        levelDepth = levelEvent.levelDepth-1,
+        newX = levelEvent.oldX,
+        newY = levelEvent.oldY,
         x=randX,
         y=randY,
-        plane=planeName})
+        plane=planeName}) 
   end
   
   
@@ -68,6 +76,8 @@ function forest.build(seed, levelEvent)
     randX, randY = forest.getEmptyCoord()
     systems.addEntity(Factory.Downstairs{
           levelName = levelEvent.levelName,
+          levelSeed = levelEvent.levelSeed+1,
+          levelDepth = levelEvent.levelDepth+1,
           x=randX,
           y=randY,
           plane=planeName}) 

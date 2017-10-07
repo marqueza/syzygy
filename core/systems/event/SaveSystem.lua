@@ -15,6 +15,8 @@ local _loadMessageLog
 local _loadTurn
 local _loadEntities
 local _backupSave
+local _activePrefixes = {}
+local _writePlanesToFile
 
 function SaveSystem:initialize()
   self.name = "SaveSystem"
@@ -112,40 +114,59 @@ _loadTurn = function (self)
 end
 
 _saveEntities = function (self, prefix)
-  prefix = prefix or ""
-  local f = io.open(self:getSaveDir() .. "/" .. prefix .. "_" .. self.gameId ..".save.txt", "w")
+  local f = io.open(self:getSaveDir() .. "/" .. (prefix or "") .. "_" .. self.gameId ..".save.txt", "w")
   --for index, entity in pairs(systems.getEntitiesWithComponent("Physics")) do
   for index, entity in pairs(systems.engine.entities) do
-    f:write("entity ".."{id = \""..entity.id.."\", name = \""..entity.name.."\"}\n")
-    for k, v in pairs(entity.components) do
-      f:write(v:toString() .. "\n")
+    if prefix==nil or entity.Physics.plane == prefix then
+      f:write("entity ".."{id = \""..entity.id.."\", name = \""..entity.name.."\"}\n")
+      for k, v in pairs(entity.components) do
+        f:write(v:toString() .. "\n")
+      end
     end
   end
-  if prefix == "" then prefix = game.player.Physics.plane end
-  --now save the plane information
-  f:write("planes."..prefix..".structure " .. serpent.line(systems.planeSystem.planes[prefix]["structure"], 
-      {comment=false, 
-        sparse=true,
-        compact=true,
-        nohuge=true}))
-  f:write("\n")
-  f:write("planes."..prefix..".visible " .. serpent.line(systems.planeSystem.planes[prefix]["visible"], 
-      {comment=false, 
-        sparse=true,
-        compact=true,
-        nohuge=true}))
-  f:write("\n")
-  f:write("planes."..prefix..".known " .. serpent.line(systems.planeSystem.planes[prefix]["known"], 
-      {comment=false, 
-        sparse=true,
-        compact=true,
-        nohuge=true}))
+  
+  if prefix and prefix ~= "" then
+    --now save the plane information
+    _writePlanesToFile(f, prefix)
+  else
+    for planeName, planeTable in pairs(systems.planeSystem.planes) do
+      --now save the plane information
+      _writePlanesToFile(f, planeName)
+    end
+  end
+  
+  
   f:write("\n")
   f:close()
 end
 
+_writePlanesToFile = function (f, plane) 
+  f:write("planes."..plane..".structure " .. serpent.line(systems.planeSystem.planes[plane]["structure"], 
+        {comment=false, 
+          sparse=true,
+          compact=true,
+          nohuge=true}))
+    f:write("\n")
+    f:write("planes."..plane..".visible " .. serpent.line(systems.planeSystem.planes[plane]["visible"], 
+        {comment=false, 
+          sparse=true,
+          compact=true,
+          nohuge=true}))
+    f:write("\n")
+    f:write("planes."..plane..".known " .. serpent.line(systems.planeSystem.planes[plane]["known"], 
+        {comment=false, 
+          sparse=true,
+          compact=true,
+          nohuge=true}))
+    f:write("\n")
+end
 _loadEntities = function (self, prefix)
   prefix = prefix or ""
+  
+  if systems.planeSystem.planes[prefix] then
+    return
+  end
+  
   local fullSave = (prefix == "")
   local tempEnts = {}
   for k, v in pairs(systems.engine.entities) do
@@ -181,8 +202,7 @@ _loadEntities = function (self, prefix)
       --adding a component to an entity
     else
       local ok, t = serpent.load(line)
-      if ok then
-        assert(t)
+      if ok and t then
         assert(t.class)
         if components[t.class] == nil then
           t.class = string.gsub(t.class, "class ", "")

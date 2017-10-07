@@ -43,15 +43,36 @@ function arena.build(seed, levelEvent, options)
   local randX, randY
   for i=0, math.floor(math.random(1,4)) do
     randX, randY = arena.getEmptyCoord()
-    systems.addEntity(Factory.Castle{x=randX, y=randY, plane=planeName})
+    local seed = math.floor(math.random()*10000)
+    systems.addEntity(
+      Factory.Castle{
+          levelSeed = seed,
+          levelDepth = levelEvent.levelDepth+1,
+          x=randX,
+          y=randY,
+          plane=planeName}
+        )
   end
   for i=0, math.floor(math.random(1,4)) do
+    local seed = math.floor(math.random()*10000)
     randX, randY = arena.getEmptyCoord()
-    systems.addEntity(Factory.Cave{x=randX, y=randY, plane=planeName})
+    systems.addEntity(
+      Factory.Cave{
+          levelSeed = seed,
+          levelDepth = levelEvent.levelDepth+1,
+          x=randX,
+          y=randY,
+          plane=planeName})
   end
   for i=0, math.floor(math.random(1,4)) do
+    local seed = math.floor(math.random()*10000)
     randX, randY = arena.getEmptyCoord()
-    systems.addEntity(Factory.Forest{x=randX, y=randY, plane=planeName})
+    systems.addEntity(Factory.Forest{
+          levelSeed = seed,
+          levelDepth = levelEvent.levelDepth+1,
+          x=randX,
+          y=randY,
+          plane=planeName})
   end
   
     --set player

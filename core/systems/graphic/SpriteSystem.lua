@@ -7,8 +7,8 @@ function SpriteSystem:initialize()
   love.window.setMode(1280,720)
   --local font = love.graphics.setNewFont("res/font/tamsyn_bold.pcf", 16)
   --local font = love.graphics.setNewFont("res/font/pixelEmulator/Pixel Emulator.otf", 24)
-  local font = love.graphics.setNewFont("res/font/PressStart/PressStart2p.ttf", game.options.fontSize)
-  love.graphics.setFont(font)
+  game.options.font = love.graphics.setNewFont("res/font/PressStart/PressStart2p.ttf", game.options.fontSize)
+  love.graphics.setFont(game.options.font)
   lovetoys.System.initialize(self)
   self.maxCount = 4
   self.layers = {}
@@ -45,7 +45,7 @@ _drawStructures = function(self)
   local visibleTable = systems.planeSystem.planes[game.player.Physics.plane]["visible"]
   local floorTable = systems.planeSystem.planes[game.player.Physics.plane]["structure"]
   if floorTable then 
-    for knownCoord, isKnown in pairs(knownTable) do
+    for knownCoord, isKnown in pairs(knownTable or {}) do
       if isKnown then
         --extract the coord
         local strings = string.gmatch(knownCoord, "%d+")

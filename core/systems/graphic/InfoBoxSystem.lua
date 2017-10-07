@@ -5,13 +5,14 @@ local InfoBoxSystem = class("InfoBoxSystem", lovetoys.System)
 
 function InfoBoxSystem:initialize()
     lovetoys.System.initialize(self)
-    self.pixelX = game.options.viewportWidth
-    self.pixelY = game.options.viewportHeight-200
+    self.pixelX = 0
+    self.pixelY = game.options.viewportHeight+10
     self.marginWidth = 10
     self.marginHeight = 10
     self.text = nil
     self.examinee = nil
-    self.visible = false
+    self.visible =  false
+    self.font = love.graphics.setNewFont("res/font/PressStart/PressStart2p.ttf", 8)
 end
 
 _refreshText = function(self)
@@ -21,9 +22,11 @@ _refreshText = function(self)
 end
 function InfoBoxSystem:draw()
   if self.visible then
+    love.graphics.setFont(self.font)
     love.graphics.print(self.text or "",
     self.pixelX+self.marginWidth,
     self.pixelY+self.marginHeight)
+  love.graphics.setFont(game.options.font)
   end
 end
 

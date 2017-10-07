@@ -4,7 +4,14 @@ local function Downstairs(args)
 	entity.name = "Downstairs"
 	entity:add(Physics{x=args.x, y=args.y, hp=10, blocks=false, layer="backdrop", plane=args.plane})
 	entity:add(Sprite{filename="img/sprites/downstairs.png", color=args.color})
-	entity:add(Entrance{levelName=args.levelName, commandKey=">"})
+	entity:add(Entrance{
+      levelName=args.levelName or entity.id, 
+      commandKey=">", 
+      newX=args.newX, 
+      newY=args.newY,
+      levelDepth=args.levelDepth,
+      levelSeed=args.levelSeed or entity.id
+      })
 	return entity
 end
 return Downstairs

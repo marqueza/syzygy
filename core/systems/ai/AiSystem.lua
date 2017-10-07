@@ -129,7 +129,9 @@ function AiSystem:pathToExit(aiEntity)
     local entrances = systems.getEntitiesWithComponent("Entrance")
     for key, entrance in pairs(entrances) do
       if entrance.Entrance.commandKey == ">" then
-        if aiEntity.Physics.x == entrance.Physics.x and aiEntity.Physics.y == entrance.Physics.y then
+        if aiEntity.Physics.x == entrance.Physics.x and 
+           aiEntity.Physics.y == entrance.Physics.y and 
+           aiEntity.Physics.plane == entrance.Physics.plane then
           --fire a level event
           events.fireEvent(events.LevelEvent{
               levelName=entrance.Entrance.levelName, 
@@ -217,7 +219,7 @@ end
     return false
   end
 function AiSystem:pathToEnemy(aiEntity)
-  for key, value in pairs(systems.planeSystem.planes[aiEntity.Physics.plane]["visible"]) do
+  for key, value in pairs(systems.planeSystem.planes[aiEntity.Physics.plane]["visible"] or {}) do
       local entityList = systems.planeSystem.planes[aiEntity.Physics.plane]["creature"][key]
       if entityList then
         for k, entity in pairs(entityList) do
