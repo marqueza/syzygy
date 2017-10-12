@@ -134,9 +134,10 @@ _drawStructures = function(self)
     love.graphics.setColor(255,255,255)
 
     --draw a rectangle representing health
-    if Physics.hp < Physics.maxHp then
+    local Stats = spriteEntity.Stats
+    if Stats and Stats.hp < Stats.maxHp then
       love.graphics.setColor(255,0,0,100)
-      local lifeRatio = Physics.hp / Physics.maxHp
+      local lifeRatio = Stats.hp / Stats.maxHp
       love.graphics.rectangle( "fill", pixelX, pixelY+Sprite.size+self.pixelY, Sprite.size*lifeRatio, 4)
       love.graphics.setColor(255,255,255,255)
     end
@@ -157,7 +158,7 @@ _drawStructures = function(self)
     end
   end
   function SpriteSystem:getColor(spaceType)
-    if systems.levelSystem.currentLevelName == "overWorld" then
+    if string.find(game.player.Physics.plane, "overWorld") then
       if spaceType == "visibleWall" then
         return {94,145,255,255}
       elseif spaceType == "visibleFloor" then
@@ -167,7 +168,7 @@ _drawStructures = function(self)
       elseif spaceType == "knownFloor" then
         return {46,85,19,255}
       end
-    elseif string.find(systems.levelSystem.currentLevelName, "cave") then
+    elseif string.find(game.player.Physics.plane, "cave") then
       if spaceType == "visibleWall" then
         return {157,126,97,255}
       elseif spaceType == "visibleFloor" then
@@ -177,7 +178,7 @@ _drawStructures = function(self)
       elseif spaceType == "knownFloor" then
         return {106,85,65,255}    
       end
-    elseif string.find(systems.levelSystem.currentLevelName, "forest") then
+    elseif string.find(game.player.Physics.plane, "forest") then
       if spaceType == "visibleWall" then
         return {75,105,47,255}
       elseif spaceType == "visibleFloor" then

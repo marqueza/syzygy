@@ -19,15 +19,22 @@ function DeathSystem:onNotify(DeathEvent)
     end
   end
   --one in 3 chance of dropping gold
-  events.fireEvent(events.SpawnEvent{
-      name="Gold", 
-      amount=3, 
-      stock=false, 
-      x=deadEntity.Physics.x, 
-      y=deadEntity.Physics.y,
-      plane=deadEntity.Physics.plane
-    })
-
+  if math.random(3) == 1 then
+    events.fireEvent(events.SpawnEvent{
+        name="Gold", 
+        amount=math.random(5), 
+        stock=false, 
+        x=deadEntity.Physics.x, 
+        y=deadEntity.Physics.y,
+        plane=deadEntity.Physics.plane
+      })
+  end
+  --drop inventory if needed
+  if deadEntity.Inventory then
+    for index, itemId in ipairs(deadEntity.Inventory.itemIds) do
+      events.fireEvent(events.InventoryExitEvent{holderId=deadEntity.id, itemId=itemId})
+    end
+  end
   
   events.fireEvent(events.LogEvent{text=deadEntity.name .. " dies."})
   systems.removeEntity(deadEntity)

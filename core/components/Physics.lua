@@ -7,8 +7,6 @@ function Physics:initialize(args)
     self.x = args.x
     self.y = args.y
     self.blocks = args.blocks
-    self.hp = args.hp or 1
-    self.maxHp = args.maxHp or self.hp
     self.layer = args.layer
     assert(args.plane, "You are missing a plane for the Physics component")
     self.plane = args.plane

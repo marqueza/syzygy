@@ -19,6 +19,7 @@ function PartySystem:onExitNotify(partyExitEvent)
   leader.Party.members[follower.id] = nil
 end
 function PartySystem.getMemberIds(leader)
+  assert(leader.Party, "Entity " .. leader.name .. "" .. leader.id.." does not have 'Party'")
   local keys={}
   local n=0
   for k,v in pairs(leader.Party.members) do

@@ -29,6 +29,9 @@ function InteractSystem:onEnterNotify(interactEnterEvent)
     else
       table.insert(choices, "follow")
     end
+    table.insert(choices, "collect")
+    table.insert(choices, "dungeon")
+    table.insert(choices, "inventory")
   end
   
   --recruit will be always on.
@@ -76,6 +79,20 @@ function InteractSystem:onSelectNotify(interactSelectEvent)
     subject.Ai.objective = "go"
     events.fireEvent(events.PartyEnterEvent{leaderId=interactor.id, followerId=subject.id })
     events.fireEvent(events.LogEvent{text=subject.name .. " follows " .. interactor.name .. "."})
+  elseif interactSelectEvent.selection == "collect" then
+    --tell your ally to pick up all items
+    subject.Ai.objective = "collect"
+    events.fireEvent(events.PartyExitEvent{leaderId=interactor.id, followerId=subject.id })
+    events.fireEvent(events.LogEvent{text=subject.name .. " will collect here."})
+  elseif interactSelectEvent.selection == "inventory" then
+    events.fireEvent(events.InventoryDisplayEvent{holderId=subject.id})
+  elseif interactSelectEvent.selection == "dungeon" then
+    subject.Ai.objective = "dungeon"
+    events.fireEvent(events.PartyExitEvent{leaderId=interactor.id, followerId=subject.id })
+    local members = {}
+    members[subject.id] = 1
+    subject:add(components.Party{members=members})
+    events.fireEvent(events.LogEvent{text=subject.name .. " will complete the dungeon."})
   end
 end
 

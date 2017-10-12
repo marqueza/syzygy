@@ -14,9 +14,9 @@ function TurnSystem:onNotify(TurnEvent)
 
     --regenerate those who can
     if self.turn % 10 == 0 then
-        for index, entity in pairs(systems.getEntitiesWithComponent("Physics")) do
-            if entity.Physics.hp < entity.Physics.maxHp then
-                entity.Physics.hp = entity.Physics.hp+1
+        for index, entity in pairs(systems.getEntitiesWithComponent("Stats")) do
+            if entity.Stats.hp < entity.Stats.maxHp then
+                entity.Stats.hp = entity.Stats.hp+math.floor(entity.Stats.con/4)+1
             end
         end
     end

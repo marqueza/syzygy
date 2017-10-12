@@ -8,6 +8,8 @@ function KeyPressSystem:initialize()
   self.name = "KeyPressSystem"
 end
 
+local playerIndex = 1
+
 function KeyPressSystem:onNotify(KeyPressEvent)
   local state = systems.stateSystem:getState()
   if state == "command" then
@@ -36,10 +38,10 @@ function KeyPressSystem:doInteractKey(KeyPressEvent)
     events.fireEvent(events.StateEvent{state="command"})
   else
     local subjectId, subject = next(systems.planeSystem:getEntityList(
-      game.player.Physics.x+dx,
-      game.player.Physics.y+dy,
-      game.player.Physics.layer,
-      game.player.Physics.plane))
+        game.player.Physics.x+dx,
+        game.player.Physics.y+dy,
+        game.player.Physics.layer,
+        game.player.Physics.plane))
     if subject then
       events.fireEvent(events.InteractEnterEvent{interactorId=game.player.id, subjectId=subjectId})
     else
@@ -210,10 +212,10 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
     else
       events.fireEvent(events.TurnEvent())
       if game.player then
-        if game.player.Physics.hp < game.player.Physics.maxHp then
-          game.player.Physics.hp = game.player.Physics.hp+5
-          if game.player.Physics.hp > game.player.Physics.maxHp then
-            game.player.Physics.hp = game.player.Physics.maxHp
+        if game.player.Stats.hp < game.player.Stats.maxHp then
+          game.player.Stats.hp = game.player.Stats.hp+5
+          if game.player.Stats.hp > game.player.Stats.maxHp then
+            game.player.Stats.hp = game.player.Stats.maxHp
           end
         end
       end
@@ -235,7 +237,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
       events.fireEvent(events.InventoryEnterEvent{
           itemId=item.id,
           holderId=game.player.id
-      })
+        })
     end
   elseif KeyPressEvent.key == "d" then
     events.fireEvent(events.InventoryDisplayEvent{
@@ -243,14 +245,31 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
       })
   elseif KeyPressEvent.key == "v" then
     for index, resourceEntity in pairs(systems.getEntitiesWithComponent("Harvest")) do
-        if resourceEntity.Physics.x == game.player.Physics.x and
-        resourceEntity.Physics.y == game.player.Physics.y then
+      if resourceEntity.Physics.x == game.player.Physics.x and
+      resourceEntity.Physics.y == game.player.Physics.y then
         events.fireEvent(events.HarvestEvent{
             entityId=resourceEntity.id
           })
-          break
-        end
+        break
       end
+    end
+   elseif KeyPressEvent.key == "tab" then
+     local leaders = systems.getEntitiesWithComponent("Party")
+     local i = 1
+     local leaderList = {}
+     for id, leader in pairs(leaders) do
+       leaderList[i] = leader
+       i = i + 1
+      end
+     playerIndex = 1+((playerIndex) % #leaderList)
+      game.player = leaderList[playerIndex]
+      --systems.levelSystem.currentLevelName = string.match(game.player.Physics.plane, "(%g+)-")
+      --systems.levelSystem.currentLevelDepth = string.match(game.player.Physics.plane, "-(%d+)")
+      events.fireEvent(events.FocusEvent{dx=0, dy=0})
+      events.fireEvent(events.FocusEvent{unfocus=true})
+      
+  elseif KeyPressEvent.key == "space" then
+     systems.autoPressSystem:toggle()
   end
 
 end

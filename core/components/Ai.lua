@@ -10,6 +10,7 @@ function Ai:initialize(args)
     --objective is the current goal of the entitiy
     -- for example dungeon means complete the dungeon
     self.objective = args.objective
+    self.lastAction = "none"
 end
 
 return Ai

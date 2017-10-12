@@ -23,11 +23,11 @@ function systems.init()
         systems.engine:addSystem(systems.infoBoxSystem, "draw")
         systems.engine:addSystem(systems.cursorSystem, "draw")
         systems.engine:addSystem(systems.menuSystem, "draw")
+        systems.engine:addSystem(systems.sideBarSystem, "draw")
     end
-    if  game.options.auto then
-        --filer.instantiateDirectoryItems(systems, "systems", "core/systems/update/" )
-        --systems.engine:addSystem(systems.autoPressSystem, "update")
-    end
+    filer.instantiateDirectoryItems(systems, "systems", "core/systems/update/" )
+    systems.engine:addSystem(systems.autoPressSystem, "update")
+    
     
 end
 

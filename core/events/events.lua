@@ -98,6 +98,8 @@ function events.init()
         events.eventManager:addListener("LoadEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
         events.eventManager:addListener("TitleEnterEvent", systems.titleSystem, systems.titleSystem.onEnterNotify)
         events.eventManager:addListener("TitleSelectEvent", systems.titleSystem, systems.titleSystem.onSelectNotify)
+        events.eventManager:addListener("TurnEvent", systems.sideBarSystem, systems.sideBarSystem.refreshSideBar)
+
     end
 end
 

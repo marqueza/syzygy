@@ -10,23 +10,23 @@ function StatusBoxSystem:initialize()
     self.marginWidth = 10
     self.text = nil
     self.examinee = nil
+    self.nameWidth = 200
+    self.statWidth = 600
 end
 function StatusBoxSystem:draw()
   --love.graphics.rectangle("fill", 0, 0, game.options.topBarWidth, game.options.topBarHeight)
-  if systems.levelSystem.currentLevelName then
+  if game.player and game.player.Physics.plane then
     
-    love.graphics.print(string.upper(systems.levelSystem.currentLevelName).."-"..
-        systems.levelSystem.currentLevelDepth, 
-        self.pixelX+self.marginWidth+500, self.pixelY+12)
+    love.graphics.print(string.upper(game.player.Physics.plane), 
+        self.pixelX+self.marginWidth+self.nameWidth+self.statWidth, self.pixelY+12)
   end
-  if game.player then
-    
-    love.graphics.print(string.upper(game.player.name).."\nHP",
-      self.pixelX+self.marginWidth, self.pixelY+12)
-      local lifeRatio = game.player.Physics.hp / game.player.Physics.maxHp
+  local examinee = systems.targetSystem.focus or game.player
+  if examinee and examinee.Stats then
+    love.graphics.print(string.upper(examinee.name) .. "\nHP", self.pixelX+self.marginWidth, self.pixelY+12)
+      local lifeRatio = examinee.Stats.hp / examinee.Stats.maxHp
       love.graphics.setColor(100,0,100,255)
       love.graphics.setColor(255,50,50,255)
-      local barWidth = 120
+      local barWidth = 90
       local barPixelX = 60
       local barPixelY = 1+20
       local barHeight = 13
@@ -43,6 +43,16 @@ function StatusBoxSystem:draw()
         barWidth*(1-lifeRatio), 
         barHeight
       )
+      love.graphics.setColor(255,255,255,255)
+      love.graphics.print(string.upper(
+          "LV:"..systems.expSystem:getLevel(examinee)..
+          " EP:" .. examinee.Stats.exp..
+          "  ST:" .. examinee.Stats.str..
+          " DX:" .. examinee.Stats.str..
+          " CN:" .. examinee.Stats.str..
+          " WS:" .. examinee.Stats.str .. "   ")
+        
+        , self.pixelX+self.marginWidth+self.nameWidth, self.pixelY+12 )
       
       
       love.graphics.setColor(255,255,255,255)

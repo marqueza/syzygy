@@ -197,6 +197,9 @@ _loadEntities = function (self, prefix)
     elseif string.find(line, 'planes%.') then
       local planeName, layerName, tableString = string.match(line, "planes.(%g+)%.(%g+) (%g+)")
       local ok, layerTable = serpent.load(tableString)
+      if systems.planeSystem.planes[planeName] == nil then
+        systems.planeSystem.planes[planeName] = {}
+      end
       systems.planeSystem.planes[planeName][layerName] = layerTable
 
       --adding a component to an entity
@@ -223,7 +226,7 @@ _loadEntities = function (self, prefix)
       key, game.player = next(systems.getEntitiesWithComponent("Adventurer"))
     end
     assert(game.player)
-    systems.levelSystem.currentLevelName, systems.levelSystem.currentLevelDepth = string.match(game.player.Physics.plane, "(%g+)-(%g+)")
+    --systems.levelSystem.currentLevelName, systems.levelSystem.currentLevelDepth = string.match(game.player.Physics.plane, "(%g+)-(%g+)")
   end
   
 end

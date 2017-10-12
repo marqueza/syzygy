@@ -25,6 +25,7 @@ function MenuSystem:initialize()
     self.pixelWidth = 300
     self.pixelHeight = game.options.sideBarHeight
     self.backgroundImage = love.graphics.newImage('res/img/sprites/menu.png')
+    self.menuStack = 0
 end
 
 function MenuSystem:onDisplayNotify(MenuDisplayEvent)
@@ -32,6 +33,7 @@ function MenuSystem:onDisplayNotify(MenuDisplayEvent)
     self.text = ""
     self.choices = {}
     self.prettyChoices = {}
+    self.menuStack = self.menuStack + 1
     if MenuDisplayEvent.type == "component" then
         _setupComponentMenu(self, MenuDisplayEvent)
     else
@@ -77,17 +79,18 @@ _setupStringMenu = function(self, MenuDisplayEvent)
 end
 
 function MenuSystem:onCommmandNotify(MenuCommandEvent)
+  self.menuStack = self.menuStack - 1
+  if self.menuStack == 0 then
+    _closeMenu(self)
+  end
     if self.resultEvent then
         local choiceIndex = string.byte(MenuCommandEvent.key)-96
         if self.choices[choiceIndex] then
             self.result = self.choices[choiceIndex]
             self.resultEventArgs[self.resultKey] = self.result
             events.fireEvent(self.resultEvent(self.resultEventArgs))
-           _closeMenu(self)
+           
         end
-    end
-    if not self.persistant then
-      _closeMenu(self)
     end
 end
 _closeMenu = function(self)

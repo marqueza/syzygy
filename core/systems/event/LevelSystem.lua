@@ -17,39 +17,41 @@ local _restoreLevel
 local _createLevel
 local _storeLevel
 local _getLevelSeed
+local _getLeader
+local _getCurrentLevelName
+local _getCurrentLevelDepth
 
 function LevelSystem:initialize()
   self.name = "LevelSystem"
   --self.seed = 8
   --self.seed = os.time()*1000000
-  self.currentLevelName = nil
-  self.currentLevelDepth = 0
-  self.currentLevelSeed = nil
 end
 
 function LevelSystem:onNotify(levelEvent)
-
-  --adjusting the levelEvent's levelDepth
-  if levelEvent.options.depthDelta then
-    levelEvent.levelDepth = self.currentLevelDepth+levelEvent.options.depthDelta
-  end
-
   assert(levelEvent.levelName)
   assert(levelEvent.levelDepth)
+  --get the leader
+  local leader = _getLeader(levelEvent)
+  levelEvent.leader = leader
   
-  if self.currentLevelName then
-    levelEvent.oldX = game.player.Physics.x
-    levelEvent.oldY = game.player.Physics.y
+  --adjusting the levelEvent's levelDepth
+  if levelEvent.options.depthDelta then
+    levelEvent.levelDepth = _getCurrentLevelDepth(leader)+levelEvent.options.depthDelta
+  end
+  
+  if leader and leader.Physics.plane then
+    levelEvent.oldX = leader.Physics.x
+    levelEvent.oldY = leader.Physics.y
   end
 
   --first level in the game
-  if self.currentLevelName == nil then
-    self.currentLevelName = levelEvent.levelName
+  if leader == nil then
+    --self.currentLevelName = levelEvent.levelName
     overWorld.build(
-      _getLevelSeed(self, levelEvent), 
+      _getLevelSeed(levelEvent), 
       levelEvent, 
       {spawnPlayer=true})
-    assert(game.player)
+    --assert(game.player)
     events.eventManager:fireEvent(events.LogEvent{
         text="You begin your journey in an unknown land. "
       })
@@ -69,9 +71,9 @@ function LevelSystem:onNotify(levelEvent)
     self:enterNewLevel(levelEvent)
   end
   --change levelName
-  self.currentLevelName = levelEvent.levelName
+  --self.currentLevelName = levelEvent.levelName
   --change depth
-  self.currentLevelDepth = levelEvent.levelDepth
+  --self.currentLevelDepth = levelEvent.levelDepth
   --do a full save
   --events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="full", prefix=nil})
 
@@ -80,7 +82,11 @@ end
 function LevelSystem:levelVisited(levelName, levelDepth)
   local filePath = systems.saveSystem:getSaveDir() .."/".. levelName.."-"..levelDepth.."_"
   ..systems.saveSystem.gameId..".save.txt"
-  return love.filesystem.exists(filePath)
+  if (love.filesystem.exists(filePath)) then
+    return true
+  else 
+    return (systems.planeSystem.planes[levelName .. "-" .. levelDepth] ~= nil)
+  end
 end
 
 function LevelSystem:reloadLevel(levelEvent)
@@ -104,9 +110,9 @@ function LevelSystem:reloadLevel(levelEvent)
       end
     end
   end
-
+  local leader = levelEvent.leader
   --save level that is being left
-  events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="level", prefix=self.currentLevelName .."-"..self.currentLevelDepth})
+  events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="level", prefix=leader.Physics.plane})
 
   --recreate the former level
   events.fireEvent(events.LoadEvent{saveSlot="latest", loadType="level", prefix=levelEvent.levelName .."-"..levelEvent.levelDepth})
@@ -126,10 +132,10 @@ elseif levelEvent.previousEntranceId then
     local entrances = systems.getEntitiesWithComponent("Entrance")
 
     --check if we are entering a new levelName
-    if self.currentLevelName ~= levelEvent.levelName then
+    if _getCurrentLevelName(leader) ~= levelEvent.levelName then
       --determine where the travelers are going
       for key, entranceEntity in pairs(entrances) do
-        if entranceEntity.Entrance.levelName == self.currentLevelName then
+        if entranceEntity.Entrance.levelName == _getCurrentLevelName(leader) then
           travelX = entranceEntity.Physics.x
           travelY = entranceEntity.Physics.y
           travelPlane = levelEvent.levelName .. "-" .. levelEvent.levelDepth
@@ -182,22 +188,21 @@ function LevelSystem:enterNewLevel(levelEvent)
       end
     end
   end
-
-
+  local leader = levelEvent.leader
   --save level
-  events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="level", prefix=self.currentLevelName .."-"..self.currentLevelDepth})
+  events.fireEvent(events.SaveEvent{saveSlot="latest", saveType="level", prefix=leader.Physics.plane})
 
   --delete entities
   --systems.removeAllEntities()
 
   if string.match(levelEvent.levelName,"overWorld") ~= nil then
-    overWorld.build(_getLevelSeed(self, levelEvent), levelEvent)
+    overWorld.build(_getLevelSeed(levelEvent), levelEvent)
   elseif string.match(levelEvent.levelName, "tower") or string.match(levelEvent.levelName, "castle") then
-      dungeon.build(_getLevelSeed(self, levelEvent), levelEvent)
+      dungeon.build(_getLevelSeed(levelEvent), levelEvent)
   elseif string.match(levelEvent.levelName, "forest") then
-    forest.build(_getLevelSeed(self, levelEvent), levelEvent)
+    forest.build(_getLevelSeed(levelEvent), levelEvent)
   elseif string.match(levelEvent.levelName, "cave") then
-    cavern.build(_getLevelSeed(self, levelEvent), levelEvent)
+    cavern.build(_getLevelSeed(levelEvent), levelEvent)
   end
 
   --when provided an entranceId this will determine where to enter in the new level
@@ -216,9 +221,9 @@ function LevelSystem:enterNewLevel(levelEvent)
     local entrances = systems.getEntitiesWithComponent("Entrance")
     assert(next(entrances))
     local foundMatch = false
-    if self.currentLevelName ~= levelEvent.levelName then
+    if _getCurrentLevelName(leader) ~= levelEvent.levelName then
       for key, entranceEntity in pairs(entrances) do
-        if entranceEntity.Entrance.levelName == self.currentLevelName and
+        if entranceEntity.Entrance.levelName == _getCurrentLevelName(leader) and
            entranceEntity.Physics.plane == levelEvent.levelName .. "-" .. levelEvent.levelDepth
         then
           travelX = entranceEntity.Physics.x
@@ -263,8 +268,31 @@ function LevelSystem:enterNewLevel(levelEvent)
 
 end
 
-_getLevelSeed = function(self, levelEvent)
+_getLevelSeed = function(levelEvent)
   return (string.match(levelEvent.levelName, "%d+") or 0) + levelEvent.levelDepth
 end
 
+_getLeader = function(levelEvent)
+  for index, travelerId in ipairs(levelEvent.travelerIds) do
+    local traveler = systems.getEntityById(travelerId)
+    if traveler and traveler.Party then
+      return traveler
+    end
+  end
+end
+
+_getCurrentLevelName = function(leader)
+  if leader then
+    return string.match(leader.Physics.plane, "(%g+)-")
+  else
+    return "VOID"
+  end
+end
+_getCurrentLevelDepth = function(leader)
+  if leader then
+    return string.match(leader.Physics.plane, "-(%d+)")
+  else
+    return 0
+  end
+end
 return LevelSystem
