@@ -306,6 +306,28 @@ function AiSystem:combatAction(aiEntity)
   return false
 end
 function AiSystem:pathToEnemy(aiEntity)
+  -- if we are in plane sight than everything is fair game. 
+  -- if not then we have to see how far the enemy is
+  local entityList = systems.getEntitiesWithComponent("Faction")
+    if entityList then
+      for k, entity in pairs(entityList) do
+        if aiEntity.Physics.plane == entity.Physics.plane and aiEntity.Faction.name ~= entity.Faction.name then
+          
+          --now check the distance. lets say 8
+          local dx = entity.Physics.x - entity.Physics.x
+          local dy = aiEntity.Physics.y - entity.Physics.y
+          local r = math.sqrt(math.pow(dx, 2)+math.pow(dy, 2))
+          if r <= 6 then
+            return self:buildPath(aiEntity, entity.Physics.x, entity.Physics.y)
+          elseif r <= 8 and math.random(1,2)==1 then
+            return self:buildPath(aiEntity, entity.Physics.x, entity.Physics.y)
+          end
+        end
+      end
+    end
+  
+  
+  --[[
   for key, value in pairs(systems.planeSystem.planes[aiEntity.Physics.plane]["visible"] or {}) do
     local entityList = systems.planeSystem.planes[aiEntity.Physics.plane]["creature"][key]
     if entityList then
@@ -317,6 +339,7 @@ function AiSystem:pathToEnemy(aiEntity)
       end
     end
   end
+  --]]
 end
 function AiSystem:pathToEntity(aiEntity, target)
   return self:buildPath(aiEntity, target.Physics.x, target.Physics.y)

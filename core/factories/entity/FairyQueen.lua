@@ -1,13 +1,12 @@
 local lovetoys = require "lib.lovetoys.lovetoys"
-local function Fairy(args)
+local function FairyQueen(args)
 	local entity = lovetoys.Entity()
-	entity.name = "fairy"
+	entity.name = "fairy queen"
 	entity:add(Physics{x=args.x, y=args.y, blocks=true, layer="creature", plane=args.plane})
-  entity:add(Stats{hp=2, str=1, dex=2, con=1})
-	entity:add(Sprite{filename="img/sprites/fairy.png"})
+  entity:add(Stats{hp=30, str=1, dex=4, con=1})
+	entity:add(Sprite{filename="img/sprites/fairy_queen.png"})
 	entity:add(Faction{name="hostile"})
   entity:add(Ai{combatPreference="melee", idle="still", objective="kill"})
-  entity:add(Recruit{desire="Bell", amount=1})
 	return entity
 end
-return Fairy
+return FairyQueen

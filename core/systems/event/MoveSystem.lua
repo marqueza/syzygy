@@ -25,6 +25,8 @@ function MoveSystem:onNotify(moveEvent)
                   systems.planeSystem:reposition(target, mover.Physics.x,  mover.Physics.y)
                   systems.planeSystem:reposition(mover, moveEvent.x, moveEvent.y)
                 end
+            elseif target.Door then
+              target.Door:open(target)
             else
                 events.fireEvent(events.LogEvent{text=mover.name .. " bumps " .. target.name})
             end

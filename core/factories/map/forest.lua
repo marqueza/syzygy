@@ -1,5 +1,6 @@
 local Factory = require("core/factories/entity/Factory")
 local systems = require "core.systems.systems"
+local components = require "core.components.components"
 local rot = require "lib.rotLove.src.rot"
 local forest = {}
 
@@ -30,7 +31,7 @@ function forest.build(seed, levelEvent)
   local rotRng = rot.RNG
   rotRng:setSeed(seed)
   rotCellBuilder:setRNG(rotRng)
-  rotCellBuilder:randomize(.5)
+  rotCellBuilder:randomize(.4)
   rotCellBuilder:create(forest.buildStructure)
   
   local randX, randY = forest.getEmptyCoord()
@@ -65,13 +66,19 @@ function forest.build(seed, levelEvent)
   end
   for i=0, math.floor(math.random(1,4)) do
     randX, randY = forest.getEmptyCoord()
+    systems.addEntity(Factory.Kobold{x=randX, y=randY, plane=planeName})
+  end
+  for i=0, math.floor(math.random(1,2)) do
+    randX, randY = forest.getEmptyCoord()
     systems.addEntity(Factory.Fairy{x=randX, y=randY, plane=planeName})
   end
   
   --downstairs
   if levelEvent.levelDepth > 2 then
     randX, randY = forest.getEmptyCoord()
-    systems.addEntity(Factory.Medal{x=randX, y=randY, plane=planeName})
+    local boss = Factory.FairyQueen{x=randX, y=randY, plane=planeName}
+    boss:add(components.Boss{})
+    systems.addEntity(boss)
   else
     randX, randY = forest.getEmptyCoord()
     systems.addEntity(Factory.Downstairs{
@@ -82,16 +89,6 @@ function forest.build(seed, levelEvent)
           y=randY,
           plane=planeName}) 
       randX, randY = forest.getEmptyCoord()
-  end
-  
-  --set player
-  if options.spawnPlayer then
-    game.player = Factory.Player{x=exitX,y=exitY, plane=planeName}
-    systems.addEntity(game.player)
-  end
-  if options.spawnMinion then
-    game.player = Factory.Brownie{x=exitX,y=exitY, plane=planeName}
-    systems.addEntity(game.player)
   end
   
   for i=1, 10 do

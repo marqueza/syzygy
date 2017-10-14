@@ -8,16 +8,15 @@ local systems = require "core.systems.systems"
 
 function FovSystem:initialize()
   self.name = "FovSystem"
-  self.fov=rot.FOV.Precise:new(FovSystem.isTranslucent)
   self.radius = 6
 end
 
 --returning true: light passes through
 --returning false: sight is blocked
-function FovSystem.isTranslucent(fov, x, y)
-  local planeName = game.player.Physics.plane
-  local entityList = systems.planeSystem:getEntityList(x, y, "backdrop", planeName)
-  if not systems.planeSystem:isFloorSpace(x, y, planeName) then
+function FovSystem.getTranslucentFunction(plane)
+return function (fov, x, y)
+  local entityList = systems.planeSystem:getEntityList(x, y, "backdrop", plane)
+  if not systems.planeSystem:isFloorSpace(x, y, plane) then
     return false
   end
   if entityList then
@@ -29,21 +28,27 @@ function FovSystem.isTranslucent(fov, x, y)
   end
   return true
 end
+end
 
-function FovSystem.markFov(x, y, r, v)
+function FovSystem.getMarkFunction(plane)
+ return function (x, y, r, v)
   if not x or not y then return end
-  local planeName = game.player.Physics.plane
-  local entityList = systems.planeSystem:getEntityList(x, y, nil, planeName)
+  local entityList = systems.planeSystem:getEntityList(x, y, nil, plane)
   for k, entity in pairs(entityList) do
     entity.Sprite.isVisible = true
   end
-  systems.planeSystem:setVisibleSpace(x, y, planeName)
-  systems.planeSystem:setKnownSpace(x, y, planeName)
+  systems.planeSystem:setVisibleSpace(x, y, plane)
+  systems.planeSystem:setKnownSpace(x, y, plane)
+  end
 end
 
 function FovSystem:onNotify(TurnEvent)
-  systems.planeSystem:clearVisible(x, y, game.player.Physics.plane)
-  self.fov:compute(game.player.Physics.x, game.player.Physics.y, self.radius, self.markFov)
+    local leaders = systems.getEntitiesWithComponent("Party")
+    systems.planeSystem:clearVisible(x, y, game.player.Physics.plane)
+    for id, leader in pairs(leaders) do
+      self.fov=rot.FOV.Precise:new(FovSystem.getTranslucentFunction(leader.Physics.plane))
+      self.fov:compute(leader.Physics.x, leader.Physics.y, self.radius, self.getMarkFunction(leader.Physics.plane))
+    end
 end
 
 return FovSystem

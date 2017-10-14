@@ -35,6 +35,16 @@ function DeathSystem:onNotify(DeathEvent)
       events.fireEvent(events.InventoryExitEvent{holderId=deadEntity.id, itemId=itemId})
     end
   end
+  if deadEntity.Boss then
+    events.fireEvent(events.SpawnEvent{
+        name="Medal", 
+        amount=1, 
+        stock=false, 
+        x=deadEntity.Physics.x, 
+        y=deadEntity.Physics.y,
+        plane=deadEntity.Physics.plane
+      })
+  end
   
   events.fireEvent(events.LogEvent{text=deadEntity.name .. " dies."})
   systems.removeEntity(deadEntity)

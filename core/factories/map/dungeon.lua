@@ -1,6 +1,7 @@
 local Factory = require("core/factories/entity/Factory")
 local systems = require "core.systems.systems"
 local rot = require "lib.rotLove.src.rot"
+local components = require "core.components.components"
 local dungeon = {}
 
 dungeon.emptyCoords = {}
@@ -25,12 +26,15 @@ function dungeon.build(seed, levelEvent)
   dungeon.length = 20
   dungeon.width = 20
 
-  local rotCellBuilder = rot.Map.Digger(dungeon.length, dungeon.width, {connected=true})
+  local rotDungeonBuilder = rot.Map.Digger(dungeon.length, dungeon.width, {connected=true})
   local rotRng = rot.RNG
   rotRng:setSeed(seed)
-  rotCellBuilder:setRNG(rotRng)
-  --rotCellBuilder:randomize(.5)
-  rotCellBuilder:create(dungeon.buildStructure)
+  rotDungeonBuilder:setRNG(rotRng)
+  rotDungeonBuilder:create(dungeon.buildStructure)
+  local doorsList = rotDungeonBuilder:getDoors()
+  for index, doorCoord in ipairs(doorsList) do
+    systems.addEntity(Factory.WoodDoor{x=doorCoord.x, y=doorCoord.y, plane=planeName})
+  end
   
   local randX, randY = dungeon.getEmptyCoord()
   local exitX, exitY = randX, randY

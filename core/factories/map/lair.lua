@@ -8,6 +8,7 @@ function lair.build(seed, levelEvent)
     local options = levelEvent.options
     lair.length = 30
     lair.width = 30
+    local planeName = levelEvent.levelName .. "-" .. levelEvent.levelDepth
 
     --build basic map
     for i=1, lair.length do
@@ -17,9 +18,8 @@ function lair.build(seed, levelEvent)
                     x=i, 
                     y=j, 
                     color=options.color, 
-                    plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth})
+                    plane=planeName})
             else
-                --systems.addEntity(Factory.Floor{x=i, y=j, color=options.color})
             end
         end
     end
@@ -31,7 +31,7 @@ function lair.build(seed, levelEvent)
         x=lair.getRandX(),
         y=lair.getRandY(),
         color=options.color,
-        plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth})
+        plane=planeName})
     else
       
     systems.addEntity(Factory.Upstairs{
@@ -39,7 +39,7 @@ function lair.build(seed, levelEvent)
         x=lair.getRandX(),
         y=lair.getRandY(),
         color=options.color,
-        plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth})
+        plane=planeName})
     end
     
     if levelEvent.levelDepth < 3 then
@@ -48,30 +48,25 @@ function lair.build(seed, levelEvent)
             x=lair.getRandX(),
             y=lair.getRandY(),
             color=options.color,
-            plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth})
+            plane=planeName})
     else
-      systems.addEntity(Factory.Medal{x=lair.getRandX(), y=lair.getRandY()})
+      local boss = Factory.Overlord{x=lair.getRandX(), y=lair.getRandY(), plane=planeName}
+      boss:add(components.Boss{})
+      systems.addEntity(boss)
       systems.addEntity(Factory.DragonEgg{x=lair.getRandX(), y=lair.getRandY()})
       end
 
     if not options.empty then
 
-        --[[
-        systems.addEntity(Factory.Goo{x=lair.getRandX(), y=lair.getRandY()})
-        systems.addEntity(Factory.Fairy{x=lair.getRandX(), y=lair.getRandY()})
-        systems.addEntity(Factory.Kobold{x=lair.getRandX(), y=lair.getRandY()})
-        systems.addEntity(Factory.Golem{x=lair.getRandX(), y=lair.getRandY()})
-        systems.addEntity(Factory.Brownie{x=lair.getRandX(), y=lair.getRandY()})
-        --]]
     end
 
     --set player
     if options.spawnPlayer then
-        game.player = Factory.Player{x=3,y=3,plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth}
+        game.player = Factory.Player{x=3,y=3,plane=planeName}
         systems.addEntity(game.player)
     end
     if options.spawnMinion then
-        game.player = Factory.Brownie{x=3,y=3,plane=levelEvent.levelName .. "-" .. levelEvent.levelDepth}
+        game.player = Factory.Brownie{x=3,y=3,plane=planeName}
         systems.addEntity(game.player)
     end
 end

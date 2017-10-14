@@ -1,5 +1,6 @@
 local Factory = require("core/factories/entity/Factory")
 local systems = require "core.systems.systems"
+local components = require "core.components.components"
 local rot = require "lib.rotLove.src.rot"
 local cavern = {}
 
@@ -27,7 +28,13 @@ function cavern.build(seed, levelEvent)
   cavern.length = 20
   cavern.width = 20
 
-  local rotCellBuilder = rot.Map.Cellular(cavern.length, cavern.width, {connected=true})
+  local rotCellBuilder = rot.Map.Cellular(cavern.length, cavern.width, {
+                    born    ={5,6,7,8},
+                    survive ={4,5,6,7,8},
+                    topology=8,
+                    connected=true,
+                    minimumZoneArea=2
+                  })
   local rotRng = rot.RNG
   rotRng:setSeed(seed)
   rotCellBuilder:setRNG(rotRng)
@@ -68,11 +75,21 @@ function cavern.build(seed, levelEvent)
     randX, randY = cavern.getEmptyCoord()
     systems.addEntity(Factory.Skeleton{x=randX, y=randY, plane=planeName})
   end
+    for i=0, math.floor(math.random(1,2)) do
+    randX, randY = forest.getEmptyCoord()
+    systems.addEntity(Factory.Kobold{x=randX, y=randY, plane=planeName})
+  end
+    for i=0, math.floor(math.random(1,2)) do
+    randX, randY = cavern.getEmptyCoord()
+    systems.addEntity(Factory.Ghost{x=randX, y=randY, plane=planeName})
+  end
   
   --downstairs
   if levelEvent.levelDepth > 2 then
     randX, randY = cavern.getEmptyCoord()
-    systems.addEntity(Factory.Medal{x=randX, y=randY, plane=planeName})
+    local boss = Factory.RedGoo{x=randX, y=randY, plane=planeName}
+    boss:add(components.Boss{})
+    systems.addEntity(boss)
   else
     randX, randY = cavern.getEmptyCoord()
     systems.addEntity(Factory.Downstairs{
