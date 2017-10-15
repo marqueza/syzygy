@@ -22,12 +22,25 @@ function DeathSystem:onNotify(DeathEvent)
   if math.random(3) == 1 then
     events.fireEvent(events.SpawnEvent{
         name="Gold", 
-        amount=math.random(5), 
+        amount=math.random(10), 
         stock=false, 
         x=deadEntity.Physics.x, 
         y=deadEntity.Physics.y,
         plane=deadEntity.Physics.plane
       })
+  end
+  
+  if deadEntity.Flags and deadEntity.Flags.leavesCorpse then
+    if math.random(5) == 1 then
+      events.fireEvent(events.SpawnEvent{
+          name="Bones", 
+          amount=1, 
+          stock=false, 
+          x=deadEntity.Physics.x, 
+          y=deadEntity.Physics.y,
+          plane=deadEntity.Physics.plane
+        })
+    end
   end
   --drop inventory if needed
   if deadEntity.Inventory then

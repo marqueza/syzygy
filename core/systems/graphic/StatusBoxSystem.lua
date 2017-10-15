@@ -14,7 +14,9 @@ function StatusBoxSystem:initialize()
     self.statWidth = 600
 end
 function StatusBoxSystem:draw()
-  --love.graphics.rectangle("fill", 0, 0, game.options.topBarWidth, game.options.topBarHeight)
+  love.graphics.setColor(0,0,0,255)
+  love.graphics.rectangle("fill", 0, 0, game.options.topBarWidth, game.options.topBarHeight)
+  love.graphics.setColor(255,255,255,255)
   if game.player and game.player.Physics.plane then
     
     love.graphics.print(string.upper(game.player.Physics.plane), 

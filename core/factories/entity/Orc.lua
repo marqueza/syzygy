@@ -7,6 +7,7 @@ local function Orc(args)
 	entity:add(Sprite{filename="img/sprites/orc.png"})
 	entity:add(Faction{name="hostile"})
 	entity:add(Ai{combatPreference="melee", idle="still", objective="kill"})
+  entity:add(Flags{leavesCorpse=true})
 	return entity
 end
 return Orc

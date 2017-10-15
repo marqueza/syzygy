@@ -1,9 +1,11 @@
-local function Angel(x, y)
-	entity = Entity()
+local lovetoys = require "lib.lovetoys.lovetoys"
+local function Angel(args)
+	entity = lovetoys.Entity()
 	entity.name = "angel"
-	entity:add(Physics(x,y, 10, true))
-	entity:add(Faction("hostile"))
-	entity:add(Sprite("img/sprites/angel.png"))
+	entity:add(Faction("neutral"))
+  entity:add(Physics{x=args.x, y=args.y, blocks=true, layer="creature", plane=args.plane})
+  entity:add(Stats{hp=50, str=1, dex=1, con=1})
+	entity:add(Sprite{filename="img/sprites/angel.png"})
 	return entity
 end
 return Angel

@@ -9,14 +9,20 @@ function SpriteSystem:initialize()
   --local font = love.graphics.setNewFont("res/font/pixelEmulator/Pixel Emulator.otf", 24)
   game.options.font = love.graphics.setNewFont("res/font/PressStart/PressStart2p.ttf", game.options.fontSize)
   love.graphics.setFont(game.options.font)
+  love.window.setMode(game.options.screenWidth, game.options.screenHeight)
   lovetoys.System.initialize(self)
   self.maxCount = 4
   self.layers = {}
   self.pixelY = game.options.topBarHeight
   self.pixelWidth = game.options.viewportWidth
   self.pixelHeight = game.options.viewportHeight
-  self.horizontalTileMax = self.pixelWidth/game.options.spriteSize
-  self.verticalTileMax = (self.pixelHeight-self.pixelY)/game.options.spriteSize
+  --self.horizontalTileMax = self.pixelWidth/game.options.spriteSize
+  --self.verticalTileMax = (self.pixelHeight-self.pixelY)/game.options.spriteSize
+  self.horizontalTileMax = game.options.horizontalTileMax
+  self.verticalTileMax = game.options.verticalTileMax
+  self.hOffset = 3
+  self.vOffset= 2
+  
 end
 
 --function declaration
@@ -73,8 +79,8 @@ _drawStructures = function(self)
             
           
           love.graphics.rectangle( "fill", 
-            (x-1-systems.cameraSystem.cameraX)*game.options.spriteSize, 
-            (y-1-systems.cameraSystem.cameraY)*game.options.spriteSize+self.pixelY, 
+            (x-1-self.hOffset-systems.cameraSystem.cameraX)*game.options.spriteSize, 
+            (y-1-self.vOffset-systems.cameraSystem.cameraY)*game.options.spriteSize+self.pixelY, 
             game.options.spriteSize, 
             game.options.spriteSize)
           love.graphics.setColor(255,255,255,255)
@@ -122,8 +128,8 @@ _drawStructures = function(self)
     end
 
     --draw the sprite
-    local pixelX = xOffset+(Physics.x-systems.cameraSystem.cameraX)*Sprite.size-Sprite.size
-    local pixelY = yOffset+(Physics.y-systems.cameraSystem.cameraY)*Sprite.size-Sprite.size
+    local pixelX = xOffset+(Physics.x-self.hOffset-systems.cameraSystem.cameraX)*Sprite.size-Sprite.size
+    local pixelY = yOffset+(Physics.y-self.vOffset-systems.cameraSystem.cameraY)*Sprite.size-Sprite.size
     love.graphics.draw(Sprite.image,
       Sprite:getFrame(count),
       pixelX,

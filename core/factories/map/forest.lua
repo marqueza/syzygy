@@ -24,8 +24,8 @@ function forest.build(seed, levelEvent)
   planeName = levelEvent.levelName..'-'..levelEvent.levelDepth
   math.randomseed(seed)
   local options = levelEvent.options
-  forest.length = 20
-  forest.width = 20
+  forest.length = math.random(20, 60)
+  forest.width = math.random(20, 60)
 
   local rotCellBuilder = rot.Map.Cellular(forest.length, forest.width, {connected=true})
   local rotRng = rot.RNG

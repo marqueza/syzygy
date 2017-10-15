@@ -25,8 +25,8 @@ function cavern.build(seed, levelEvent)
   planeName = levelEvent.levelName..'-'..levelEvent.levelDepth
   math.randomseed(seed)
   local options = levelEvent.options
-  cavern.length = 20
-  cavern.width = 20
+  cavern.length = math.random(20, 60)
+  cavern.width = math.random(20, 60)
 
   local rotCellBuilder = rot.Map.Cellular(cavern.length, cavern.width, {
                     born    ={5,6,7,8},
@@ -76,7 +76,7 @@ function cavern.build(seed, levelEvent)
     systems.addEntity(Factory.Skeleton{x=randX, y=randY, plane=planeName})
   end
     for i=0, math.floor(math.random(1,2)) do
-    randX, randY = forest.getEmptyCoord()
+    randX, randY = cavern.getEmptyCoord()
     systems.addEntity(Factory.Kobold{x=randX, y=randY, plane=planeName})
   end
     for i=0, math.floor(math.random(1,2)) do

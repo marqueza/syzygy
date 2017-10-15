@@ -7,6 +7,7 @@ local function Skeleton(args)
 	entity:add(Sprite{filename="img/sprites/skeleton.png"})
 	entity:add(Faction{name="hostile"})
 	entity:add(Ai{combatPreference="melee", idle="still", objective="kill"})
+  entity:add(Flags{leavesCorpse=true})
 	return entity
 end
 return Skeleton

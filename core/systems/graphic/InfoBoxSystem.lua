@@ -11,7 +11,7 @@ function InfoBoxSystem:initialize()
     self.marginHeight = 10
     self.text = nil
     self.examinee = nil
-    self.visible =  true
+    self.visible =  false
     self.font = love.graphics.setNewFont("res/font/PressStart/PressStart2p.ttf", 8)
 end
 
@@ -24,12 +24,13 @@ function InfoBoxSystem:draw()
   if self.visible then
     love.graphics.setColor(0,0,0,100)
     love.graphics.rectangle("fill", self.pixelX, self.pixelY, game.options.viewportWidth, 100)
-    love.graphics.setColor(255,255,255,255)
+    love.graphics.setColor(200,200,200,255)
     love.graphics.setFont(self.font)
     love.graphics.print(self.text or "",
     self.pixelX+self.marginWidth,
     self.pixelY+self.marginHeight)
   love.graphics.setFont(game.options.font)
+  love.graphics.setColor(255,255,255,255)
   end
 end
 

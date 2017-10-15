@@ -18,8 +18,8 @@ function CursorSystem:draw()
         love.graphics.setColor(255, 255, 255, 50)
         love.graphics.rectangle(
             "fill",
-            (focusX-systems.cameraSystem.cameraX-1)*game.options.spriteSize,
-            (focusY-systems.cameraSystem.cameraY-1)*game.options.spriteSize+game.options.topBarHeight,
+            (focusX-systems.cameraSystem.cameraX-1-systems.spriteSystem.hOffset)*game.options.spriteSize,
+            (focusY-systems.cameraSystem.cameraY-1-systems.spriteSystem.vOffset)*game.options.spriteSize+game.options.topBarHeight,
             game.options.spriteSize,
             game.options.spriteSize)
         love.graphics.setColor(255, 255, 255, 255)

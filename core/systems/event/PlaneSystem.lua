@@ -11,8 +11,8 @@ function PlaneSystem:initialize()
 end
 
 function PlaneSystem:addToLayer(entity)
-  assert(entity.Physics.layer, "This entity needs a layer variable in Physics ->"..entity.id)
-  assert(entity.Physics.plane, "This entity needs a plane variable in Physics ->"..entity.id)
+  assert(entity.Physics.layer, "This entity needs a layer variable in Physics ->"..entity.name .. entity.id)
+  assert(entity.Physics.plane, "This entity needs a plane variable in Physics ->"..entity.name .. entity.id)
   if not self.planes[entity.Physics.plane] then 
     self.planes[entity.Physics.plane] = {}
   end

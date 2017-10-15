@@ -4,6 +4,7 @@ local Serializable = require "data.serializable"
 Physics:include(Serializable)
 
 function Physics:initialize(args)
+    assert(args, "The args table has not been provided")
     self.x = args.x
     self.y = args.y
     self.blocks = args.blocks

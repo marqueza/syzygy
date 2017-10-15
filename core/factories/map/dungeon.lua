@@ -23,8 +23,8 @@ function dungeon.build(seed, levelEvent)
   planeName = levelEvent.levelName..'-'..levelEvent.levelDepth
   math.randomseed(seed)
   local options = levelEvent.options
-  dungeon.length = 20
-  dungeon.width = 20
+  dungeon.length = math.random(20, 60)
+  dungeon.width = math.random(20, 60)
 
   local rotDungeonBuilder = rot.Map.Digger(dungeon.length, dungeon.width, {connected=true})
   local rotRng = rot.RNG
@@ -63,16 +63,26 @@ else
   systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
   end
 
-  for i=0, math.floor(math.random(1,2)) do
+  for i=0, math.floor(math.random(0,2)) do
     randX, randY = dungeon.getEmptyCoord()
     systems.addEntity(Factory.Goo{x=randX, y=randY, plane=planeName})
   end
-  for i=0, math.floor(math.random(1,4)) do
+  for i=0, math.floor(math.random(1,3)) do
     randX, randY = dungeon.getEmptyCoord()
     systems.addEntity(Factory.Orc{x=randX, y=randY, plane=planeName})
   end
-  
-
+  if math.random(1,5) == 1 then
+    randX, randY = dungeon.getEmptyCoord()
+    systems.addEntity(Factory.Angel{x=randX, y=randY, plane=planeName})
+  end
+  if math.random(1,4) == 1 then
+    randX, randY = dungeon.getEmptyCoord()
+    systems.addEntity(Factory.Devil{x=randX, y=randY, plane=planeName})
+  end
+  if math.random(1,3) == 1 then
+    randX, randY = dungeon.getEmptyCoord()
+    systems.addEntity(Factory.Golem{x=randX, y=randY, plane=planeName})
+  end
   --set player
   if options.spawnPlayer then
     game.player = Factory.Player{x=exitX,y=exitY, plane=planeName}
