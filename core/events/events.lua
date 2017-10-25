@@ -27,13 +27,13 @@ function events.init()
     events.eventManager:addListener("SaveEvent", systems.saveSystem, systems.saveSystem.onSaveNotify)
     events.eventManager:addListener("LoadEvent", systems.saveSystem, systems.saveSystem.onLoadNotify)
 
-    
+
     --target system
     events.eventManager:addListener("FocusEvent", systems.targetSystem, systems.targetSystem.onFocusNotify)
     events.eventManager:addListener("LoadEvent", systems.targetSystem, systems.targetSystem.refreshFocus)
     events.eventManager:addListener("LevelEvent", systems.targetSystem, systems.targetSystem.refreshFocus)
-    
-    
+
+
     --reserves systems
     events.eventManager:addListener("ReservesEnterEvent", systems.reservesSystem, systems.reservesSystem.onEnterNotify)
     events.eventManager:addListener("ReservesExitEvent", systems.reservesSystem, systems.reservesSystem.onExitNotify)
@@ -57,7 +57,6 @@ function events.init()
 
     --combat system
     events.eventManager:addListener("AttackEvent", systems.combatSystem, systems.combatSystem.onAttackNotify)
-    events.eventManager:addListener("TurnEvent", systems.infoBoxSystem, systems.infoBoxSystem.refreshInfoBox)
 
     --ai sytem
     events.eventManager:addListener("TurnEvent", systems.aiSystem, systems.aiSystem.onTurnNotify)
@@ -66,30 +65,39 @@ function events.init()
     events.eventManager:addListener("InventoryEnterEvent", systems.inventorySystem, systems.inventorySystem.onEnterNotify)
     events.eventManager:addListener("InventoryExitEvent", systems.inventorySystem, systems.inventorySystem.onExitNotify)
     events.eventManager:addListener("InventoryDisplayEvent", systems.inventorySystem, systems.inventorySystem.onDisplayNotify)
-    
+
     --death system
     events.eventManager:addListener("DeathEvent", systems.deathSystem, systems.deathSystem.onNotify)
-    
+
     --fov system
     events.eventManager:addListener("TurnEvent", systems.fovSystem, systems.fovSystem.onNotify)
     events.eventManager:addListener("LevelEvent", systems.fovSystem, systems.fovSystem.onNotify)
-    
+
     --harvest system
     events.eventManager:addListener("HarvestEvent", systems.harvestSystem, systems.harvestSystem.onNotify)
 
     --interact system
     events.eventManager:addListener("InteractEnterEvent", systems.interactSystem, systems.interactSystem.onEnterNotify)
     events.eventManager:addListener("InteractSelectEvent", systems.interactSystem, systems.interactSystem.onSelectNotify)
-    
-        --interact system
+
+    --interact system
     events.eventManager:addListener("PartyEnterEvent", systems.partySystem, systems.partySystem.onEnterNotify)
     events.eventManager:addListener("PartyExitEvent", systems.partySystem, systems.partySystem.onExitNotify)
-    
+
+    --spell system
+    events.eventManager:addListener("SpellLearnEvent", systems.spellSystem, systems.spellSystem.onSpellLearn)
+    events.eventManager:addListener("SpellCastEvent", systems.spellSystem, systems.spellSystem.onSpellCast)
+    events.eventManager:addListener("SpellDisplayEvent", systems.spellSystem, systems.spellSystem.onSpellDisplay)
+
+    --use system
+    events.eventManager:addListener("UseEvent", systems.useSystem, systems.useSystem.onUse)
+
     if not game.options.headless then
         events.eventManager:addListener("TurnEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("LevelEvent", systems.promptSystem, systems.promptSystem.flushPrompt)
         events.eventManager:addListener("FocusEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
         events.eventManager:addListener("LoadEvent", systems.infoBoxSystem, systems.infoBoxSystem.onFocusNotify)
+        events.eventManager:addListener("TurnEvent", systems.infoBoxSystem, systems.infoBoxSystem.refreshInfoBox)
         events.eventManager:addListener("MenuCommandEvent", systems.menuSystem, systems.menuSystem.onCommmandNotify)
         events.eventManager:addListener("MenuDisplayEvent", systems.menuSystem, systems.menuSystem.onDisplayNotify)
         events.eventManager:addListener("LevelEvent", systems.cameraSystem, systems.cameraSystem.recenterCamera)
@@ -108,7 +116,7 @@ function events.fireEvent(event)
     events.eventManager:fireEvent(event)
     local result = love.timer.getTime() - start
     result = math.floor(result*1000)
-    
+
     if event.toString then
         if game.options.debug then
             --captures all events and places a debug message

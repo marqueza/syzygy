@@ -136,7 +136,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
             y=Physics.y+1
           }))
       events.fireEvent(events.TurnEvent())
-    end 
+    end
   elseif KeyPressEvent.key == "kp1" then
     for index, entity in pairs(systems.getEntitiesWithComponent("Control")) do
       local Physics = entity:get("Physics")
@@ -146,7 +146,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
             y=Physics.y+1
           }))
       events.fireEvent(events.TurnEvent())
-    end 
+    end
   elseif KeyPressEvent.key == "s" then
     events.fireEvent(events.SaveEvent())
   elseif KeyPressEvent.key == "l" and (
@@ -198,7 +198,7 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
         entrance.Physics.plane == game.player.Physics.plane and
         entrance.Entrance.commandKey == ">" then
           events.fireEvent(events.LevelEvent{
-              levelName=entrance.Entrance.levelName, 
+              levelName=entrance.Entrance.levelName,
               levelSeed=entrance.Entrance.levelSeed,
               levelDepth=entrance.Entrance.levelDepth,
               newX=entrance.Entrance.newX,
@@ -225,8 +225,8 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
     local unit = systems.getLastEntity()
     events.fireEvent(events.ReservesEnterEvent{entityId=unit.id})
     assert(unit:has("Reserve"))
-  elseif KeyPressEvent.key == "m" then
-    events.fireEvent(events.MissionUnitEvent{})
+ --elseif KeyPressEvent.key == "m" then
+  --  events.fireEvent(events.MissionUnitEvent{})
   elseif KeyPressEvent.key == "p" then
     events.fireEvent(events.StockDisplayEvent{})
   elseif KeyPressEvent.key == "h" then
@@ -267,9 +267,18 @@ function KeyPressSystem:doCommandKey(KeyPressEvent)
       --systems.levelSystem.currentLevelDepth = string.match(game.player.Physics.plane, "-(%d+)")
       events.fireEvent(events.FocusEvent{dx=0, dy=0})
       events.fireEvent(events.FocusEvent{unfocus=true})
-      
+
   elseif KeyPressEvent.key == "space" then
      systems.autoPressSystem:toggle()
+ elseif KeyPressEvent.key == "a" then
+     events.fireEvent(events.InventoryDisplayEvent{
+         holderId=game.player.id,
+         mode="use"
+     })
+  elseif KeyPressEvent.key == "m" then
+    events.fireEvent(events.SpellDisplayEvent{
+          casterId=game.player.id
+        })
   end
 
 end

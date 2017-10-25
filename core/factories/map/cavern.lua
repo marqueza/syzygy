@@ -112,6 +112,15 @@ function cavern.build(seed, levelEvent)
     systems.addEntity(game.player)
   end
   
+  
+    randX, randY = cavern.getEmptyCoord()
+    systems.addEntity(Factory.Book{
+        x=randX,
+        y=randY,
+        plane=planeName,
+        spellName="Return"})
+
+  
   for i=1, 10 do
     randX, randY = cavern.getEmptyCoord()
     if levelEvent.levelName == "forest" then

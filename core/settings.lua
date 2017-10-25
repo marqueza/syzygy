@@ -2,7 +2,8 @@ local options = {
   debug = false,
   headless = false,
   player = true,
-  auto = false}
+  auto = false,
+  scouter = true}
 
 --graphic settings
 --[[

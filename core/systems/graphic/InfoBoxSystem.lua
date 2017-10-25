@@ -11,7 +11,7 @@ function InfoBoxSystem:initialize()
     self.marginHeight = 10
     self.text = nil
     self.examinee = nil
-    self.visible =  false
+    self.visible =  game.options.scouter
     self.font = love.graphics.setNewFont("res/font/PressStart/PressStart2p.ttf", 8)
 end
 

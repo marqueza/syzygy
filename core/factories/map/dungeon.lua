@@ -7,12 +7,11 @@ local dungeon = {}
 dungeon.emptyCoords = {}
 local planeName
 function dungeon.buildStructure(x, y, value)
-  if value == 1 or 
+  if value == 1 or
     (x == 1 or x == dungeon.length or
      y == 1 or y == dungeon.width) then
   else
       systems.planeSystem:setFloorSpace(x, y, planeName)
-    table.insert(dungeon.emptyCoords, x..','..y)
   end
 end
 
@@ -35,10 +34,19 @@ function dungeon.build(seed, levelEvent)
   for index, doorCoord in ipairs(doorsList) do
     systems.addEntity(Factory.WoodDoor{x=doorCoord.x, y=doorCoord.y, plane=planeName})
   end
-  
+  local roomList = rotDungeonBuilder:getRooms()
+  for index, room in ipairs(roomList) do
+      for x = room:getLeft(), room:getRight() do
+          for y = room:getTop(), room:getBottom() do
+              table.insert(dungeon.emptyCoords, x .. ",".. y)
+          end
+      end
+  end
+
+
   local randX, randY = dungeon.getEmptyCoord()
   local exitX, exitY = randX, randY
-  
+
   if levelEvent.levelDepth == 1 then
   systems.addEntity(Factory.OutsideEntrance{
         levelName = "overWorld",
@@ -48,7 +56,7 @@ function dungeon.build(seed, levelEvent)
         newY = levelEvent.oldY,
         x=randX,
         y=randY,
-        plane=planeName}) 
+        plane=planeName})
 else
   systems.addEntity(Factory.Upstairs{
         levelName = levelEvent.levelName,
@@ -92,9 +100,24 @@ else
     game.player = Factory.Brownie{x=exitX,y=exitY, plane=planeName}
     systems.addEntity(game.player)
   end
-  
+  if math.random(1,3) == 1 then
     randX, randY = dungeon.getEmptyCoord()
-    
+    systems.addEntity(Factory.Book{
+        x=randX,
+        y=randY,
+        plane=planeName,
+        spellName="Pocket Dimension"})
+  end
+  if math.random(1,3) == 1 then
+    randX, randY = dungeon.getEmptyCoord()
+    systems.addEntity(Factory.Scroll{
+        x=randX,
+        y=randY,
+        plane=planeName,
+        spellName="Return"})
+  end
+    randX, randY = dungeon.getEmptyCoord()
+
     systems.addEntity(Factory.Downstairs{
           levelName = levelEvent.levelName,
           levelSeed = levelEvent.levelSeed+1,
