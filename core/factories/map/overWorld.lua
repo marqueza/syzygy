@@ -1,44 +1,45 @@
 local Factory = require("core/factories/entity/Factory")
 local systems = require "core.systems.systems"
+local rot = require "lib.rotLove.src.rot"
 
 local arena = {}
+local planeName
 arena.emptyCoords = {}
+
+function arena.buildStructure(x, y, value)
+  if value == 1 or 
+    (x == 1 or x == arena.length or
+     y == 1 or y == arena.width) then
+    systems.planeSystem:setFloorSpace(x, y, planeName)
+     systems.addEntity(Factory.Water{x=x, y=y, variant="B", plane=planeName})
+  else
+    --systems.addEntity(Factory.CaveFloor{x=x, y=y, plane=planeName})
+    print(planeName)
+    systems.planeSystem:setFloorSpace(x, y, planeName)
+
+    table.insert(arena.emptyCoords, x..','..y)
+  end
+end
 
 function arena.build(seed, levelEvent, options)
     math.randomseed(seed)
     options = options or {}
-    arena.length = options.length or 10
-    arena.width = options.width or 7
-    local planeName = levelEvent.levelName..'-'..levelEvent.levelDepth
+    arena.length = options.length or 20
+    arena.width = options.width or 20
+    planeName = levelEvent.levelName..'-'..levelEvent.levelDepth
 
-    --build basic map
-    for i=1, arena.length do
-        for j=1, arena.width do
-            if i == 1 or i == arena.length or j == 1 or j == arena.width then
-                if i == 1 and j ==1 then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="up", isCorner=true, plane=planeName})
-                elseif i == arena.length and j == 1 then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="right", isCorner=true, plane=planeName})
-                elseif i == 1 and j == arena.width then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="left", isCorner=true, plane=planeName})
-                elseif i == arena.length and j == arena.width then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="down", isCorner=true, plane=planeName})
-                elseif i == 1 then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="left", isCorner=false, plane=planeName})
-                elseif i == arena.length then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="right", isCorner=false, plane=planeName})
-                elseif j == 1 then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="up", isCorner=false, plane=planeName})
-                elseif j == arena.width then
-                    systems.addEntity(Factory.Shore{x=i, y=j, direction="down", isCorner=false, plane=planeName})
-                end
-            else
-                --systems.addEntity(Factory.Grass{x=i, y=j, plane=planeName})
-                table.insert(arena.emptyCoords, i..','..j)
-            end
-            systems.planeSystem:setFloorSpace(i, j, planeName)
-        end
-    end
+  local rotCellBuilder = rot.Map.Cellular(arena.length, arena.width, {
+                    --born    ={5,6,7,8},
+                    --survive ={4,5,6,7,8},
+                    topology=4,
+                    connected=true,
+                    minimumZoneArea=4
+                  })
+  local rotRng = rot.RNG
+  rotRng:setSeed(seed)
+  rotCellBuilder:setRNG(rotRng)
+  rotCellBuilder:randomize(.7)
+  rotCellBuilder:create(arena.buildStructure)
 
   local randX, randY
   for i=0, math.floor(math.random(1,4)) do

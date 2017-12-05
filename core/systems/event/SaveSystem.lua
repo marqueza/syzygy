@@ -24,10 +24,10 @@ function SaveSystem:initialize()
   self.saveSlot = "latest"
 end
 function SaveSystem:getSaveDir()
-  return "save/" .. self.gameId .. "/".. self.saveSlot
+  return love.filesystem.getSaveDirectory() .. "/save/" .. self.gameId .. "/".. self.saveSlot
 end
 function SaveSystem:getLatestDir()
-  return "save/" .. self.gameId .. "/".. "latest"
+  return love.filesystem.getSaveDirectory() .. "/save/" .. self.gameId .. "/".. "latest"
 end
 function SaveSystem:deleteSaves()
    for key, item in pairs(love.filesystem.getDirectoryItems(self:getSaveDir())) do
@@ -62,16 +62,12 @@ function SaveSystem:onLoadNotify(loadEvent)
 end
 
 _backupSave = function (self)
-  --[[
-    if lfs.attributes("save/") == nil or lfs.attributes(self:getSaveDir()) == nil then
-        lfs.mkdir("save/")
-        lfs.mkdir("save/" .. self.gameId)
-        lfs.mkdir(self:getSaveDir())
-        --]]
-  if love.filesystem.exists("save/") == nil or love.filesystem.exists(self:getSaveDir()) == nil then
+  print "backupSave>"
+  if not love.filesystem.exists("save/") or not love.filesystem.exists(self:getSaveDir()) then
     love.filesystem.createDirectory("save/")
     love.filesystem.createDirectory("save/" .. self.gameId)
     love.filesystem.createDirectory(self:getSaveDir())
+    print "made save"
   end
 end
 

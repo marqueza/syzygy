@@ -10,7 +10,7 @@ function SideBarSystem:initialize()
   self.marginWidth = 10
   self.marginHeight = 40
   self.text = ""
-  self.font = love.graphics.setNewFont("res/font/PressStart/PressStart2p.ttf", 16)
+  self.font = love.graphics.setNewFont("res/font/PressStart/PressStart2P.ttf", 16)
 
 end
 local _refreshText

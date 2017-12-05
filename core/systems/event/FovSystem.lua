@@ -21,7 +21,7 @@ return function (fov, x, y)
   end
   if entityList then
     for k, entity in pairs(entityList) do
-      if entity.Physics.blocks then
+      if entity.Physics.blocks and not entity.Physics.allowsFov then
         return false
       end
     end

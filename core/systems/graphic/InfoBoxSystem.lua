@@ -12,7 +12,7 @@ function InfoBoxSystem:initialize()
     self.text = nil
     self.examinee = nil
     self.visible =  game.options.scouter
-    self.font = love.graphics.setNewFont("res/font/PressStart/PressStart2p.ttf", 8)
+    self.font = love.graphics.setNewFont("res/font/PressStart/PressStart2P.ttf", 8)
 end
 
 _refreshText = function(self)

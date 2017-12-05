@@ -9,6 +9,7 @@ function Physics:initialize(args)
     self.y = args.y
     self.blocks = args.blocks
     self.layer = args.layer
+    self.allowsFov = args.allowsFov
     assert(args.plane, "You are missing a plane for the Physics component")
     self.plane = args.plane
 end

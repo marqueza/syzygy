@@ -41,3 +41,4 @@ luac.out
 
 # Custome save
 *.save.txt
+*.swp

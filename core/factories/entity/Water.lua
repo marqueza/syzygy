@@ -1,8 +1,8 @@
 local lovetoys = require "lib.lovetoys.lovetoys"
-local function Water(x, y)
+local function Water(args)
 	entity = lovetoys.Entity()
 	entity.name = "water"
-	entity:add(Physics{x=x, y=y, blocks=true, layer="floor", plane=args.plane})
+	entity:add(Physics{x=args.x, y=args.y, blocks=true, allowsFov=true, layer="backdrop", plane=args.plane})
 	entity:add(Sprite{filename="img/sprites/water.png"})
 	return entity
 end

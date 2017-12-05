@@ -32,7 +32,6 @@ function SpellSystem:onSpellCast(spellCastEvent)
     else
       travelerIds = {caster.id}
     end
---I need to rewrite level system to handle not using entrances
     events.fireEvent(events.LevelEvent{
         levelName="overWorld", 
         levelSeed=0,
@@ -44,8 +43,11 @@ end
 
 function SpellSystem:onSpellDisplay(spellDisplayEvent)
     local caster = systems.getEntityById(spellDisplayEvent.casterId)
-    if caster.Inventory == nil then
-        caster:add(components.Inventory({}))
+    if caster == nil then 
+      return
+    end
+    if caster.Spells == nil then
+        caster:add(components.Spells({}))
     end
     events.fireEvent(events.MenuDisplayEvent{
         type="string",

@@ -15,8 +15,10 @@ options.verticalTileMax = 11
 options.horizontalTileMax = 20
 --]]
 
-options.screenWidth = 1920
-options.screenHeight = 1080
+--options.screenWidth = 1920
+--options.screenHeight = 1080
+options.screenWidth = 1280
+options.screenHeight = 720
 --the view port should be 75% of height and width
 options.spriteSize = 48
 options.verticalTileMax = math.floor(options.screenHeight*.75/options.spriteSize)
