@@ -24,7 +24,7 @@ local _getCurrentLevelDepth
 function LevelSystem:initialize()
   self.name = "LevelSystem"
   --self.seed = 8
-  --self.seed = os.time()*1000000
+  self.seed = os.time()*1000000
 end
 
 function LevelSystem:onNotify(levelEvent)
