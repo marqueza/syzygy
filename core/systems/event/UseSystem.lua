@@ -8,6 +8,7 @@ local UseSystem = class("UseSystem", lovetoys.System)
 
 function UseSystem:initialize()
     lovetoys.System.initialize(self)
+    self.name = "UseSystem"
 end
 
 function UseSystem:onUse(useEvent)

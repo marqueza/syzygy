@@ -79,19 +79,20 @@ _setupStringMenu = function(self, MenuDisplayEvent)
 end
 
 function MenuSystem:onCommmandNotify(MenuCommandEvent)
-  self.menuStack = self.menuStack - 1
-  if self.menuStack == 0 then
-    _closeMenu(self)
-  end
-    if self.resultEvent then
-        local choiceIndex = string.byte(MenuCommandEvent.key)-96
-        if self.choices[choiceIndex] then
-            self.result = self.choices[choiceIndex]
-            self.resultEventArgs[self.resultKey] = self.result
-            events.fireEvent(self.resultEvent(self.resultEventArgs))
-           
-        end
+  local choiceIndex = string.byte(MenuCommandEvent.key)-96
+  if not self.persistant or self.choices[choiceIndex] then
+    self.menuStack = self.menuStack - 1
+    if self.menuStack == 0 then
+      _closeMenu(self)
     end
+  end
+  if self.resultEvent then
+    if self.choices[choiceIndex] then
+      self.result = self.choices[choiceIndex]
+      self.resultEventArgs[self.resultKey] = self.result
+      events.fireEvent(self.resultEvent(self.resultEventArgs))
+    end
+  end
 end
 _closeMenu = function(self)
   events.fireEvent(events.StateEvent{state="command"})

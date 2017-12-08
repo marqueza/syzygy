@@ -10,7 +10,6 @@ local systems = {}
 
 function systems.init()
     systems.engine = lovetoys.Engine()
-    systems.aiSystem = require "core.systems.ai.AiSystem"
     filer.instantiateDirectoryItems(systems, "systems", "core/systems/event/")
     
     if not game.options.headless then
@@ -26,6 +25,7 @@ function systems.init()
         systems.engine:addSystem(systems.sideBarSystem, "draw")
     end
     filer.instantiateDirectoryItems(systems, "systems", "core/systems/update/" )
+    filer.instantiateDirectoryItems(systems, "systems", "core/systems/ai/" )
     systems.engine:addSystem(systems.autoPressSystem, "update")
     
     

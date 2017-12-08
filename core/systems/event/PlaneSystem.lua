@@ -7,6 +7,7 @@ local PlaneSystem = class("PlaneSystem", lovetoys.System)
 
 function PlaneSystem:initialize()
   lovetoys.System.initialize(self)
+  self.name = "PlaneSystem"
   self.planes = {}
 end
 

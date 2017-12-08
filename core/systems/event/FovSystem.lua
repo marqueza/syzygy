@@ -43,6 +43,9 @@ function FovSystem.getMarkFunction(plane)
 end
 
 function FovSystem:onNotify(TurnEvent)
+  if not game.player then
+    return
+  end
     local leaders = systems.getEntitiesWithComponent("Party")
     systems.planeSystem:clearVisible(x, y, game.player.Physics.plane)
     for id, leader in pairs(leaders) do

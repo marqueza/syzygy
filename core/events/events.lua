@@ -112,10 +112,15 @@ function events.init()
 end
 
 function events.fireEvent(event)
-    local start = love.timer.getTime()
-    events.eventManager:fireEvent(event)
-    local result = love.timer.getTime() - start
-    result = math.floor(result*1000)
+    local start
+    if not game.options.headless then
+      start = love.timer.getTime()
+    end
+      events.eventManager:fireEvent(event)
+    if not game.options.headless then
+      local result = love.timer.getTime() - start
+      result = math.floor(result*1000)
+    end
 
     if event.toString then
         if game.options.debug then

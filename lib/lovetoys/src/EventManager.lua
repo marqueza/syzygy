@@ -19,7 +19,7 @@ function EventManager:addListener(eventName, listener, listenerFunction)
 
 
     if not listener.class or (listener.class and not listener.class.name) then
-        lovetoys.debug('Eventmanager: The listener has to implement a listener.class.name field.')
+        lovetoys.debug('Eventmanager: The listener'.. listener .. ' has to implement a listener.class.name field.')
     end
 
     for _, registeredListener in pairs(self.eventListeners[eventName]) do

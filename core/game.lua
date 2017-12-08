@@ -2,7 +2,7 @@ game = {}
 game.events = require "core.events.events"
 game.systems = require "core.systems.systems"
 function game.load(options)
-    game.options = options
+    game.options = options or require "core.settings"
     game.state = "command"
     dofile('core/startup.lua')
 
@@ -10,7 +10,14 @@ function game.load(options)
     game.time = 1
     game.systems.init()
     game.events.init()
-    if not game.options.headless then
+
+    if game.options.headless then
+      --bring the events and systems modules to global
+      --[[
+      for k, v in pairs(game.events) do _G[k] = v end
+      for k, v in pairs(game.systems) do _G[k] = v end
+      --]]
+    else
         game.events.fireEvent(game.events.TitleEnterEvent{})
     end
     

@@ -6,7 +6,7 @@ local events = require "core.events.events"
 local ExpSystem = class("ExpSystem", lovetoys.System)
 
 function ExpSystem:initialize()
-  lovetoys.System.initialize(self)
+    self.name = "ExpSystem"
 end
 
 function ExpSystem:gainExp(entity, amount)

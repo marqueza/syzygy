@@ -26,8 +26,8 @@ function filer.getDirectoryItems(dir)
 end
 
 function filer.requireDirectoryItems(table, tableName, path)
-    --local files = filer.getDirectoryItems( path )
-    local files = love.filesystem.getDirectoryItems( path)
+    local files = filer.getDirectoryItems( path )
+    --local files = love.filesystem.getDirectoryItems( path)
     for k, file in ipairs(files) do
         tokens = _split(file, ".")
         file = tokens[1]
@@ -38,8 +38,9 @@ function filer.requireDirectoryItems(table, tableName, path)
 end
 
 function filer.instantiateDirectoryItems(table, tableName, path)
-    --local files = filer.getDirectoryItems( path )
-    local files = love.filesystem.getDirectoryItems( path )
+    local files = filer.getDirectoryItems( path )
+
+    --local files = love.filesystem.getDirectoryItems( path )
     for k, file in ipairs(files) do
         tokens = _split(file, ".")
         file = tokens[1]

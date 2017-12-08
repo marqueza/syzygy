@@ -8,7 +8,7 @@ local AiSystem = class("AiSystem", System)
 AiSystem:include(Serializable)
 
 function AiSystem:initialize()
-  self.name = "AiSystem"
+  AiSystem.name = "AiSystem"
   self.path = {}
 end
 
@@ -20,7 +20,6 @@ function AiSystem:onTurnNotify(TurnEvent)
     --have them enter the decisionState to decide what to actually do
     _determineState(self, aiEntity)
   end
-
 end
 
 _determineState = function(self, aiEntity)

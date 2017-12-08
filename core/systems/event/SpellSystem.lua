@@ -8,6 +8,7 @@ local SpellSystem = class("SpellSystem", lovetoys.System)
 
 function SpellSystem:initialize()
   lovetoys.System.initialize(self)
+  self.name = "SpellSystem"
 end
 
 function SpellSystem:onSpellLearn(spellLearnEvent)
