@@ -7,6 +7,8 @@ if not lovetoys.initialized then lovetoys.initialize({
 end
 
 local systems = {}
+local _stackIndex = 0
+local _entityStack = {}
 
 function systems.init()
     systems.engine = lovetoys.Engine()
@@ -46,6 +48,11 @@ function systems.addEntity(entity)
     if systems.planeSystem and entity.Physics then
       systems.planeSystem:addToLayer(entity)
     end
+
+    --add to stack
+    _stackIndex = _stackIndex + 1
+    _entityStack[_stackIndex] = entity
+
 end
 
 function systems.getEntityById(entityId)
@@ -76,11 +83,23 @@ function systems.removeAllEntities()
         systems.removeEntity(e)
     end
 end
-function systems.getLastEntity()
-    return systems.engine.entities[#systems.engine.entities]
+function systems.popEntity()
+  if _stackIndex < 1 then return nil end
+  local e =  _entityStack[_stackIndex]
+  _stackIndex = _stackIndex-1
+  return e
 end
 function systems.getEntities()
     return systems.engine.entities
+end
+
+function systems.getEntityByName(name)
+  for entity in pairs(systems.engine.entities) do
+    if entity.name == name then
+      return entity
+    end
+  end
+  return nil
 end
 
 function systems.update(dt)

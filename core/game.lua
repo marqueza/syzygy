@@ -13,10 +13,8 @@ function game.load(options)
 
     if game.options.headless then
       --bring the events and systems modules to global
-      --[[
       for k, v in pairs(game.events) do _G[k] = v end
       for k, v in pairs(game.systems) do _G[k] = v end
-      --]]
     else
         game.events.fireEvent(game.events.TitleEnterEvent{})
     end

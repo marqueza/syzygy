@@ -9,6 +9,7 @@ end
 -- This is when we know we want to move here.
 function MoveSystem:onNotify(moveEvent)
     local mover = systems.getEntityById(moveEvent.moverId)
+    assert(mover, "MoveSystem: could not find mover " .. moveEvent.moverId)
     if not systems.planeSystem:isFloorSpace(moveEvent.x, moveEvent.y, mover.Physics.plane) then
       events.fireEvent(events.LogEvent{text=mover.name .. " bumps wall."})
       return

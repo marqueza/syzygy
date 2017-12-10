@@ -8,12 +8,13 @@ describe("Startup >", function()
     end
   )
 
-  it("Fire Event", function()
+  it("Turn", function()
     local sOnNotify = spy.on(game.systems.turnSystem, "onNotify")
-    local sEvent = spy.on(game.events.LevelEvent, "initialize")
+    local turnSpy = spy.on(game.events.TurnEvent, "initialize")
     game.events.fireEvent(game.events.TurnEvent())
     local turn = systems.turnSystem.turn
     assert.is.Equals(2, turn)
+    assert.spy(turnSpy).was_called()
   end
   )
   it("Launch", function()

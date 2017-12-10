@@ -10,6 +10,13 @@ function Serializable:toString()
         valtypeignore = {'userdata', 'function'},
         nohuge=true})
 end
+
+--[[
+function Serializable:__tostring()
+  return "HIIII"
+end
+--]]
+
 function Serializable:toTable()
     local t = {}
     for k, v in pairs(self) do
