@@ -47,10 +47,18 @@ function LevelSystem:onNotify(levelEvent)
   --first level in the game
   if leader == nil then
     --self.currentLevelName = levelEvent.levelName
-    overWorld.build(
-      _getLevelSeed(levelEvent), 
-      levelEvent, 
-      {spawnPlayer=true})
+    if game.headless then
+      arena.build(
+        _getLevelSeed(levelEvent), 
+        levelEvent, 
+        {spawnPlayer=true})
+    else
+      overWorld.build(
+        _getLevelSeed(levelEvent), 
+        levelEvent, 
+        {spawnPlayer=true, empty=true})
+
+    end
     --assert(game.player)
     events.eventManager:fireEvent(events.LogEvent{
         text="You begin your journey in an unknown land. "
@@ -82,7 +90,7 @@ end
 function LevelSystem:levelVisited(levelName, levelDepth)
   local filePath = systems.saveSystem:getSaveDir() .."/".. levelName.."-"..levelDepth.."_"
   ..systems.saveSystem.gameId..".save.txt"
-  if (love.filesystem.exists(filePath)) then
+  if (lfs.attributes(filePath)) then
     return true
   else 
     return (systems.planeSystem.planes[levelName .. "-" .. levelDepth] ~= nil)

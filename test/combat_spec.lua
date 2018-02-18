@@ -1,12 +1,11 @@
 describe("combat", function()
   setup(function()
       game = require("../core/game")
-      game.load{headless=true, debug=false}
     end
   )
   before_each(function()
-      fireEvent(LevelEvent{levelName="arena", levelDepth=1, options={
-          first=true}})
+      game.load{headless=true, debug=false, new=true}
+      fireEvent(LevelEvent{levelName="arena", levelDepth=1, options={first=true, empty=true}})
 
       fireEvent(SpawnEvent{
         name="Skeleton",
@@ -31,17 +30,19 @@ describe("combat", function()
     end
     )
  
-  it("attack", function()
+  it("attack event", function()
       --assemble
-      local angelHp =  angel.Stats.hp
+      local angelHp = angel.Stats.hp
       local attackSpy = spy.on(AttackEvent, "initialize")
 
       --act
-      fireEvent(MoveEvent{moverId=skeleton.id, x=4, y=3})
+      fireEvent(AttackEvent{attackerId=skeleton.id, defenderId=angel.id})
 
       --assert
-      assert.spy(attackSpy).was_called()
+      assert.is_same(3, skeleton.Physics.x)
+      assert.is_same(3, skeleton.Physics.y)
       assert.is_true(angel.Stats.hp < angelHp)
+      assert.spy(attackSpy).was_called()
     end
   )
   it("death", function()
@@ -64,6 +65,11 @@ describe("combat", function()
       local aiList = getEntitiesWithComponent("Ai")
       --act
       game.events.fireEvent(game.events.TurnEvent())
+      fireEvent(TurnEvent())
+      fireEvent(TurnEvent())
+      fireEvent(TurnEvent())
+      fireEvent(TurnEvent())
+      fireEvent(TurnEvent())
       fireEvent(TurnEvent())
       fireEvent(TurnEvent())
       fireEvent(TurnEvent())

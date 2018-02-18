@@ -1,6 +1,6 @@
 local class = require "lib.middleclass"
 local lovetoys = require "lib.lovetoys.lovetoys"
---local lfs = require "lfs"
+local lfs = require "lfs"
 local serpent = require "lib.serpent"
 local events = require "core.events.events"
 local components = require "core.components.components"
@@ -24,15 +24,30 @@ function SaveSystem:initialize()
   self.saveSlot = "latest"
 end
 function SaveSystem:getSaveDir()
-  return love.filesystem.getSaveDirectory() .. "/save/" .. self.gameId .. "/".. self.saveSlot
+  if game.options.headless then
+    return lfs.currentdir() .. "/save/" .. self.gameId .. "/" .. self.saveSlot
+  else
+    return love.filesystem.getSaveDirectory() .. "/save/" .. self.gameId .. "/".. self.saveSlot
+  end
 end
 function SaveSystem:getLatestDir()
-  return love.filesystem.getSaveDirectory() .. "/save/" .. self.gameId .. "/".. "latest"
+  if game.options.headless then
+    return lfs.currentdir() .. "/save/" .. self.gameId .. "/" .. "latest"
+  else
+    return love.filesystem.getSaveDirectory() .. "/save/" .. self.gameId .. "/".. "latest"
+  end
 end
+
 function SaveSystem:deleteSaves()
+  if game.options.headless then
+   for filename in lfs.dir(self:getSaveDir()) do
+     os.remove(self:getSaveDir() .. "/" .. filename)
+    end
+  else
    for key, item in pairs(love.filesystem.getDirectoryItems(self:getSaveDir())) do
      os.remove(self:getSaveDir() .. "/" .. item)
     end
+  end
 end
 function SaveSystem:onSaveNotify(saveEvent)
   if not game.player then return end
@@ -62,12 +77,18 @@ function SaveSystem:onLoadNotify(loadEvent)
 end
 
 _backupSave = function (self)
-  print "backupSave>"
-  if not love.filesystem.exists("save/") or not love.filesystem.exists(self:getSaveDir()) then
-    love.filesystem.createDirectory("save/")
-    love.filesystem.createDirectory("save/" .. self.gameId)
-    love.filesystem.createDirectory(self:getSaveDir())
-    print "made save"
+  if not game.options.headless then
+    if not love.filesystem.exists("save/") or not love.filesystem.exists(self:getSaveDir()) then
+      love.filesystem.createDirectory("save/")
+      love.filesystem.createDirectory("save/" .. self.gameId)
+      love.filesystem.createDirectory(self:getSaveDir())
+    end
+  else 
+    if lfs.attributes(self:getSaveDir()) == nil then
+      lfs.mkdir("save/")
+      lfs.mkdir("save/" .. self.gameId)
+      lfs.mkdir(self:getSaveDir())
+    end
   end
 end
 
@@ -79,6 +100,8 @@ _saveMessageLogs = function (self)
   f = io.open(self:getSaveDir() .. "/events.save.txt", 'w')
   f:write(serpent.dump(systems.logSystem.eventLog, {indent = " "}))
   f:close()
+  assert(lfs.attributes(self:getSaveDir() .. "/messages.save.txt"), 
+         "Did not create "..self:getSaveDir() .. "/messages.save.txt")
 end
 
 _loadMessageLogs = function (self)
@@ -190,16 +213,18 @@ _loadEntities = function (self, prefix)
       for k, v in pairs(eLineTable) do
         e[k] = v
       end
+    --creating an plane
     elseif string.find(line, 'planes%.') then
-      local planeName, layerName, tableString = string.match(line, "planes.(%g+)%.(%g+) (%g+)")
-      local ok, layerTable = serpent.load(tableString)
+      local planeName, layerName, tableString = string.match(line, "planes%.(.+)%.(.+) (.+)")
+      if not pcall(function() ok, layerTable = serpent.load(tableString) end) then
+        error("Could not parse " .. planeName .. layerName .. tableString)
+      end
       if systems.planeSystem.planes[planeName] == nil then
         systems.planeSystem.planes[planeName] = {}
       end
       systems.planeSystem.planes[planeName][layerName] = layerTable
-
-      --adding a component to an entity
     else
+      --adding a component to an entity
       local ok, t = serpent.load(line)
       if ok and t then
         assert(t.class)

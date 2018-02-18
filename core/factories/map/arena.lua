@@ -21,7 +21,6 @@ roomB.anchorY = 1
 
 
 function dungeon.build(seed, levelEvent)
-  local startTime = love.timer.getTime()
   dungeon.emptyCoords = {}
   planeName = levelEvent.levelName..'-'..levelEvent.levelDepth
   math.randomseed(seed)
@@ -66,6 +65,7 @@ else
   end
   
     
+  if not options.empty then
     if (math.random(0,1) == 1) then 
       local randX, randY = dungeon.getEmptyCoord()
       systems.addEntity(Factory.Orc{x=randX, y=randY, plane=planeName}) 
@@ -100,8 +100,7 @@ else
             color=options.color,
             plane=planeName})
     end
-  
-  print (math.floor((love.timer.getTime() - startTime)*1000))
+  end
 end
 
 function dungeon.carveFloor()

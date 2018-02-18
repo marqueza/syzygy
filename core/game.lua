@@ -18,7 +18,9 @@ function game.load(options)
     else
         game.events.fireEvent(game.events.TitleEnterEvent{})
     end
-    
+    if game.options.new then
+      game.systems.saveSystem:deleteSaves()
+    end
 end
 
 
